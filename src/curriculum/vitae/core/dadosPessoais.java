@@ -19,8 +19,8 @@ public class dadosPessoais {
     private String linkedin;
     private String morada;
     private String descricao;
-    private ArrayList<expProf> expProf;
-    private ArrayList<educacao> educacao;
+    private ArrayList<ExpProf> expProf;
+    private ArrayList<Educacao> educacao;
 
     public dadosPessoais(String nome, String nacionalidade, Date dataNasc, String telemovel, String linkedin, String morada, String descricao) {
         this.nome = nome;
@@ -32,7 +32,7 @@ public class dadosPessoais {
         this.descricao = descricao;
     }
   
-    public dadosPessoais(String nome, String nacionalidade, Date dataNasc, String telemovel, String linkedin, String morada, String descricao, ArrayList<expProf> expProf, ArrayList<educacao> educacao) {
+    public dadosPessoais(String nome, String nacionalidade, Date dataNasc, String telemovel, String linkedin, String morada, String descricao, ArrayList<ExpProf> expProf, ArrayList<Educacao> educacao) {
         this.nome = nome;
         this.nacionalidade = nacionalidade;
         this.dataNasc = dataNasc;
@@ -100,19 +100,19 @@ public class dadosPessoais {
         this.descricao = descricao;
     }
 
-    public ArrayList<expProf> getExpProf() {
+    public ArrayList<ExpProf> getExpProf() {
         return expProf;
     }
 
-    public void setExpProf(ArrayList<expProf> expProf) {
+    public void setExpProf(ArrayList<ExpProf> expProf) {
         this.expProf = expProf;
     }
 
-    public ArrayList<educacao> getEducacao() {
+    public ArrayList<Educacao> getEducacao() {
         return educacao;
     }
 
-    public void setEducacao(ArrayList<educacao> educacao) {
+    public void setEducacao(ArrayList<Educacao> educacao) {
         this.educacao = educacao;
     }
 }

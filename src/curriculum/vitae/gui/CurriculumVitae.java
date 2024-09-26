@@ -4,11 +4,15 @@
  */
 package curriculum.vitae.gui;
 
+import curriculum.vitae.core.Utilizador;
+import java.util.ArrayList;
+
 /**
  *
  * @author joaob
  */
 public class CurriculumVitae extends javax.swing.JFrame {
+    ArrayList<Utilizador> listUsers = new ArrayList<>();
 
     /**
      * Creates new form PaginaInicial

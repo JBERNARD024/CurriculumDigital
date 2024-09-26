@@ -5,22 +5,24 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Utilizador;
-import java.util.Arrays;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author joaob
  */
-public class Login extends java.awt.Dialog {
+public class Registo extends java.awt.Dialog {
     CurriculumVitae cv;
     String email;
-    byte[] password;
+    String password;
+    String confPassword;
     Utilizador user;
     /**
-     * Creates new form Login2
+     * Creates new form Registo
+     * @param parent
+     * @param modal
      */
-    public Login(CurriculumVitae parent, boolean modal) {
+    public Registo(CurriculumVitae parent, boolean modal) {
         this.cv = parent;
         super(parent, modal);
         initComponents();
@@ -42,6 +44,8 @@ public class Login extends java.awt.Dialog {
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
+        txtConfPassword = new javax.swing.JPasswordField();
+        jLabel5 = new javax.swing.JLabel();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -70,7 +74,7 @@ public class Login extends java.awt.Dialog {
             }
         });
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/loginImage.jpeg"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/registoImage.jpg"))); // NOI18N
         jLabel1.setMaximumSize(new java.awt.Dimension(150, 125));
         jLabel1.setMinimumSize(new java.awt.Dimension(150, 125));
         jLabel1.setPreferredSize(new java.awt.Dimension(150, 150));
@@ -81,7 +85,9 @@ public class Login extends java.awt.Dialog {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("LOGIN");
+        jLabel2.setText("REGISTO");
+
+        jLabel5.setText("Confirmar Password");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -89,41 +95,50 @@ public class Login extends java.awt.Dialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(14, 14, 14)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtConfPassword, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnRegisto, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(txtPassword))
-                        .addContainerGap(12, Short.MAX_VALUE))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnRegisto, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel5)
+                                    .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                                    .addComponent(txtPassword))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
+                .addContainerGap()
                 .addComponent(jLabel2)
-                .addGap(30, 30, 30)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
-                .addGap(12, 12, 12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtConfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRegisto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnRegisto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -141,16 +156,16 @@ public class Login extends java.awt.Dialog {
         dispose();
     }//GEN-LAST:event_closeDialog
 
-    private void btnRegistoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoActionPerformed
-        // TODO add your handling code here:
-        dispose();
-        new Registo(cv, true).setVisible(true);
-    }//GEN-LAST:event_btnRegistoActionPerformed
-
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
-        login();
+        dispose();
+        new Login(cv, true).setVisible(true);
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void btnRegistoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoActionPerformed
+        // TODO add your handling code here:
+        adicionarUtilizador();
+    }//GEN-LAST:event_btnRegistoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -163,42 +178,48 @@ public class Login extends java.awt.Dialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPasswordField txtConfPassword;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JPasswordField txtPassword;
     // End of variables declaration//GEN-END:variables
 
-    private void login() { 
+    private void adicionarUtilizador() {
         email = txtEmail.getText().trim();
-        password = new String(txtPassword.getPassword()).getBytes();
-        if(verificaCampos() == true && verificaUtilizador(email) == true){
-            JOptionPane.showConfirmDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 2);
+        password = new String(txtPassword.getPassword());
+        confPassword = new String(txtConfPassword.getPassword());
+        if(verificaCampos() == true && verificaEmail(email) == false){
+            user = new Utilizador(email, password.getBytes());
+            cv.listUsers.add(user);
+            dispose();
+            new Login(cv, true).setVisible(true);
         }
-    }
-    
-    private boolean verificaCampos() {
-        boolean verifica = false;
-        for (int i = 0; i < cv.listUsers.size(); i++) {
-            user = new Utilizador(cv.listUsers.get(i));
-            if(email.equals(user.getEmail()) && Arrays.equals(password, user.getPassword())){
-                verifica = true;
-            }else{
-                JOptionPane.showConfirmDialog(null, "Introduza a password correta!!", "Password Incorreta", 2);
-                verifica = false;
-            }
-        }
-        return verifica;
     }
 
-    private boolean verificaUtilizador(String email) {
+    private boolean verificaCampos() {
+        if (email.equals("") || password.equals("") || confPassword.equals("")) {
+            JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
+            return false;
+        } else if (!password.equals(confPassword)) {
+            JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
+            return false;
+        } else if (!email.contains("@")){
+            JOptionPane.showConfirmDialog(null, "Email inválido!!", "Email Incorreto", 2);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean verificaEmail(String email) {
         boolean verifica = false;
         for (int i = 0; i < cv.listUsers.size(); i++) {
-            user = new Utilizador(cv.listUsers.get(i));
-            if (!user.getEmail().equals(email)) {
-                verifica = false;
-                JOptionPane.showConfirmDialog(null, "Email não está registado no sistema!!", "Email Inválido", 2);
+            if (cv.listUsers.get(i).getEmail().equals(email)) {
+                verifica = true;
+                JOptionPane.showConfirmDialog(null, "Email já está a ser utilizado!!", "Email Indisponível", 2);
                 break;
             } else {
-                 verifica = true;
+                 verifica = false;
             }
         }
         return verifica;
