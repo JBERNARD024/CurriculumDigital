@@ -8,20 +8,20 @@ package curriculum.vitae.core;
  *
  * @author joaob
  */
-public class utilizador {
-    private String username;
+public class Utilizador {
+    private String email;
     private byte[] password;
     private dadosPessoais dados;
 
-    public utilizador(String username, byte[] password) {
-        this.username = username;
+    public Utilizador(String email, byte[] password) {
+        this.email = email;
         this.password = password;
     }
 
-    public utilizador(String username, byte[] password, dadosPessoais dados) {
-        this.username = username;
-        this.password = password;
-        this.dados = dados;
+    public Utilizador(Utilizador user) {
+        this.email = user.email;
+        this.password = user.password;
+        this.dados = user.dados;
     }
 
     public dadosPessoais getDados() {
@@ -32,12 +32,12 @@ public class utilizador {
         this.dados = dados;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public byte[] getPassword() {
@@ -51,10 +51,8 @@ public class utilizador {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("username=").append(username);
+        sb.append("username=").append(email);
         sb.append(", password=").append(password);
         return sb.toString();
-    }
-    
-    
+    } 
 }

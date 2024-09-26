@@ -8,6 +8,6 @@ package curriculum.vitae.core;
  *
  * @author joaob
  */
-public class expProf {
+public class Educacao {
     
 }
