@@ -25,6 +25,7 @@ public class Registo extends java.awt.Dialog {
     public Registo(CurriculumVitae parent, boolean modal) {
         this.cv = parent;
         super(parent, modal);
+        this.setTitle("Registo");
         initComponents();
     }
 
@@ -47,6 +48,7 @@ public class Registo extends java.awt.Dialog {
         txtConfPassword = new javax.swing.JPasswordField();
         jLabel5 = new javax.swing.JLabel();
 
+        setName(""); // NOI18N
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 closeDialog(evt);
@@ -146,6 +148,7 @@ public class Registo extends java.awt.Dialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**

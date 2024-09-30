@@ -15,35 +15,30 @@ public class dadosPessoais {
     private String nome;
     private String nacionalidade;
     private Date dataNasc;
+    private String sexo;
     private String telemovel;
     private String linkedin;
     private String morada;
+    private String localidade;
+    private String pais;
     private String descricao;
+    private ArrayList<String> linguas;
     private ArrayList<ExpProf> expProf;
     private ArrayList<Educacao> educacao;
 
-    public dadosPessoais(String nome, String nacionalidade, Date dataNasc, String telemovel, String linkedin, String morada, String descricao) {
+    public dadosPessoais(String nome, String nacionalidade, Date dataNasc, String sexo, String telemovel, String linkedin, String morada, String localidade, String pais, String descricao) {
         this.nome = nome;
         this.nacionalidade = nacionalidade;
         this.dataNasc = dataNasc;
+        this.sexo = sexo;
         this.telemovel = telemovel;
         this.linkedin = linkedin;
         this.morada = morada;
+        this.localidade = localidade;
+        this.pais = pais;
         this.descricao = descricao;
     }
   
-    public dadosPessoais(String nome, String nacionalidade, Date dataNasc, String telemovel, String linkedin, String morada, String descricao, ArrayList<ExpProf> expProf, ArrayList<Educacao> educacao) {
-        this.nome = nome;
-        this.nacionalidade = nacionalidade;
-        this.dataNasc = dataNasc;
-        this.telemovel = telemovel;
-        this.linkedin = linkedin;
-        this.morada = morada;
-        this.descricao = descricao;
-        this.expProf = expProf;
-        this.educacao = educacao;
-    } 
-
     public String getNome() {
         return nome;
     }
@@ -99,7 +94,7 @@ public class dadosPessoais {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-
+    
     public ArrayList<ExpProf> getExpProf() {
         return expProf;
     }
@@ -115,4 +110,55 @@ public class dadosPessoais {
     public void setEducacao(ArrayList<Educacao> educacao) {
         this.educacao = educacao;
     }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public String getLocalidade() {
+        return localidade;
+    }
+
+    public void setLocalidade(String localidade) {
+        this.localidade = localidade;
+    }
+
+    public String getPais() {
+        return pais;
+    }
+
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+    
+        public ArrayList<String> getLinguas() {
+        return linguas;
+    }
+
+    public void setLinguas(ArrayList<String> linguas) {
+        this.linguas = linguas;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("DadosPessoais{");
+        sb.append("Nome =").append(nome);
+        sb.append(", Nacionalidade =").append(nacionalidade);
+        sb.append(", Data de Nascimento =").append(dataNasc);
+        sb.append(", Sexo =").append(sexo);
+        sb.append(", Telemóvel =").append(telemovel);
+        sb.append(", Linkedin =").append(linkedin);
+        sb.append(", Morada=").append(morada);
+        sb.append(", Localidade=").append(localidade);
+        sb.append(", Paíss=").append(pais);
+        sb.append(", Descrição=").append(descricao);
+        sb.append('}');
+        return sb.toString();
+    }
+    
 }

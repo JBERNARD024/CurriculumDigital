@@ -4,6 +4,8 @@
  */
 package curriculum.vitae.core;
 
+import java.util.Date;
+
 /**
  *
  * @author joaob
@@ -12,6 +14,8 @@ public class Utilizador {
     private String email;
     private byte[] password;
     private dadosPessoais dados;
+    private int numLogin;
+    private Date lastLogin;
 
     public Utilizador(String email, byte[] password) {
         this.email = email;
@@ -47,7 +51,7 @@ public class Utilizador {
     public void setPassword(byte[] password) {
         this.password = password;
     }
-
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -55,4 +59,20 @@ public class Utilizador {
         sb.append(", password=").append(password);
         return sb.toString();
     } 
+
+    public int getNumLogin() {
+        return numLogin;
+    }
+
+    public void setNumLogin(int numLogin) {
+        this.numLogin = numLogin;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
 }

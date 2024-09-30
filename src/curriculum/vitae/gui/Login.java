@@ -5,7 +5,9 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Utilizador;
+import java.time.Instant;
 import java.util.Arrays;
+import java.util.Date;
 import javax.swing.JOptionPane;
 
 /**
@@ -23,6 +25,7 @@ public class Login extends java.awt.Dialog {
     public Login(CurriculumVitae parent, boolean modal) {
         this.cv = parent;
         super(parent, modal);
+        this.setTitle("Login");
         initComponents();
     }
 
@@ -131,6 +134,7 @@ public class Login extends java.awt.Dialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -171,7 +175,13 @@ public class Login extends java.awt.Dialog {
         email = txtEmail.getText().trim();
         password = new String(txtPassword.getPassword()).getBytes();
         if(verificaCampos() == true && verificaUtilizador(email) == true){
-            JOptionPane.showConfirmDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 2);
+            user = new Utilizador(email, password);
+            JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
+            user.setNumLogin(user.getNumLogin()+1);
+            user.setLastLogin(Date.from(Instant.now()));
+            if(user.getNumLogin() < 2){
+                new adicionarDadosPessoais(cv, true, user).setVisible(true);
+            }
         }
     }
     
@@ -182,7 +192,7 @@ public class Login extends java.awt.Dialog {
             if(email.equals(user.getEmail()) && Arrays.equals(password, user.getPassword())){
                 verifica = true;
             }else{
-                JOptionPane.showConfirmDialog(null, "Introduza a password correta!!", "Password Incorreta", 2);
+                JOptionPane.showMessageDialog(null,"Introduza a password correta!!", "Password Incorreta", 1);
                 verifica = false;
             }
         }
