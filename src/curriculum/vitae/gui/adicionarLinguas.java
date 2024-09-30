@@ -5,6 +5,8 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Utilizador;
+import java.util.ArrayList;
+import javax.swing.JCheckBox;
 
 /**
  *
@@ -14,6 +16,7 @@ public class adicionarLinguas extends java.awt.Dialog {
 
     CurriculumVitae cv;
     Utilizador user;
+    ArrayList<JCheckBox> listaOpcoes = new ArrayList<>();
 
     /**
      * Creates new form adicionarDados
@@ -23,6 +26,20 @@ public class adicionarLinguas extends java.awt.Dialog {
         this.cv = parent;
         this.user = user;
         initComponents();
+        listaOpcoes.add(checkAlemao);
+        listaOpcoes.add(checkArabe);
+        listaOpcoes.add(checkChines);
+        listaOpcoes.add(checkCoreano);
+        listaOpcoes.add(checkEspanhol);
+        listaOpcoes.add(checkFrances);
+        listaOpcoes.add(checkGrego);
+        listaOpcoes.add(checkIngles);
+        listaOpcoes.add(checkJapones);
+        listaOpcoes.add(checkPolaco);
+        listaOpcoes.add(checkPortugues);
+        listaOpcoes.add(checkRusso);
+        listaOpcoes.add(checkTurco);
+        listaOpcoes.add(checkUcraniano);
     }
 
     /**
@@ -185,7 +202,11 @@ public class adicionarLinguas extends java.awt.Dialog {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-        System.out.println(checkPortugues.getText());
+        for (int i = 0; i < listaOpcoes.size(); i++) {
+            if(listaOpcoes.get(i).isSelected()){
+                user.getDados().getLinguas().add(listaOpcoes.get(i).getText());
+            }
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
 

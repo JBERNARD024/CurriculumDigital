@@ -13,6 +13,7 @@ import java.util.Date;
 public class Utilizador {
     private String email;
     private byte[] password;
+    private byte[] imagem;
     private dadosPessoais dados;
     private int numLogin;
     private Date lastLogin;
@@ -55,8 +56,8 @@ public class Utilizador {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("username=").append(email);
-        sb.append(", password=").append(password);
+        sb.append("Email=").append(email);
+        sb.append(", Password=").append(password);
         return sb.toString();
     } 
 
@@ -74,5 +75,13 @@ public class Utilizador {
 
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public byte[] getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(byte[] imagem) {
+        this.imagem = imagem;
     }
 }
