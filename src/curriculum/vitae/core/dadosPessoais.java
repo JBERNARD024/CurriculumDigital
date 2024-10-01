@@ -12,6 +12,7 @@ import java.util.Date;
  * @author joaob
  */
 public class dadosPessoais {
+
     private String nome;
     private String nacionalidade;
     private Date dataNasc;
@@ -22,9 +23,9 @@ public class dadosPessoais {
     private String localidade;
     private String pais;
     private String descricao;
-    private ArrayList<String> linguas;
-    private ArrayList<ExpProf> expProf;
-    private ArrayList<Educacao> educacao;
+    private ArrayList<Lingua> linguas = new ArrayList<>();
+    private ArrayList<ExpProf> expProf = new ArrayList<>();
+    private ArrayList<Educacao> educacao = new ArrayList<>();
 
     public dadosPessoais(String nome, String nacionalidade, Date dataNasc, String sexo, String telemovel, String linkedin, String morada, String localidade, String pais, String descricao) {
         this.nome = nome;
@@ -38,7 +39,7 @@ public class dadosPessoais {
         this.pais = pais;
         this.descricao = descricao;
     }
-  
+
     public String getNome() {
         return nome;
     }
@@ -94,7 +95,7 @@ public class dadosPessoais {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
-    
+
     public ArrayList<ExpProf> getExpProf() {
         return expProf;
     }
@@ -134,12 +135,12 @@ public class dadosPessoais {
     public void setPais(String pais) {
         this.pais = pais;
     }
-    
-        public ArrayList<String> getLinguas() {
+
+    public ArrayList<Lingua> getLinguas() {
         return linguas;
     }
 
-    public void setLinguas(ArrayList<String> linguas) {
+    public void setLinguas(ArrayList<Lingua> linguas) {
         this.linguas = linguas;
     }
 
@@ -160,5 +161,5 @@ public class dadosPessoais {
         sb.append('}');
         return sb.toString();
     }
-    
+
 }
