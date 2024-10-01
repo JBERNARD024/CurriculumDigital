@@ -4,9 +4,12 @@
  */
 package curriculum.vitae.gui;
 
+import curriculum.vitae.core.Lingua;
 import curriculum.vitae.core.Utilizador;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.JCheckBox;
+import javax.swing.JButton;
 
 /**
  *
@@ -16,8 +19,10 @@ public class adicionarLinguas extends java.awt.Dialog {
 
     CurriculumVitae cv;
     Utilizador user;
-    ArrayList<JCheckBox> listaOpcoes = new ArrayList<>();
-    ArrayList<String> linguas = new ArrayList<>();
+    Lingua lingua = new Lingua("", "");
+    ArrayList<JButton> buttons = new ArrayList<>();
+    String auxLingua = "";
+    
 
     /**
      * Creates new form adicionarDados
@@ -27,20 +32,28 @@ public class adicionarLinguas extends java.awt.Dialog {
         this.cv = parent;
         this.user = user;
         initComponents();
-        listaOpcoes.add(checkAlemao);
-        listaOpcoes.add(checkArabe);
-        listaOpcoes.add(checkChines);
-        listaOpcoes.add(checkCoreano);
-        listaOpcoes.add(checkEspanhol);
-        listaOpcoes.add(checkFrances);
-        listaOpcoes.add(checkGrego);
-        listaOpcoes.add(checkIngles);
-        listaOpcoes.add(checkJapones);
-        listaOpcoes.add(checkPolaco);
-        listaOpcoes.add(checkPortugues);
-        listaOpcoes.add(checkRusso);
-        listaOpcoes.add(checkTurco);
-        listaOpcoes.add(checkUcraniano);
+        lbl_linguas.setText(user.getDados().getLinguas().toString());
+        buttons.add(pt);
+        buttons.add(en);
+        buttons.add(it);
+        buttons.add(uk);
+        buttons.add(tr);
+        buttons.add(es);
+        buttons.add(ru);
+        buttons.add(pl);
+        buttons.add(ch);
+        buttons.add(jp);
+        buttons.add(fr);
+        buttons.add(nl);
+        buttons.add(gr);
+        buttons.add(ar);
+        buttons.add(kr);
+
+//        for (int i = 0; i < buttons.size(); i++) {
+//            auxLingua = buttons.get(i).getText();
+//            final int index = i;
+//            
+//        }
     }
 
     /**
@@ -58,22 +71,23 @@ public class adicionarLinguas extends java.awt.Dialog {
         buttonGroup5 = new javax.swing.ButtonGroup();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        lbl_linguas = new javax.swing.JLabel();
         painelLinguas = new javax.swing.JPanel();
-        checkPortugues = new javax.swing.JCheckBox();
-        checkIngles = new javax.swing.JCheckBox();
-        checkItaliano = new javax.swing.JCheckBox();
-        checkUcraniano = new javax.swing.JCheckBox();
-        checkTurco = new javax.swing.JCheckBox();
-        checkEspanhol = new javax.swing.JCheckBox();
-        checkRusso = new javax.swing.JCheckBox();
-        checkPolaco = new javax.swing.JCheckBox();
-        checkChines = new javax.swing.JCheckBox();
-        checkJapones = new javax.swing.JCheckBox();
-        checkFrances = new javax.swing.JCheckBox();
-        checkAlemao = new javax.swing.JCheckBox();
-        checkGrego = new javax.swing.JCheckBox();
-        checkArabe = new javax.swing.JCheckBox();
-        checkCoreano = new javax.swing.JCheckBox();
+        pt = new javax.swing.JButton();
+        en = new javax.swing.JButton();
+        it = new javax.swing.JButton();
+        uk = new javax.swing.JButton();
+        tr = new javax.swing.JButton();
+        es = new javax.swing.JButton();
+        ru = new javax.swing.JButton();
+        pl = new javax.swing.JButton();
+        ch = new javax.swing.JButton();
+        jp = new javax.swing.JButton();
+        fr = new javax.swing.JButton();
+        nl = new javax.swing.JButton();
+        gr = new javax.swing.JButton();
+        ar = new javax.swing.JButton();
+        kr = new javax.swing.JButton();
         btnProximo = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
 
@@ -88,59 +102,132 @@ public class adicionarLinguas extends java.awt.Dialog {
         jLabel2.setText("Competências Linguísticas");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel3.setText("Línguas Faladas");
+        jLabel3.setText("Línguas Faladas (selecione a pretendida)");
+
+        lbl_linguas.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lbl_linguas.setToolTipText("");
 
         painelLinguas.setLayout(new java.awt.GridLayout(3, 4));
 
-        checkPortugues.setText("Português");
-        checkPortugues.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        painelLinguas.add(checkPortugues);
+        pt.setText("Português");
+        pt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ptActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(pt);
 
-        checkIngles.setText("English");
-        painelLinguas.add(checkIngles);
+        en.setText("English");
+        en.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(en);
 
-        checkItaliano.setText("Italiano");
-        painelLinguas.add(checkItaliano);
+        it.setText("Italiano");
+        it.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(it);
 
-        checkUcraniano.setText("Українська (Ukrainska)");
-        checkUcraniano.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        painelLinguas.add(checkUcraniano);
+        uk.setText("Українська (Ukrainska)");
+        uk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ukActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(uk);
 
-        buttonGroup1.add(checkTurco);
-        checkTurco.setText("Türkçe");
-        checkTurco.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        painelLinguas.add(checkTurco);
+        tr.setText("Türkçe");
+        tr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                trActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(tr);
 
-        checkEspanhol.setText("Espanõl");
-        checkEspanhol.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        painelLinguas.add(checkEspanhol);
+        es.setText("Espanõl");
+        es.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                esActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(es);
 
-        checkRusso.setText("Русский (Russkiy)");
-        painelLinguas.add(checkRusso);
+        ru.setText("Русский (Russkiy)");
+        ru.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ruActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(ru);
 
-        checkPolaco.setText("Polski");
-        painelLinguas.add(checkPolaco);
+        pl.setText("Polski");
+        pl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(pl);
 
-        checkChines.setText("普通话 (Pǔtōnghuà)");
-        painelLinguas.add(checkChines);
+        ch.setText("普通话 (Pǔtōnghuà)");
+        ch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(ch);
 
-        checkJapones.setText("日本語 (Nihongo)");
-        painelLinguas.add(checkJapones);
+        jp.setText("日本語 (Nihongo)");
+        jp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jpActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(jp);
 
-        checkFrances.setText("Français");
-        painelLinguas.add(checkFrances);
+        fr.setText("Français");
+        fr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                frActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(fr);
 
-        checkAlemao.setText("Deutsch");
-        painelLinguas.add(checkAlemao);
+        nl.setText("Deutsch");
+        nl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nlActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(nl);
 
-        checkGrego.setText("Ελληνικά (Elliniká)");
-        painelLinguas.add(checkGrego);
+        gr.setText("Ελληνικά (Elliniká)");
+        gr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                grActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(gr);
 
-        checkArabe.setText("العربية (Al-‘Arabīyah)");
-        painelLinguas.add(checkArabe);
+        ar.setText("العربية (Al-‘Arabīyah)");
+        ar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                arActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(ar);
 
-        checkCoreano.setText("한국어 (Hangugeo)");
-        painelLinguas.add(checkCoreano);
+        kr.setText("한국어 (Hangugeo)");
+        kr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                krActionPerformed(evt);
+            }
+        });
+        painelLinguas.add(kr);
 
         btnProximo.setText("Próximo");
 
@@ -155,24 +242,25 @@ public class adicionarLinguas extends java.awt.Dialog {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(painelLinguas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(painelLinguas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 906, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(154, 154, 154))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnGuardar)
                                 .addGap(99, 99, 99)
-                                .addComponent(btnProximo)
-                                .addGap(252, 252, 252))))))
+                                .addComponent(btnProximo)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbl_linguas)
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(253, 253, 253)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,14 +269,18 @@ public class adicionarLinguas extends java.awt.Dialog {
                 .addComponent(jLabel2)
                 .addGap(24, 24, 24)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbl_linguas, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addComponent(painelLinguas, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnProximo)
                     .addComponent(btnGuardar))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap())
         );
+
+        lbl_linguas.getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -203,16 +295,106 @@ public class adicionarLinguas extends java.awt.Dialog {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-        for (int i = 0; i < listaOpcoes.size(); i++) {
-            if(listaOpcoes.get(i).isSelected()){
-                linguas.add(listaOpcoes.get(i).getText());
-                user.getDados().setLinguas(linguas);
-            }
-        }
+
     }//GEN-LAST:event_btnGuardarActionPerformed
 
+    private void ptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ptActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(pt.getText());
+        redireciona();
+    }//GEN-LAST:event_ptActionPerformed
+
+    private void enActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(en.getText());
+        redireciona();
+    }//GEN-LAST:event_enActionPerformed
+
+    private void itActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(it.getText());
+        redireciona();
+    }//GEN-LAST:event_itActionPerformed
+
+    private void ukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ukActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(uk.getText());
+        redireciona();
+    }//GEN-LAST:event_ukActionPerformed
+
+    private void trActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(tr.getText());
+        redireciona();
+    }//GEN-LAST:event_trActionPerformed
+
+    private void esActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_esActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(es.getText());
+        redireciona();
+    }//GEN-LAST:event_esActionPerformed
+
+    private void ruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ruActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(ru.getText());
+        redireciona();
+    }//GEN-LAST:event_ruActionPerformed
+
+    private void plActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(pl.getText());
+        redireciona();
+    }//GEN-LAST:event_plActionPerformed
+
+    private void chActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(ch.getText());
+        redireciona();
+    }//GEN-LAST:event_chActionPerformed
+
+    private void jpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jpActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(jp.getText());
+        redireciona();
+    }//GEN-LAST:event_jpActionPerformed
+
+    private void frActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_frActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(fr.getText());
+        redireciona();
+    }//GEN-LAST:event_frActionPerformed
+
+    private void nlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nlActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(nl.getText());
+        redireciona();
+    }//GEN-LAST:event_nlActionPerformed
+
+    private void grActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(gr.getText());
+        redireciona();
+    }//GEN-LAST:event_grActionPerformed
+
+    private void arActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_arActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(ar.getText());
+        redireciona();
+    }//GEN-LAST:event_arActionPerformed
+
+    private void krActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_krActionPerformed
+        // TODO add your handling code here:
+        lingua.setLingua(kr.getText());
+        redireciona();
+    }//GEN-LAST:event_krActionPerformed
+
+    private void redireciona() {
+        dispose();
+        new AdicionarCompetenciaLinguistica(cv, true, user, lingua).setVisible(true);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnProximo;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -220,23 +402,23 @@ public class adicionarLinguas extends java.awt.Dialog {
     private javax.swing.ButtonGroup buttonGroup3;
     private javax.swing.ButtonGroup buttonGroup4;
     private javax.swing.ButtonGroup buttonGroup5;
-    private javax.swing.JCheckBox checkAlemao;
-    private javax.swing.JCheckBox checkArabe;
-    private javax.swing.JCheckBox checkChines;
-    private javax.swing.JCheckBox checkCoreano;
-    private javax.swing.JCheckBox checkEspanhol;
-    private javax.swing.JCheckBox checkFrances;
-    private javax.swing.JCheckBox checkGrego;
-    private javax.swing.JCheckBox checkIngles;
-    private javax.swing.JCheckBox checkItaliano;
-    private javax.swing.JCheckBox checkJapones;
-    private javax.swing.JCheckBox checkPolaco;
-    private javax.swing.JCheckBox checkPortugues;
-    private javax.swing.JCheckBox checkRusso;
-    private javax.swing.JCheckBox checkTurco;
-    private javax.swing.JCheckBox checkUcraniano;
+    private javax.swing.JButton ch;
+    private javax.swing.JButton en;
+    private javax.swing.JButton es;
+    private javax.swing.JButton fr;
+    private javax.swing.JButton gr;
+    private javax.swing.JButton it;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JButton jp;
+    private javax.swing.JButton kr;
+    private javax.swing.JLabel lbl_linguas;
+    private javax.swing.JButton nl;
     private javax.swing.JPanel painelLinguas;
+    private javax.swing.JButton pl;
+    private javax.swing.JButton pt;
+    private javax.swing.JButton ru;
+    private javax.swing.JButton tr;
+    private javax.swing.JButton uk;
     // End of variables declaration//GEN-END:variables
 }

@@ -38,7 +38,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     ImageIcon icon;
     byte[] byteIcon;
     File f;
-    dadosPessoais dadosP;    
+    dadosPessoais dadosP; 
     /**
      * Creates new form adicionarDadosPessoais
      * @param parent
