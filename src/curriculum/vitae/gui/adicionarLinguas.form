@@ -35,30 +35,31 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="painelLinguas" alignment="1" max="32767" attributes="0"/>
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="painelLinguas" alignment="1" pref="906" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="jLabel2" min="-2" pref="400" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="154" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="1" attributes="0">
+                          <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
                               <Component id="btnGuardar" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="99" max="-2" attributes="0"/>
                               <Component id="btnProximo" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="252" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="lbl_linguas" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="253" max="-2" attributes="0"/>
+              <Component id="jLabel2" min="-2" pref="400" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -69,14 +70,16 @@
               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
               <Component id="jLabel3" min="-2" pref="30" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="lbl_linguas" min="-2" pref="30" max="-2" attributes="0"/>
+              <EmptySpace pref="28" max="32767" attributes="0"/>
               <Component id="painelLinguas" min="-2" pref="175" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnProximo" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnGuardar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="13" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -96,8 +99,19 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="18" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="L&#xed;nguas Faladas"/>
+        <Property name="text" type="java.lang.String" value="L&#xed;nguas Faladas (selecione a pretendida)"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lbl_linguas">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="18" style="0"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
+      </Properties>
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
+      </AccessibilityProperties>
     </Component>
     <Container class="javax.swing.JPanel" name="painelLinguas">
 
@@ -106,87 +120,125 @@
         <Property name="rows" type="int" value="3"/>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JCheckBox" name="checkPortugues">
+        <Component class="javax.swing.JButton" name="pt">
           <Properties>
             <Property name="text" type="java.lang.String" value="Portugu&#xea;s"/>
-            <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ptActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkIngles">
+        <Component class="javax.swing.JButton" name="en">
           <Properties>
             <Property name="text" type="java.lang.String" value="English"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="enActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkItaliano">
+        <Component class="javax.swing.JButton" name="it">
           <Properties>
             <Property name="text" type="java.lang.String" value="Italiano"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkUcraniano">
+        <Component class="javax.swing.JButton" name="uk">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#x423;&#x43a;&#x440;&#x430;&#x457;&#x43d;&#x441;&#x44c;&#x43a;&#x430; (Ukrainska)"/>
-            <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ukActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkTurco">
+        <Component class="javax.swing.JButton" name="tr">
           <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="buttonGroup1"/>
-            </Property>
             <Property name="text" type="java.lang.String" value="T&#xfc;rk&#xe7;e"/>
-            <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="trActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkEspanhol">
+        <Component class="javax.swing.JButton" name="es">
           <Properties>
             <Property name="text" type="java.lang.String" value="Espan&#xf5;l"/>
-            <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="esActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkRusso">
+        <Component class="javax.swing.JButton" name="ru">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#x420;&#x443;&#x441;&#x441;&#x43a;&#x438;&#x439; (Russkiy)"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ruActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkPolaco">
+        <Component class="javax.swing.JButton" name="pl">
           <Properties>
             <Property name="text" type="java.lang.String" value="Polski"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="plActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkChines">
+        <Component class="javax.swing.JButton" name="ch">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#x666e;&#x901a;&#x8bdd; (P&#x1d4;t&#x14d;nghu&#xe0;)"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkJapones">
+        <Component class="javax.swing.JButton" name="jp">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#x65e5;&#x672c;&#x8a9e; (Nihongo)"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jpActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkFrances">
+        <Component class="javax.swing.JButton" name="fr">
           <Properties>
             <Property name="text" type="java.lang.String" value="Fran&#xe7;ais"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="frActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkAlemao">
+        <Component class="javax.swing.JButton" name="nl">
           <Properties>
             <Property name="text" type="java.lang.String" value="Deutsch"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nlActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkGrego">
+        <Component class="javax.swing.JButton" name="gr">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#x395;&#x3bb;&#x3bb;&#x3b7;&#x3bd;&#x3b9;&#x3ba;&#x3ac; (Ellinik&#xe1;)"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="grActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkArabe">
+        <Component class="javax.swing.JButton" name="ar">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#x627;&#x644;&#x639;&#x631;&#x628;&#x64a;&#x629; (Al-&#x2018;Arab&#x12b;yah)"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="arActionPerformed"/>
+          </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="checkCoreano">
+        <Component class="javax.swing.JButton" name="kr">
           <Properties>
             <Property name="text" type="java.lang.String" value="&#xd55c;&#xad6d;&#xc5b4; (Hangugeo)"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="krActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
