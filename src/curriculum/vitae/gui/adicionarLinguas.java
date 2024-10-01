@@ -17,6 +17,7 @@ public class adicionarLinguas extends java.awt.Dialog {
     CurriculumVitae cv;
     Utilizador user;
     ArrayList<JCheckBox> listaOpcoes = new ArrayList<>();
+    ArrayList<String> linguas = new ArrayList<>();
 
     /**
      * Creates new form adicionarDados
@@ -204,7 +205,8 @@ public class adicionarLinguas extends java.awt.Dialog {
         // TODO add your handling code here:
         for (int i = 0; i < listaOpcoes.size(); i++) {
             if(listaOpcoes.get(i).isSelected()){
-                user.getDados().getLinguas().add(listaOpcoes.get(i).getText());
+                linguas.add(listaOpcoes.get(i).getText());
+                user.getDados().setLinguas(linguas);
             }
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
