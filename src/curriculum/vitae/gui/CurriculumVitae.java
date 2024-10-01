@@ -31,21 +31,33 @@ public class CurriculumVitae extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnCriarCurriculum = new javax.swing.JButton();
+        btnAboutUs = new javax.swing.JButton();
 
         setTitle("Página Inicial");
         setResizable(false);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/CV.jpeg"))); // NOI18N
 
-        jButton1.setBackground(new java.awt.Color(86, 137, 171));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Cria o teu Curriculum Vitae aqui!!");
-        jButton1.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnCriarCurriculum.setBackground(new java.awt.Color(86, 137, 171));
+        btnCriarCurriculum.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnCriarCurriculum.setForeground(new java.awt.Color(255, 255, 255));
+        btnCriarCurriculum.setText("Cria o teu Curriculum Vitae aqui!!");
+        btnCriarCurriculum.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        btnCriarCurriculum.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCriarCurriculumActionPerformed(evt);
+            }
+        });
+
+        btnAboutUs.setBackground(new java.awt.Color(86, 137, 171));
+        btnAboutUs.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAboutUs.setForeground(new java.awt.Color(255, 255, 255));
+        btnAboutUs.setText("About Us");
+        btnAboutUs.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        btnAboutUs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAboutUsActionPerformed(evt);
             }
         });
 
@@ -54,28 +66,36 @@ public class CurriculumVitae extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
-                .addGap(42, 42, 42))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnCriarCurriculum, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAboutUs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnCriarCurriculum, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnAboutUs, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnCriarCurriculumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarCurriculumActionPerformed
         // TODO add your handling code here:
         new Login(this, true).setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnCriarCurriculumActionPerformed
+
+    private void btnAboutUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAboutUsActionPerformed
+        // TODO add your handling code here:
+        new aboutUs(this, true).setVisible(true);
+    }//GEN-LAST:event_btnAboutUsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -116,7 +136,8 @@ public class CurriculumVitae extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnAboutUs;
+    private javax.swing.JButton btnCriarCurriculum;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
