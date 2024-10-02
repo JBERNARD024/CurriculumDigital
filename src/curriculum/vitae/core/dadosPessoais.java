@@ -4,6 +4,7 @@
  */
 package curriculum.vitae.core;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -11,7 +12,7 @@ import java.util.Date;
  *
  * @author joaob
  */
-public class dadosPessoais {
+public class dadosPessoais implements Serializable{
 
     private String nome;
     private String nacionalidade;
@@ -147,17 +148,17 @@ public class dadosPessoais {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("DadosPessoais{");
-        sb.append("Nome =").append(nome);
-        sb.append(", Nacionalidade =").append(nacionalidade);
-        sb.append(", Data de Nascimento =").append(dataNasc);
-        sb.append(", Sexo =").append(sexo);
-        sb.append(", Telemóvel =").append(telemovel);
-        sb.append(", Linkedin =").append(linkedin);
-        sb.append(", Morada=").append(morada);
-        sb.append(", Localidade=").append(localidade);
-        sb.append(", Paíss=").append(pais);
-        sb.append(", Descrição=").append(descricao);
+        sb.append("DadosPessoais {");
+        sb.append("Nome = ").append(nome);
+        sb.append(", Nacionalidade = ").append(nacionalidade);
+        sb.append(", Data de Nascimento = ").append(dataNasc);
+        sb.append(", Sexo = ").append(sexo);
+        sb.append(", Telemóvel = ").append(telemovel);
+        sb.append(", Linkedin = ").append(linkedin);
+        sb.append(", Morada = ").append(morada);
+        sb.append(", Localidade = ").append(localidade);
+        sb.append(", País = ").append(pais);
+        sb.append(", Descrição = ").append(descricao);
         sb.append('}');
         return sb.toString();
     }

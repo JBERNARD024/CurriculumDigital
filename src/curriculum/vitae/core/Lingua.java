@@ -4,11 +4,13 @@
  */
 package curriculum.vitae.core;
 
+import java.io.Serializable;
+
 /**
  *
  * @author henry
  */
-public class Lingua {
+public class Lingua implements Serializable{
     String lingua;
     String nivel;
 

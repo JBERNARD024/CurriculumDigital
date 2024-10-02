@@ -4,13 +4,14 @@
  */
 package curriculum.vitae.core;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author joaob
  */
-public class Utilizador {
+public class Utilizador implements Serializable{
     private String email;
     private byte[] password;
     private byte[] imagem;

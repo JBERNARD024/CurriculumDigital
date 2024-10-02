@@ -5,7 +5,9 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Utilizador;
+import java.io.File;
 import java.util.ArrayList;
+import utils.Recursos;
 
 /**
  *
@@ -13,12 +15,15 @@ import java.util.ArrayList;
  */
 public class CurriculumVitae extends javax.swing.JFrame {
     ArrayList<Utilizador> listUsers = new ArrayList<>();
+    File f;
 
     /**
      * Creates new form PaginaInicial
      */
     public CurriculumVitae() {
         initComponents();
+        f = new File("../Curriculum Vitae/utilizadores/users.user");
+        listUsers = (ArrayList<Utilizador>) Recursos.readObject(f.getAbsolutePath());
     }
 
     /**
