@@ -4,12 +4,13 @@
  */
 package curriculum.vitae.core;
 
+import java.io.Serializable;
 import java.util.Date;
 /**
  *
  * @author joaob
  */
-public class ExpProf{
+public class ExpProf implements Serializable{
     private String funcao;
     private String entEmpregadora;
     private String cidade;
@@ -98,14 +99,14 @@ public class ExpProf{
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Experiência Profissional {");
-        sb.append("Função =").append(funcao);
-        sb.append(", Entidade Empregadora =").append(entEmpregadora);
+        sb.append("Função = ").append(funcao);
+        sb.append(", Entidade Empregadora = ").append(entEmpregadora);
         sb.append(", Cidade =").append(cidade);
-        sb.append(", País =").append(pais);
-        sb.append(", Sítio Web =").append(sitioWeb);
-        sb.append(", Data de Início =").append(dataInic);
-        sb.append(", Data de Fim =").append(dataFim);
-        sb.append(", Descrição =").append(descr);
+        sb.append(", País = ").append(pais);
+        sb.append(", Sítio Web = ").append(sitioWeb);
+        sb.append(", Data de Início = ").append(dataInic);
+        sb.append(", Data de Fim = ").append(dataFim);
+        sb.append(", Descrição = ").append(descr);
         sb.append('}');
         return sb.toString();
     }

@@ -4,13 +4,14 @@
  */
 package curriculum.vitae.core;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author joaob
  */
-public class Educacao {
+public class Educacao implements Serializable{
     private String qualificacao;
     private String areaEstudo;
     private String instituicao;

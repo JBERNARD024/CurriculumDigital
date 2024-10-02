@@ -22,6 +22,7 @@ import utils.Recursos;
  * @author joaob
  */
 public class adicionarDadosPessoais extends java.awt.Dialog {
+
     CurriculumVitae cv;
     Utilizador user;
     String nome;
@@ -38,9 +39,11 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     ImageIcon icon;
     byte[] byteIcon;
     File f;
-    dadosPessoais dadosP; 
+    dadosPessoais dadosP;
+
     /**
      * Creates new form adicionarDadosPessoais
+     *
      * @param parent
      * @param modal
      * @param user
@@ -296,43 +299,14 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     }//GEN-LAST:event_closeDialog
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
-        nome = txtNome.getText().trim();
-        dataNasc = txtData.getDate();
-        sexo = txtSexo.getSelectedItem().toString();
-        nacionalidade = txtNacionalidade.getText().trim();
-        telemovel = txtTelemovel.getText().trim();
-        linkedin = txtLinkedin.getText().trim();
-        morada = txtMorada.getText().trim();
-        localidade = txtLocalidade.getText().trim();
-        codPostal = txtCodPostal.getText().trim();
-        pais = txtPais.getText().trim();
-        descr = txtDescr.getText();
-        dadosP = new dadosPessoais(nome, nacionalidade, dataNasc, sexo, telemovel, linkedin, morada, localidade, pais, descr);
-        if (icon == null) {
-            try {
-                String caminhoImag = "..NetBeansProjects\\CurriculumVitae\\img\\defaultUser.png";
-                icon = new ImageIcon(caminhoImag);
-                Image imagem = icon.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_SMOOTH);
-                btnFoto.setIcon(new ImageIcon(imagem));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        try {
-            byteIcon = Recursos.iconToByteArray(icon);
-        } catch (IOException ex) {
-            Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        user.setImagem(byteIcon);
-        user.setDados(dadosP);
-        System.out.println(dadosP.toString());
+        adicionarDadosPessoais();
+        btnGuardar.setEnabled(false);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProximoActionPerformed
         // TODO add your handling code here:
-        new adicionarLinguas(cv, true, user).setVisible(true);
+        //new adicionarLinguas(cv, true, user).setVisible(true);
+        new adicionarExperienciaProfissional(cv, true, user).setVisible(true);
     }//GEN-LAST:event_btnProximoActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
@@ -389,4 +363,37 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     private javax.swing.JComboBox<String> txtSexo;
     private javax.swing.JTextField txtTelemovel;
     // End of variables declaration//GEN-END:variables
+
+    private void adicionarDadosPessoais() {
+        nome = txtNome.getText().trim();
+        dataNasc = txtData.getDate();
+        sexo = txtSexo.getSelectedItem().toString();
+        nacionalidade = txtNacionalidade.getText().trim();
+        telemovel = txtTelemovel.getText().trim();
+        linkedin = txtLinkedin.getText().trim();
+        morada = txtMorada.getText().trim();
+        localidade = txtLocalidade.getText().trim();
+        codPostal = txtCodPostal.getText().trim();
+        pais = txtPais.getText().trim();
+        descr = txtDescr.getText();
+        dadosP = new dadosPessoais(nome, nacionalidade, dataNasc, sexo, telemovel, linkedin, morada, localidade, pais, descr);
+        if (icon == null) {
+            try {
+                String caminhoImag = "..NetBeansProjects\\CurriculumVitae\\img\\defaultUser.png";
+                icon = new ImageIcon(caminhoImag);
+                Image imagem = icon.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_SMOOTH);
+                btnFoto.setIcon(new ImageIcon(imagem));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            byteIcon = Recursos.iconToByteArray(icon);
+        } catch (IOException ex) {
+            Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        user.setImagem(byteIcon);
+        user.setDados(dadosP);
+    }
 }
