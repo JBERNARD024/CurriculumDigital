@@ -6,8 +6,6 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Lingua;
 import curriculum.vitae.core.Utilizador;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JButton;
 
@@ -22,7 +20,6 @@ public class adicionarLinguas extends java.awt.Dialog {
     Lingua lingua = new Lingua("", "");
     ArrayList<JButton> buttons = new ArrayList<>();
     String auxLingua = "";
-    
 
     /**
      * Creates new form adicionarDados
@@ -49,11 +46,18 @@ public class adicionarLinguas extends java.awt.Dialog {
         buttons.add(ar);
         buttons.add(kr);
 
-//        for (int i = 0; i < buttons.size(); i++) {
-//            auxLingua = buttons.get(i).getText();
-//            final int index = i;
-//            
-//        }
+        for (JButton button : buttons) {
+            button.addActionListener(e -> {
+                // Capturar o botão que disparou o evento
+                JButton clickedButton = (JButton) e.getSource();
+
+                // Atribuir a língua com base no texto do botão clicado
+                lingua.setLingua(clickedButton.getText());
+
+                // Chamar a função de redirecionamento
+                redireciona();
+            });
+        }
     }
 
     /**
@@ -110,123 +114,48 @@ public class adicionarLinguas extends java.awt.Dialog {
         painelLinguas.setLayout(new java.awt.GridLayout(3, 4));
 
         pt.setText("Português");
-        pt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ptActionPerformed(evt);
-            }
-        });
         painelLinguas.add(pt);
 
         en.setText("English");
-        en.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                enActionPerformed(evt);
-            }
-        });
         painelLinguas.add(en);
 
         it.setText("Italiano");
-        it.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itActionPerformed(evt);
-            }
-        });
         painelLinguas.add(it);
 
         uk.setText("Українська (Ukrainska)");
-        uk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ukActionPerformed(evt);
-            }
-        });
         painelLinguas.add(uk);
 
         tr.setText("Türkçe");
-        tr.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                trActionPerformed(evt);
-            }
-        });
         painelLinguas.add(tr);
 
         es.setText("Espanõl");
-        es.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                esActionPerformed(evt);
-            }
-        });
         painelLinguas.add(es);
 
         ru.setText("Русский (Russkiy)");
-        ru.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ruActionPerformed(evt);
-            }
-        });
         painelLinguas.add(ru);
 
         pl.setText("Polski");
-        pl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                plActionPerformed(evt);
-            }
-        });
         painelLinguas.add(pl);
 
         ch.setText("普通话 (Pǔtōnghuà)");
-        ch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chActionPerformed(evt);
-            }
-        });
         painelLinguas.add(ch);
 
         jp.setText("日本語 (Nihongo)");
-        jp.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jpActionPerformed(evt);
-            }
-        });
         painelLinguas.add(jp);
 
         fr.setText("Français");
-        fr.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                frActionPerformed(evt);
-            }
-        });
         painelLinguas.add(fr);
 
         nl.setText("Deutsch");
-        nl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nlActionPerformed(evt);
-            }
-        });
         painelLinguas.add(nl);
 
         gr.setText("Ελληνικά (Elliniká)");
-        gr.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                grActionPerformed(evt);
-            }
-        });
         painelLinguas.add(gr);
 
         ar.setText("العربية (Al-‘Arabīyah)");
-        ar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                arActionPerformed(evt);
-            }
-        });
         painelLinguas.add(ar);
 
         kr.setText("한국어 (Hangugeo)");
-        kr.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                krActionPerformed(evt);
-            }
-        });
         painelLinguas.add(kr);
 
         btnProximo.setText("Próximo");
@@ -251,7 +180,7 @@ public class adicionarLinguas extends java.awt.Dialog {
                             .addComponent(jLabel3)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnGuardar)
-                                .addGap(99, 99, 99)
+                                .addGap(36, 36, 36)
                                 .addComponent(btnProximo)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
@@ -280,8 +209,6 @@ public class adicionarLinguas extends java.awt.Dialog {
                 .addContainerGap())
         );
 
-        lbl_linguas.getAccessibleContext().setAccessibleName("");
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -297,96 +224,6 @@ public class adicionarLinguas extends java.awt.Dialog {
         // TODO add your handling code here:
 
     }//GEN-LAST:event_btnGuardarActionPerformed
-
-    private void ptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ptActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(pt.getText());
-        redireciona();
-    }//GEN-LAST:event_ptActionPerformed
-
-    private void enActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(en.getText());
-        redireciona();
-    }//GEN-LAST:event_enActionPerformed
-
-    private void itActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(it.getText());
-        redireciona();
-    }//GEN-LAST:event_itActionPerformed
-
-    private void ukActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ukActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(uk.getText());
-        redireciona();
-    }//GEN-LAST:event_ukActionPerformed
-
-    private void trActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(tr.getText());
-        redireciona();
-    }//GEN-LAST:event_trActionPerformed
-
-    private void esActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_esActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(es.getText());
-        redireciona();
-    }//GEN-LAST:event_esActionPerformed
-
-    private void ruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ruActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(ru.getText());
-        redireciona();
-    }//GEN-LAST:event_ruActionPerformed
-
-    private void plActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(pl.getText());
-        redireciona();
-    }//GEN-LAST:event_plActionPerformed
-
-    private void chActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(ch.getText());
-        redireciona();
-    }//GEN-LAST:event_chActionPerformed
-
-    private void jpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jpActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(jp.getText());
-        redireciona();
-    }//GEN-LAST:event_jpActionPerformed
-
-    private void frActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_frActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(fr.getText());
-        redireciona();
-    }//GEN-LAST:event_frActionPerformed
-
-    private void nlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nlActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(nl.getText());
-        redireciona();
-    }//GEN-LAST:event_nlActionPerformed
-
-    private void grActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(gr.getText());
-        redireciona();
-    }//GEN-LAST:event_grActionPerformed
-
-    private void arActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_arActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(ar.getText());
-        redireciona();
-    }//GEN-LAST:event_arActionPerformed
-
-    private void krActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_krActionPerformed
-        // TODO add your handling code here:
-        lingua.setLingua(kr.getText());
-        redireciona();
-    }//GEN-LAST:event_krActionPerformed
 
     private void redireciona() {
         dispose();

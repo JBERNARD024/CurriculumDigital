@@ -7,6 +7,7 @@ package curriculum.vitae.gui;
 import curriculum.vitae.core.Lingua;
 import curriculum.vitae.core.Utilizador;
 import java.util.ArrayList;
+import javax.swing.JButton;
 
 /**
  *
@@ -18,6 +19,7 @@ public class AdicionarCompetenciaLinguistica extends javax.swing.JDialog {
     Utilizador user;
     Lingua lingua;
     ArrayList<Lingua> linguas = new ArrayList<>();
+    ArrayList<JButton> buttons = new ArrayList<>();
 
     /**
      * Creates new form AdicionarCompetenciaLinguistica
@@ -27,10 +29,26 @@ public class AdicionarCompetenciaLinguistica extends javax.swing.JDialog {
         this.cv = parent;
         this.user = user;
         this.lingua = lingua;
+        initComponents();
+        buttons.add(a1);
+        buttons.add(a2);
+        buttons.add(b1);
+        buttons.add(b2);
+        buttons.add(c1);
+        buttons.add(c2);
         for (int i = 0; i < user.getDados().getLinguas().size(); i++) {
             linguas.add(user.getDados().getLinguas().get(i));
         }
-        initComponents();
+        
+        for (JButton button : buttons) {
+            button.addActionListener(e -> {
+                JButton clickedButton = (JButton) e.getSource();
+                lingua.setNivel(clickedButton.getText());
+                linguas.add(lingua);
+                user.getDados().setLinguas(linguas);
+                redireciona();
+            });
+        }
     }
 
     /**
@@ -44,14 +62,14 @@ public class AdicionarCompetenciaLinguistica extends javax.swing.JDialog {
 
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        b1 = new javax.swing.JButton();
-        b2 = new javax.swing.JButton();
+        painelBtns = new javax.swing.JPanel();
         a1 = new javax.swing.JButton();
         a2 = new javax.swing.JButton();
+        b1 = new javax.swing.JButton();
+        b2 = new javax.swing.JButton();
         c1 = new javax.swing.JButton();
         c2 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnSair = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -62,71 +80,64 @@ public class AdicionarCompetenciaLinguistica extends javax.swing.JDialog {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("Nível (selecione o seu nível)");
 
-        jPanel1.setLayout(new java.awt.GridLayout(3, 3));
+        a1.setText("A1");
+        a1.setPreferredSize(new java.awt.Dimension(83, 23));
+
+        a2.setText("A2");
+        a2.setPreferredSize(new java.awt.Dimension(83, 23));
 
         b1.setText("B1");
         b1.setMaximumSize(new java.awt.Dimension(83, 23));
         b1.setMinimumSize(new java.awt.Dimension(83, 23));
         b1.setPreferredSize(new java.awt.Dimension(83, 23));
-        b1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                b1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(b1);
 
         b2.setText("B2");
         b2.setPreferredSize(new java.awt.Dimension(83, 23));
-        b2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                b2ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(b2);
-
-        a1.setText("A1");
-        a1.setPreferredSize(new java.awt.Dimension(83, 23));
-        a1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                a1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(a1);
-
-        a2.setText("A2");
-        a2.setPreferredSize(new java.awt.Dimension(83, 23));
-        a2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                a2ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(a2);
 
         c1.setText("C1");
         c1.setPreferredSize(new java.awt.Dimension(83, 23));
-        c1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                c1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(c1);
 
         c2.setText("C2");
         c2.setPreferredSize(new java.awt.Dimension(83, 23));
-        c2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                c2ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(c2);
 
-        jButton1.setBackground(new java.awt.Color(204, 0, 0));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Sair");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        javax.swing.GroupLayout painelBtnsLayout = new javax.swing.GroupLayout(painelBtns);
+        painelBtns.setLayout(painelBtnsLayout);
+        painelBtnsLayout.setHorizontalGroup(
+            painelBtnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelBtnsLayout.createSequentialGroup()
+                .addComponent(a1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(a2, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(painelBtnsLayout.createSequentialGroup()
+                .addComponent(b1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(b2, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(painelBtnsLayout.createSequentialGroup()
+                .addComponent(c1, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(c2, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        painelBtnsLayout.setVerticalGroup(
+            painelBtnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelBtnsLayout.createSequentialGroup()
+                .addGroup(painelBtnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(a1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(a2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(painelBtnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(b1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(b2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(painelBtnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(c1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(c2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        btnSair.setBackground(new java.awt.Color(204, 0, 0));
+        btnSair.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnSair.setForeground(new java.awt.Color(255, 255, 255));
+        btnSair.setText("Sair");
+        btnSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnSairActionPerformed(evt);
             }
         });
 
@@ -139,10 +150,10 @@ public class AdicionarCompetenciaLinguistica extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)))
+                    .addComponent(painelBtns, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSair, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -153,84 +164,34 @@ public class AdicionarCompetenciaLinguistica extends javax.swing.JDialog {
                 .addGap(12, 12, 12)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(painelBtns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addComponent(btnSair, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void b1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b1ActionPerformed
-        // TODO add your handling code here:
-        lingua.setNivel(b1.getText());
-        linguas.add(lingua);
-        user.getDados().setLinguas(linguas);
-        redireciona();
-    }//GEN-LAST:event_b1ActionPerformed
-
-    private void b2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b2ActionPerformed
-        // TODO add your handling code here:
-        lingua.setNivel(b2.getText());
-        linguas.add(lingua);
-        user.getDados().setLinguas(linguas);
-        redireciona();
-    }//GEN-LAST:event_b2ActionPerformed
-
-    private void a1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_a1ActionPerformed
-        // TODO add your handling code here:
-        lingua.setNivel(a1.getText());
-        linguas.add(lingua);
-        user.getDados().setLinguas(linguas);
-        redireciona();
-    }//GEN-LAST:event_a1ActionPerformed
-
-    private void a2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_a2ActionPerformed
-        // TODO add your handling code here:
-        lingua.setNivel(a2.getText());
-        linguas.add(lingua);
-        user.getDados().setLinguas(linguas);
-        redireciona();
-    }//GEN-LAST:event_a2ActionPerformed
-
-    private void c1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c1ActionPerformed
-        // TODO add your handling code here:
-        lingua.setNivel(c1.getText());
-        linguas.add(lingua);
-        user.getDados().setLinguas(linguas);
-        redireciona();
-    }//GEN-LAST:event_c1ActionPerformed
-
-    private void c2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_c2ActionPerformed
-        // TODO add your handling code here:
-        lingua.setNivel(c2.getText());
-        linguas.add(lingua);
-        user.getDados().setLinguas(linguas);
-        redireciona();
-    }//GEN-LAST:event_c2ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
         // TODO add your handling code here:
         redireciona();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnSairActionPerformed
 
     private void redireciona() {
         dispose();
         new adicionarLinguas(cv, true, user).setVisible(true);
     }
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton a1;
     private javax.swing.JButton a2;
     private javax.swing.JButton b1;
     private javax.swing.JButton b2;
+    private javax.swing.JButton btnSair;
     private javax.swing.JButton c1;
     private javax.swing.JButton c2;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel painelBtns;
     // End of variables declaration//GEN-END:variables
 }
