@@ -15,10 +15,13 @@ import javax.swing.JOptionPane;
  * @author joaob
  */
 public class Login extends java.awt.Dialog {
+
     CurriculumVitae cv;
     String email;
     byte[] password;
     Utilizador user;
+    int index;
+
     /**
      * Creates new form Login2
      */
@@ -171,28 +174,39 @@ public class Login extends java.awt.Dialog {
     private javax.swing.JPasswordField txtPassword;
     // End of variables declaration//GEN-END:variables
 
-    private void login() { 
+    private void login() {
         email = txtEmail.getText().trim();
         password = new String(txtPassword.getPassword()).getBytes();
-        if(verificaCampos() == true && verificaUtilizador(email) == true){
-            user = new Utilizador(email, password);
-            JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
-            user.setNumLogin(user.getNumLogin()+1);
-            user.setLastLogin(Date.from(Instant.now()));
-            if(user.getNumLogin() < 2){
-                new adicionarDadosPessoais(cv, true, user).setVisible(true);
+        if (verificaUtilizador(email)) {
+            if (verificaCampos()) {
+                user = new Utilizador(cv.listUsers.get(index));
+                JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
+                cv.listUsers.get(index).setNumLogin(user.getNumLogin()+1);
+                cv.listUsers.get(index).setLastLogin(Date.from(Instant.now()));
+                if (user.getNumLogin() == 0) {
+                    new adicionarDadosPessoais(cv, true, user).setVisible(true);
+                }else{
+                    //Falta fazer
+                    //new perfil(cv,true, user).setVisible(true);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
             }
+        } else {
+            JOptionPane.showConfirmDialog(null, "Email não está registado no sistema!!", "Email Inválido", 2);
         }
     }
-    
+
     private boolean verificaCampos() {
         boolean verifica = false;
         for (int i = 0; i < cv.listUsers.size(); i++) {
             user = new Utilizador(cv.listUsers.get(i));
-            if(email.equals(user.getEmail()) && Arrays.equals(password, user.getPassword())){
+            if (email.equals(user.getEmail()) == true && Arrays.equals(password, user.getPassword()) == true) {
+                index = i;
                 verifica = true;
-            }else{
-                JOptionPane.showMessageDialog(null,"Introduza a password correta!!", "Password Incorreta", 1);
+                break;
+            } else {
+
                 verifica = false;
             }
         }
@@ -205,10 +219,9 @@ public class Login extends java.awt.Dialog {
             user = new Utilizador(cv.listUsers.get(i));
             if (!user.getEmail().equals(email)) {
                 verifica = false;
-                JOptionPane.showConfirmDialog(null, "Email não está registado no sistema!!", "Email Inválido", 2);
-                break;
             } else {
-                 verifica = true;
+                verifica = true;
+                break;
             }
         }
         return verifica;

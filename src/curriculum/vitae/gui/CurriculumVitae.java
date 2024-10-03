@@ -5,8 +5,11 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Utilizador;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import utils.Recursos;
 
 /**
@@ -24,6 +27,20 @@ public class CurriculumVitae extends javax.swing.JFrame {
         initComponents();
         f = new File("../Curriculum Vitae/utilizadores/users.user");
         listUsers = (ArrayList<Utilizador>) Recursos.readObject(f.getAbsolutePath());
+        //Fecha a janela principal da aplicação e encerra a aplicação
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //Vai guardar a lista de todos os utilizadores durante a atividade no sistema.
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e){
+                try {
+                    Recursos.writeObject(listUsers, f.getAbsolutePath());
+                    System.out.println("Lista de utilizadores gravada com sucesso");
+                } catch (Exception ex) {
+                    System.err.println("Erro ao gravar a lista de utilizadores = " + ex.getMessage());
+                }
+            }
+        });
     }
 
     /**

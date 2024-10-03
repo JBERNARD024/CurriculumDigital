@@ -6,7 +6,6 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Utilizador;
 import java.io.File;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import utils.Recursos;
 
@@ -20,7 +19,7 @@ public class Registo extends java.awt.Dialog {
     String password;
     String confPassword;
     Utilizador user;
-    File f;
+    File f = new File("../Curriculum Vitae/utilizadores/users.user");
     /**
      * Creates new form Registo
      * @param parent
@@ -198,7 +197,6 @@ public class Registo extends java.awt.Dialog {
         if(verificaCampos() == true && verificaEmail(email) == false){
             user = new Utilizador(email, password.getBytes());
             cv.listUsers.add(user);
-            f = new File("../Curriculum Vitae/utilizadores/users.user");
             Recursos.writeObject(cv.listUsers, f.getAbsolutePath());            
             dispose();
             new Login(cv, true).setVisible(true);

@@ -28,6 +28,8 @@ public class Utilizador implements Serializable{
         this.email = user.email;
         this.password = user.password;
         this.dados = user.dados;
+        this.numLogin = user.numLogin;
+        this.lastLogin = user.lastLogin;
     }
 
     public dadosPessoais getDados() {
