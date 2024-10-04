@@ -19,7 +19,7 @@ public class adicionarExperienciaProfissional extends java.awt.Dialog {
 
     private boolean selected = false;
     CurriculumVitae cv;
-    Utilizador user;
+    int index;
     String funcao;
     String entEmpr;
     String cidade;
@@ -34,10 +34,10 @@ public class adicionarExperienciaProfissional extends java.awt.Dialog {
      * @param parent
      * @param modal
      */
-    public adicionarExperienciaProfissional(CurriculumVitae parent, boolean modal, Utilizador user) {
+    public adicionarExperienciaProfissional(CurriculumVitae parent, boolean modal, int index) {
         super(parent, modal);
         this.cv = parent;
-        this.user = user;
+        this.index = index;
         initComponents();
         btnEmCurso.addActionListener((ActionEvent e) -> {
             selected = btnEmCurso.isSelected();
@@ -162,9 +162,7 @@ public class adicionarExperienciaProfissional extends java.awt.Dialog {
                                     .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(32, 32, 32)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel5)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jLabel5)
                                     .addComponent(txtPais)))
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtEntEmp, javax.swing.GroupLayout.Alignment.LEADING)
@@ -224,7 +222,7 @@ public class adicionarExperienciaProfissional extends java.awt.Dialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar)
                     .addComponent(btnProximo))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
@@ -283,6 +281,6 @@ public class adicionarExperienciaProfissional extends java.awt.Dialog {
         }
         descr = txtDescr.getText();
         expProf = new ExpProf(funcao, entEmpr, cidade, pais, sitioWeb, dataInic, dataFim, descr);
-        user.getDados().getExpProf().add(expProf);
+        cv.listUsers.get(index).getDados().getExpProf().add(expProf);
     }
 }

@@ -15,7 +15,7 @@ public class Educacao implements Serializable{
     private String qualificacao;
     private String areaEstudo;
     private String instituicao;
-    private String mediaFinal;
+    private int mediaFinal;
     private String sitioWeb;
     private String nivelQEQ;
     private String cidade;
@@ -24,7 +24,7 @@ public class Educacao implements Serializable{
     private Date dataFim;
     private String descr;
 
-    public Educacao(String qualificacao, String areaEstudo, String instituicao, String mediaFinal, String sitioWeb, String nivelQEQ, String cidade, String pais, Date dataInic, Date dataFim, String descr) {
+    public Educacao(String qualificacao, String areaEstudo, String instituicao, int mediaFinal, String sitioWeb, String nivelQEQ, String cidade, String pais, Date dataInic, Date dataFim, String descr) {
         this.qualificacao = qualificacao;
         this.areaEstudo = areaEstudo;
         this.instituicao = instituicao;
@@ -62,11 +62,11 @@ public class Educacao implements Serializable{
         this.instituicao = instituicao;
     }
 
-    public String getMediaFinal() {
+    public int getMediaFinal() {
         return mediaFinal;
     }
 
-    public void setMediaFinal(String mediaFinal) {
+    public void setMediaFinal(int mediaFinal) {
         this.mediaFinal = mediaFinal;
     }
 

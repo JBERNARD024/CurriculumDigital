@@ -24,7 +24,6 @@ import utils.Recursos;
 public class adicionarDadosPessoais extends java.awt.Dialog {
 
     CurriculumVitae cv;
-    Utilizador user;
     String nome;
     String nacionalidade;
     String sexo;
@@ -40,6 +39,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     byte[] byteIcon;
     File f;
     dadosPessoais dadosP;
+    int index;
 
     /**
      * Creates new form adicionarDadosPessoais
@@ -47,12 +47,14 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
      * @param parent
      * @param modal
      * @param user
+     * @param index
      */
-    public adicionarDadosPessoais(CurriculumVitae parent, boolean modal, Utilizador user) {
+    public adicionarDadosPessoais(CurriculumVitae parent, boolean modal, int index) {
         super(parent, modal);
         this.cv = parent;
-        this.user = user;
+        this.index = index;
         initComponents();
+        txtEmail.setText(cv.listUsers.get(index).getEmail());
     }
 
     /**
@@ -110,6 +112,8 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         jLabel3.setText("Nacionalidade");
 
         jLabel4.setText("Email");
+
+        txtEmail.setEditable(false);
 
         jLabel5.setText("Linkedin");
 
@@ -306,7 +310,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     private void btnProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProximoActionPerformed
         // TODO add your handling code here:
         //new adicionarLinguas(cv, true, user).setVisible(true);
-        new adicionarExperienciaProfissional(cv, true, user).setVisible(true);
+        new adicionarExperienciaProfissional(cv, true, index).setVisible(true);
     }//GEN-LAST:event_btnProximoActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
@@ -376,7 +380,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         codPostal = txtCodPostal.getText().trim();
         pais = txtPais.getText().trim();
         descr = txtDescr.getText();
-        dadosP = new dadosPessoais(nome, nacionalidade, dataNasc, sexo, telemovel, linkedin, morada, localidade, pais, descr);
+        dadosP = new dadosPessoais(nome, nacionalidade, dataNasc, sexo, telemovel, linkedin, morada, localidade, codPostal, pais, descr);
         if (icon == null) {
             try {
                 String caminhoImag = "..NetBeansProjects\\CurriculumVitae\\img\\defaultUser.png";
@@ -393,7 +397,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         } catch (IOException ex) {
             Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
         }
-        user.setImagem(byteIcon);
-        user.setDados(dadosP);
+        cv.listUsers.get(index).setImagem(byteIcon);
+        cv.listUsers.get(index).setDados(dadosP);
     }
 }
