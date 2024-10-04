@@ -16,7 +16,7 @@ import javax.swing.JButton;
 public class AdicionarCompetenciaLinguistica extends javax.swing.JDialog {
 
     CurriculumVitae cv;
-    Utilizador user;
+    int index;
     Lingua lingua;
     ArrayList<Lingua> linguas = new ArrayList<>();
     ArrayList<JButton> buttons = new ArrayList<>();
@@ -24,10 +24,10 @@ public class AdicionarCompetenciaLinguistica extends javax.swing.JDialog {
     /**
      * Creates new form AdicionarCompetenciaLinguistica
      */
-    public AdicionarCompetenciaLinguistica(CurriculumVitae parent, boolean modal, Utilizador user, Lingua lingua) {
+    public AdicionarCompetenciaLinguistica(CurriculumVitae parent, boolean modal, int index, Lingua lingua) {
         super(parent, modal);
         this.cv = parent;
-        this.user = user;
+        this.index = index;
         this.lingua = lingua;
         initComponents();
         buttons.add(a1);
@@ -36,8 +36,8 @@ public class AdicionarCompetenciaLinguistica extends javax.swing.JDialog {
         buttons.add(b2);
         buttons.add(c1);
         buttons.add(c2);
-        for (int i = 0; i < user.getDados().getLinguas().size(); i++) {
-            linguas.add(user.getDados().getLinguas().get(i));
+        for (int i = 0; i < cv.listUsers.get(index).getDados().getLinguas().size(); i++) {
+            linguas.add(cv.listUsers.get(index).getDados().getLinguas().get(i));
         }
         
         for (JButton button : buttons) {
@@ -45,7 +45,7 @@ public class AdicionarCompetenciaLinguistica extends javax.swing.JDialog {
                 JButton clickedButton = (JButton) e.getSource();
                 lingua.setNivel(clickedButton.getText());
                 linguas.add(lingua);
-                user.getDados().setLinguas(linguas);
+                cv.listUsers.get(index).getDados().setLinguas(linguas);
                 redireciona();
             });
         }
@@ -186,7 +186,7 @@ public class AdicionarCompetenciaLinguistica extends javax.swing.JDialog {
 
     private void redireciona() {
         dispose();
-        new adicionarLinguas(cv, true, user).setVisible(true);
+        new adicionarLinguas(cv, true, index).setVisible(true);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton a1;

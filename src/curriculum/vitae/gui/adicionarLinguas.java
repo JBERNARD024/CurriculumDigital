@@ -16,7 +16,7 @@ import javax.swing.JButton;
 public class adicionarLinguas extends java.awt.Dialog {
 
     CurriculumVitae cv;
-    Utilizador user;
+    int index;
     Lingua lingua = new Lingua("", "");
     ArrayList<JButton> buttons = new ArrayList<>();
     String auxLingua = "";
@@ -24,12 +24,12 @@ public class adicionarLinguas extends java.awt.Dialog {
     /**
      * Creates new form adicionarDados
      */
-    public adicionarLinguas(CurriculumVitae parent, boolean modal, Utilizador user) {
+    public adicionarLinguas(CurriculumVitae parent, boolean modal, int index) {
         super(parent, modal);
         this.cv = parent;
-        this.user = user;
+        this.index = index;
         initComponents();
-        lbl_linguas.setText(user.getDados().getLinguas().toString());
+        lbl_linguas.setText(cv.listUsers.get(index).getDados().getLinguas().toString());
         buttons.add(pt);
         buttons.add(en);
         buttons.add(it);
@@ -227,7 +227,7 @@ public class adicionarLinguas extends java.awt.Dialog {
 
     private void redireciona() {
         dispose();
-        new AdicionarCompetenciaLinguistica(cv, true, user, lingua).setVisible(true);
+        new AdicionarCompetenciaLinguistica(cv, true, index, lingua).setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

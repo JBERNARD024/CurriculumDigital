@@ -12,7 +12,7 @@ import java.util.Date;
  *
  * @author joaob
  */
-public class dadosPessoais implements Serializable{
+public class dadosPessoais implements Serializable {
 
     private String nome;
     private String nacionalidade;
@@ -22,13 +22,14 @@ public class dadosPessoais implements Serializable{
     private String linkedin;
     private String morada;
     private String localidade;
+    private String codPostal;
     private String pais;
     private String descricao;
     private ArrayList<Lingua> linguas = new ArrayList<>();
     private ArrayList<ExpProf> expProf = new ArrayList<>();
     private ArrayList<Educacao> educacao = new ArrayList<>();
 
-    public dadosPessoais(String nome, String nacionalidade, Date dataNasc, String sexo, String telemovel, String linkedin, String morada, String localidade, String pais, String descricao) {
+    public dadosPessoais(String nome, String nacionalidade, Date dataNasc, String sexo, String telemovel, String linkedin, String morada, String localidade, String codPostal, String pais, String descricao) {
         this.nome = nome;
         this.nacionalidade = nacionalidade;
         this.dataNasc = dataNasc;
@@ -37,6 +38,7 @@ public class dadosPessoais implements Serializable{
         this.linkedin = linkedin;
         this.morada = morada;
         this.localidade = localidade;
+        this.codPostal = codPostal;
         this.pais = pais;
         this.descricao = descricao;
     }
@@ -127,6 +129,14 @@ public class dadosPessoais implements Serializable{
 
     public void setLocalidade(String localidade) {
         this.localidade = localidade;
+    }
+
+    public String getCodPostal() {
+        return codPostal;
+    }
+
+    public void setCodPostal(String codPostal) {
+        this.codPostal = codPostal;
     }
 
     public String getPais() {

@@ -184,7 +184,7 @@ public class Login extends java.awt.Dialog {
                 cv.listUsers.get(index).setNumLogin(user.getNumLogin()+1);
                 cv.listUsers.get(index).setLastLogin(Date.from(Instant.now()));
                 if (user.getNumLogin() == 0) {
-                    new adicionarDadosPessoais(cv, true, user).setVisible(true);
+                    new adicionarDadosPessoais(cv, true, index).setVisible(true);
                 }else{
                     //Falta fazer
                     //new perfil(cv,true, user).setVisible(true);
