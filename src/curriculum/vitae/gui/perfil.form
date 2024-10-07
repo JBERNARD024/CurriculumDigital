@@ -247,6 +247,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Experi&#xea;ncia Profissional"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnExpProfActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnEduc">
           <Properties>
@@ -256,6 +259,9 @@
             <Property name="text" type="java.lang.String" value="Educa&#xe7;&#xe3;o"/>
             <Property name="horizontalTextPosition" type="int" value="10"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEducActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnLing">
           <Properties>
@@ -265,11 +271,17 @@
             <Property name="text" type="java.lang.String" value="Compet&#xea;ncias Lingu&#xed;sticas"/>
             <Property name="horizontalTextPosition" type="int" value="10"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLingActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnLogout">
           <Properties>
             <Property name="text" type="java.lang.String" value="Terminar Sess&#xe3;o"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLogoutActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="labelFoto">
         </Component>
@@ -415,6 +427,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Editar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditarActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

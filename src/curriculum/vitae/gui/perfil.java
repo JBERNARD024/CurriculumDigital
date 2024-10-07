@@ -5,6 +5,7 @@ import curriculum.vitae.core.dadosPessoais;
 import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Date;
 import javax.swing.ImageIcon;
 
@@ -22,16 +23,21 @@ import javax.swing.ImageIcon;
 public class perfil extends java.awt.Dialog {
     Utilizador user;
     ImageIcon icon;
-    byte[] byteIcon;
-    dadosPessoais dadosP;
+    Image Image;
     int index;
+    CurriculumVitae cv;
     /**
      * Creates new form perfil
+     * @param cv
+     * @param modal
+     * @param index
      */
-    public perfil(CurriculumVitae parent, boolean modal, int index) {
-        super(parent, modal);
+    public perfil(CurriculumVitae cv, boolean modal, int index) {
+        super(cv, modal);
+        this.cv = cv;
+        this.index = index;
         initComponents();
-        user = new Utilizador(parent.listUsers.get(index));
+        user = new Utilizador(cv.listUsers.get(index));
         txtNome.setText(user.getDados().getNome());
         txtSexo.setText(user.getDados().getSexo());
         txtData.setDate(user.getDados().getDataNasc());
@@ -45,8 +51,7 @@ public class perfil extends java.awt.Dialog {
         txtCodPostal.setText(user.getDados().getCodPostal());
         txtPais.setText(user.getDados().getPais());
         txtDescr.setText(user.getDados().getDescricao());
-        System.out.println(user.getImagem());
-        ImageIcon icon = new ImageIcon(user.getImagem());
+        icon = new ImageIcon(user.getImagem());
         Image imagem = icon.getImage().getScaledInstance(labelFoto.getWidth(), labelFoto.getHeight(), Image.SCALE_SMOOTH);
         labelFoto.setBackground(Color.white);
         labelFoto.setIcon(new ImageIcon(imagem));
@@ -112,16 +117,36 @@ public class perfil extends java.awt.Dialog {
 
         btnExpProf.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnExpProf.setText("Experiência Profissional");
+        btnExpProf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExpProfActionPerformed(evt);
+            }
+        });
 
         btnEduc.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnEduc.setText("Educação");
         btnEduc.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        btnEduc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEducActionPerformed(evt);
+            }
+        });
 
         btnLing.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnLing.setText("Competências Linguísticas");
         btnLing.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        btnLing.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLingActionPerformed(evt);
+            }
+        });
 
         btnLogout.setText("Terminar Sessão");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -216,6 +241,11 @@ public class perfil extends java.awt.Dialog {
         jScrollPane1.setViewportView(txtDescr);
 
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -346,7 +376,32 @@ public class perfil extends java.awt.Dialog {
         dispose();
     }//GEN-LAST:event_closeDialog
 
+    private void btnExpProfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExpProfActionPerformed
+        // TODO add your handling code here:
+        //new listaExperienciasProfissionais
+    }//GEN-LAST:event_btnExpProfActionPerformed
 
+    private void btnEducActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducActionPerformed
+        // TODO add your handling code here:
+        dispose();
+        new listaEducacao(cv, true, index).setVisible(true);
+    }//GEN-LAST:event_btnEducActionPerformed
+
+    private void btnLingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLingActionPerformed
+        // TODO add your handling code here:
+        //new listaLinguas
+        dispose();
+    }//GEN-LAST:event_btnLingActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        // TODO add your handling code here:
+        //new editarDadosPessoais
+    }//GEN-LAST:event_btnEditarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditar;
