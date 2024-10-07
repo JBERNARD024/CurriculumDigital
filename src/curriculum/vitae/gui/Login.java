@@ -186,8 +186,8 @@ public class Login extends java.awt.Dialog {
                 if (user.getNumLogin() == 0) {
                     new adicionarDadosPessoais(cv, true, index).setVisible(true);
                 }else{
-                    //Falta fazer
-                    //new perfil(cv,true, user).setVisible(true);
+                    dispose();
+                    new perfil(cv, true, index).setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);

@@ -225,6 +225,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Ver Experi&#xea;ncias Profissionais"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnProximoActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel9">
       <Properties>

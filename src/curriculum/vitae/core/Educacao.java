@@ -129,19 +129,8 @@ public class Educacao implements Serializable{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Educação{");
-        sb.append("Qualificação =").append(qualificacao);
-        sb.append(", Área de Estudo =").append(areaEstudo);
-        sb.append(", Instituição =").append(instituicao);
-        sb.append(", Média Final =").append(mediaFinal);
-        sb.append(", Sítio Web =").append(sitioWeb);
-        sb.append(", Nível QEQ =").append(nivelQEQ);
-        sb.append(", Cidade =").append(cidade);
-        sb.append(", País=").append(pais);
-        sb.append(", Data de Início =").append(dataInic);
-        sb.append(", Data de Fim =").append(dataFim);
-        sb.append(", Descrição =").append(descr);
-        sb.append('}');
+        sb.append("Qualificação = ").append(qualificacao);
+        sb.append(", Área de Estudo = ").append(areaEstudo);
         return sb.toString();
     }
     
