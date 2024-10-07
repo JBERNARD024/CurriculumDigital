@@ -5,6 +5,7 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Educacao;
+import curriculum.vitae.core.ExpProf;
 import curriculum.vitae.core.Utilizador;
 import java.awt.Color;
 import java.awt.Image;
@@ -17,18 +18,18 @@ import javax.swing.ImageIcon;
  *
  * @author joaob
  */
-public class listaEducacao extends java.awt.Dialog {
+public class listaExperienciaProfissional extends java.awt.Dialog {
     CurriculumVitae cv;
     int index;
     Utilizador user;
     ImageIcon icon;
     Image imagem;
-    DefaultListModel educaList;
-    int indexEducacao;
+    DefaultListModel expProfList;
+    int indexExpProf;
     /**
      * Creates new form listaEducacao
      */
-    public listaEducacao(CurriculumVitae cv, boolean modal, int index) {
+    public listaExperienciaProfissional(CurriculumVitae cv, boolean modal, int index) {
         super(cv, modal);
         this.cv = cv;
         this.index = index;
@@ -38,20 +39,20 @@ public class listaEducacao extends java.awt.Dialog {
         imagem = icon.getImage().getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_SMOOTH);
         lblFoto.setBackground(Color.white);
         lblFoto.setIcon(new ImageIcon(imagem));
-        educaList = new DefaultListModel<>();
-        for (int i = 0; i < cv.listUsers.get(index).getDados().getEducacao().size(); i++) {
-            educaList.addElement(cv.listUsers.get(index).getDados().getEducacao().get(i));
+        expProfList = new DefaultListModel<>();
+        for (int i = 0; i < cv.listUsers.get(index).getDados().getExpProf().size(); i++) {
+            expProfList.addElement(cv.listUsers.get(index).getDados().getExpProf().get(i));
         }
-        indexEducacao = 0;
-        educacaoList.setModel(educaList);
-        educacaoList.setSelectedIndex(indexEducacao);
-        btnEliminar.setEnabled(educaList.size() > 0);
-        btnEditar.setEnabled(educaList.size() > 0);
-        panelBtns.setVisible(educaList.size() > 0);
-        btnPrimeiro.setEnabled(indexEducacao > 1);
-        btnAnterior.setEnabled(indexEducacao > 1);
-        btnAvancar.setEnabled(indexEducacao < educaList.getSize() - 1);
-        btnUltimo.setEnabled(indexEducacao < educaList.getSize() - 1);
+        indexExpProf = 0;
+        listaExpProf.setModel(expProfList);
+        listaExpProf.setSelectedIndex(indexExpProf);
+        btnEliminar.setEnabled(expProfList.size() > 0);
+        btnEditar.setEnabled(expProfList.size() > 0);
+        panelBtns.setVisible(expProfList.size() > 0);
+        btnPrimeiro.setEnabled(indexExpProf > 1);
+        btnAnterior.setEnabled(indexExpProf > 1);
+        btnAvancar.setEnabled(indexExpProf < expProfList.getSize() - 1);
+        btnUltimo.setEnabled(indexExpProf < expProfList.getSize() - 1);
     }
 
     /**
@@ -64,11 +65,9 @@ public class listaEducacao extends java.awt.Dialog {
 
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        txtQualificacao = new javax.swing.JTextField();
+        txtFuncao = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        txtAreaEstudo = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        txtInstituicao = new javax.swing.JTextField();
+        txtEntEmpreg = new javax.swing.JTextField();
         txtCidade = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -86,12 +85,12 @@ public class listaEducacao extends java.awt.Dialog {
         painelPerfil = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         btnDadosPessoais = new javax.swing.JButton();
-        btnExpProfissional = new javax.swing.JButton();
+        btnEducacao = new javax.swing.JButton();
         btnLingua = new javax.swing.JButton();
         btnLogout2 = new javax.swing.JButton();
         lblFoto = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        educacaoList = new javax.swing.JList<>();
+        listaExpProf = new javax.swing.JList<>();
         panelBtns = new javax.swing.JPanel();
         btnPrimeiro = new javax.swing.JButton();
         btnUltimo = new javax.swing.JButton();
@@ -101,10 +100,6 @@ public class listaEducacao extends java.awt.Dialog {
         btnNovo = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
-        txtMedia = new javax.swing.JSpinner();
-        txtQEQ = new javax.swing.JTextField();
-        jLabel17 = new javax.swing.JLabel();
 
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setResizable(false);
@@ -117,22 +112,13 @@ public class listaEducacao extends java.awt.Dialog {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel2.setText("Lista de Educação");
 
-        jLabel1.setText("Qualificação");
+        jLabel1.setText("Função");
 
-        txtQualificacao.setEditable(false);
+        txtFuncao.setEditable(false);
 
-        jLabel3.setText("Área de Estudo");
+        jLabel3.setText("Entidade Empregadora");
 
-        txtAreaEstudo.setEditable(false);
-        txtAreaEstudo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtAreaEstudoActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setText("Instituição");
-
-        txtInstituicao.setEditable(false);
+        txtEntEmpreg.setEditable(false);
 
         txtCidade.setEditable(false);
         txtCidade.setToolTipText("");
@@ -179,12 +165,12 @@ public class listaEducacao extends java.awt.Dialog {
             }
         });
 
-        btnExpProfissional.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnExpProfissional.setText("Experiência Profissional");
-        btnExpProfissional.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-        btnExpProfissional.addActionListener(new java.awt.event.ActionListener() {
+        btnEducacao.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnEducacao.setText("Educação");
+        btnEducacao.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        btnEducacao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExpProfissionalActionPerformed(evt);
+                btnEducacaoActionPerformed(evt);
             }
         });
 
@@ -213,43 +199,42 @@ public class listaEducacao extends java.awt.Dialog {
                     .addGroup(painelPerfilLayout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addGroup(painelPerfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(lblFoto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                            .addComponent(btnExpProfissional, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblFoto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEducacao, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnDadosPessoais, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnLingua, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(btnLingua, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)))
                     .addGroup(painelPerfilLayout.createSequentialGroup()
                         .addGap(83, 83, 83)
-                        .addComponent(jLabel16)))
-                .addContainerGap(15, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelPerfilLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnLogout2)
-                .addGap(56, 56, 56))
+                        .addComponent(jLabel16))
+                    .addGroup(painelPerfilLayout.createSequentialGroup()
+                        .addGap(56, 56, 56)
+                        .addComponent(btnLogout2)))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         painelPerfilLayout.setVerticalGroup(
             painelPerfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(painelPerfilLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel16)
-                .addGap(59, 59, 59)
+                .addGap(35, 35, 35)
                 .addComponent(lblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
+                .addGap(80, 80, 80)
                 .addComponent(btnDadosPessoais, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnExpProfissional, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnEducacao, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnLingua, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(79, 79, 79)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnLogout2)
-                .addGap(19, 19, 19))
+                .addGap(18, 18, 18))
         );
 
-        educacaoList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        listaExpProf.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                educacaoListValueChanged(evt);
+                listaExpProfValueChanged(evt);
             }
         });
-        jScrollPane1.setViewportView(educacaoList);
+        jScrollPane1.setViewportView(listaExpProf);
 
         panelBtns.setBackground(null);
 
@@ -310,21 +295,22 @@ public class listaEducacao extends java.awt.Dialog {
 
         painelGestao.setBackground(null);
 
-        btnNovo.setText("Adicionar Educação");
+        btnNovo.setLabel("Adicionar Profissão");
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNovoActionPerformed(evt);
             }
         });
 
-        btnEditar.setText("Editar Educação");
+        btnEditar.setText("Editar Profissão");
         btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditarActionPerformed(evt);
             }
         });
 
-        btnEliminar.setText("Eliminar Educação");
+        btnEliminar.setText("Eliminar Profissão");
+        btnEliminar.setToolTipText("");
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarActionPerformed(evt);
@@ -357,153 +343,122 @@ public class listaEducacao extends java.awt.Dialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel5.setText("Média Final");
-
-        txtMedia.setEnabled(false);
-
-        txtQEQ.setEditable(false);
-        txtQEQ.setToolTipText("");
-
-        jLabel17.setText("Nível QEQ");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(painelPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(txtQualificacao, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel13)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(4, 4, 4)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel12)
-                                    .addComponent(jLabel4)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(txtMedia, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(287, 287, 287))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                            .addGap(2, 2, 2)
-                                            .addComponent(jLabel5)
-                                            .addGap(306, 306, 306)))
-                                    .addComponent(txtWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtInstituicao, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtAreaEstudo, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(252, 252, 252)
+                        .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panelBtns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(painelGestao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel10)
-                                    .addComponent(txtDataInic, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(1, 1, 1)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel12)
+                                            .addComponent(txtEntEmpreg, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel1)
+                                    .addComponent(txtFuncao, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(4, 4, 4)
+                                                .addComponent(jLabel8)
+                                                .addGap(154, 154, 154))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(22, 22, 22)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel9)
+                                            .addComponent(txtPais, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(21, 21, 21)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtDataFim, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txtEmCurso, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel11)))
+                                        .addGap(6, 6, 6)
+                                        .addComponent(painelGestao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(panelBtns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel8))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel17)
-                                    .addComponent(txtQEQ)
-                                    .addComponent(txtPais, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 30, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(482, 482, 482)
-                .addComponent(jLabel2)
-                .addGap(9, 9, 9))
+                                    .addComponent(jLabel13)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(6, 6, 6)
+                                                .addComponent(jLabel10))
+                                            .addComponent(txtDataInic, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(27, 27, 27)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(txtDataFim, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(txtEmCurso, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(jLabel11)))
+                                    .addComponent(txtWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(30, 30, 30)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtFuncao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtEntEmpreg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtWeb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jLabel11))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtDataFim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtDataInic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(3, 3, 3))
+                            .addComponent(txtEmCurso, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel13))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtQualificacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtAreaEstudo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtInstituicao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtWeb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel17))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtMedia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtQEQ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel9))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(jLabel10)
-                                            .addComponent(jLabel11))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(txtDataFim, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(txtDataInic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(3, 3, 3))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(txtEmCurso))))
-                            .addComponent(jScrollPane1))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(panelBtns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
-                                .addComponent(painelGestao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(jLabel13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane2))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(painelPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(panelBtns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(painelGestao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
+            .addComponent(painelPerfil, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -523,11 +478,11 @@ public class listaEducacao extends java.awt.Dialog {
         new perfil(cv, true, index).setVisible(true);
     }//GEN-LAST:event_btnDadosPessoaisActionPerformed
 
-    private void btnExpProfissionalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExpProfissionalActionPerformed
+    private void btnEducacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducacaoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaExperienciaProfissional(cv, true, index).setVisible(true);
-    }//GEN-LAST:event_btnExpProfissionalActionPerformed
+        new listaEducacao(cv, true, index).setVisible(true);
+    }//GEN-LAST:event_btnEducacaoActionPerformed
 
     private void btnLinguaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLinguaActionPerformed
         // TODO add your handling code here:
@@ -587,7 +542,7 @@ public class listaEducacao extends java.awt.Dialog {
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         this.dispose();
-        new adicionarEducacao(cv, true, index).setVisible(true);
+        new adicionarExperienciaProfissional(cv, true, index).setVisible(true);
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
@@ -598,17 +553,14 @@ public class listaEducacao extends java.awt.Dialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnEliminarActionPerformed
 
-    private void educacaoListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_educacaoListValueChanged
+    private void listaExpProfValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listaExpProfValueChanged
         // TODO add your handling code here:
-        indexEducacao = educacaoList.getSelectedIndex();
-        if (indexEducacao >= 0) {
+        indexExpProf = listaExpProf.getSelectedIndex();
+        if (indexExpProf >= 0) {
             //mostraPanelEleitor();
-            Educacao e = (Educacao) educacaoList.getSelectedValues()[0];
-            txtQualificacao.setText(e.getQualificacao());
-            txtQEQ.setText(e.getNivelQEQ());
-            txtAreaEstudo.setText(e.getAreaEstudo());
-            txtMedia.setValue(e.getMediaFinal());
-            txtInstituicao.setText(e.getInstituicao());
+            ExpProf e = (ExpProf) listaExpProf.getSelectedValues()[0];
+            txtFuncao.setText(e.getFuncao());
+            txtEntEmpreg.setText(e.getEntEmpregadora());
             txtWeb.setText(e.getSitioWeb());
             txtCidade.setText(e.getCidade());
             txtPais.setText(e.getPais());
@@ -621,15 +573,11 @@ public class listaEducacao extends java.awt.Dialog {
             }
             txtDescr.setText(e.getDescr());
         }
-        btnPrimeiro.setEnabled(indexEducacao > 1);
-        btnAnterior.setEnabled(indexEducacao > 1);
-        btnAvancar.setEnabled(indexEducacao < educaList.getSize() - 1);
-        btnUltimo.setEnabled(indexEducacao < educaList.getSize() - 1);
-    }//GEN-LAST:event_educacaoListValueChanged
-
-    private void txtAreaEstudoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAreaEstudoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtAreaEstudoActionPerformed
+        btnPrimeiro.setEnabled(indexExpProf > 1);
+        btnAnterior.setEnabled(indexExpProf > 1);
+        btnAvancar.setEnabled(indexExpProf < expProfList.getSize() - 1);
+        btnUltimo.setEnabled(indexExpProf < expProfList.getSize() - 1);
+    }//GEN-LAST:event_listaExpProfValueChanged
 
     /*public void mostraPanelEleitor() {
         panelFoto.setVisible(true);
@@ -647,58 +595,38 @@ public class listaEducacao extends java.awt.Dialog {
     private javax.swing.JButton btnAvancar;
     private javax.swing.JButton btnDadosPessoais;
     private javax.swing.JButton btnEditar;
-    private javax.swing.JButton btnEduc;
-    private javax.swing.JButton btnEduc1;
+    private javax.swing.JButton btnEducacao;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton btnExpProf;
-    private javax.swing.JButton btnExpProf1;
-    private javax.swing.JButton btnExpProfissional;
-    private javax.swing.JButton btnLing;
-    private javax.swing.JButton btnLing1;
     private javax.swing.JButton btnLingua;
-    private javax.swing.JButton btnLogout;
-    private javax.swing.JButton btnLogout1;
     private javax.swing.JButton btnLogout2;
     private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnPrimeiro;
     private javax.swing.JButton btnUltimo;
-    private javax.swing.JList<String> educacaoList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JLabel labelFoto;
-    private javax.swing.JLabel labelFoto1;
     private javax.swing.JLabel lblFoto;
+    private javax.swing.JList<String> listaExpProf;
     private javax.swing.JPanel painelGestao;
     private javax.swing.JPanel painelPerfil;
     private javax.swing.JPanel panelBtns;
-    private javax.swing.JTextField txtAreaEstudo;
     private javax.swing.JTextField txtCidade;
     private com.toedter.calendar.JDateChooser txtDataFim;
     private com.toedter.calendar.JDateChooser txtDataInic;
     private javax.swing.JTextArea txtDescr;
     private javax.swing.JLabel txtEmCurso;
-    private javax.swing.JTextField txtInstituicao;
-    private javax.swing.JSpinner txtMedia;
+    private javax.swing.JTextField txtEntEmpreg;
+    private javax.swing.JTextField txtFuncao;
     private javax.swing.JTextField txtPais;
-    private javax.swing.JTextField txtQEQ;
-    private javax.swing.JTextField txtQualificacao;
     private javax.swing.JTextField txtWeb;
     // End of variables declaration//GEN-END:variables
 }

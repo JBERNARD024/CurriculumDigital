@@ -186,6 +186,7 @@ public class Login extends java.awt.Dialog {
                 if (user.getNumLogin() == 0) {
                     new adicionarDadosPessoais(cv, true, index).setVisible(true);
                 }else{
+                    dispose();
                     new perfil(cv, true, index).setVisible(true);
                 }
             } else {

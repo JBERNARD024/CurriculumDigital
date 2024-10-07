@@ -378,7 +378,8 @@ public class perfil extends java.awt.Dialog {
 
     private void btnExpProfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExpProfActionPerformed
         // TODO add your handling code here:
-        //new listaExperienciasProfissionais
+        dispose();
+        new listaExperienciaProfissional(cv, true, index).setVisible(true);
     }//GEN-LAST:event_btnExpProfActionPerformed
 
     private void btnEducActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducActionPerformed
@@ -389,8 +390,8 @@ public class perfil extends java.awt.Dialog {
 
     private void btnLingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLingActionPerformed
         // TODO add your handling code here:
-        //new listaLinguas
         dispose();
+        new adicionarLinguas(cv, true, index).setVisible(true);
     }//GEN-LAST:event_btnLingActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed

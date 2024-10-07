@@ -92,7 +92,7 @@ public class adicionarLinguas extends java.awt.Dialog {
         gr = new javax.swing.JButton();
         ar = new javax.swing.JButton();
         kr = new javax.swing.JButton();
-        btnProximo = new javax.swing.JButton();
+        btnVerPerfil = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -158,7 +158,12 @@ public class adicionarLinguas extends java.awt.Dialog {
         kr.setText("한국어 (Hangugeo)");
         painelLinguas.add(kr);
 
-        btnProximo.setText("Próximo");
+        btnVerPerfil.setText("Ver Perfil");
+        btnVerPerfil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerPerfilActionPerformed(evt);
+            }
+        });
 
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
@@ -181,7 +186,7 @@ public class adicionarLinguas extends java.awt.Dialog {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnGuardar)
                                 .addGap(36, 36, 36)
-                                .addComponent(btnProximo)))
+                                .addComponent(btnVerPerfil)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lbl_linguas)
@@ -204,7 +209,7 @@ public class adicionarLinguas extends java.awt.Dialog {
                 .addComponent(painelLinguas, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnProximo)
+                    .addComponent(btnVerPerfil)
                     .addComponent(btnGuardar))
                 .addContainerGap())
         );
@@ -222,8 +227,13 @@ public class adicionarLinguas extends java.awt.Dialog {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-
+        
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnVerPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerPerfilActionPerformed
+        // TODO add your handling code here:
+        new perfil(cv, true, index).setVisible(true);
+    }//GEN-LAST:event_btnVerPerfilActionPerformed
 
     private void redireciona() {
         dispose();
@@ -233,7 +243,7 @@ public class adicionarLinguas extends java.awt.Dialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ar;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton btnProximo;
+    private javax.swing.JButton btnVerPerfil;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;

@@ -33,6 +33,7 @@ public class adicionarExperienciaProfissional extends java.awt.Dialog {
      * Creates new form adicionarExperienciaProfissional
      * @param parent
      * @param modal
+     * @param index
      */
     public adicionarExperienciaProfissional(CurriculumVitae parent, boolean modal, int index) {
         super(parent, modal);
@@ -119,6 +120,11 @@ public class adicionarExperienciaProfissional extends java.awt.Dialog {
         });
 
         btnProximo.setText("Ver Experiências Profissionais");
+        btnProximo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProximoActionPerformed(evt);
+            }
+        });
 
         jLabel9.setText("Descrição");
 
@@ -241,6 +247,12 @@ public class adicionarExperienciaProfissional extends java.awt.Dialog {
         adicionarExperienciaProfissional();
         btnGuardar.setEnabled(false);
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProximoActionPerformed
+        // TODO add your handling code here:
+        dispose();
+        new listaExperienciaProfissional(cv, true, index).setVisible(true);
+    }//GEN-LAST:event_btnProximoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnEmCurso;

@@ -17,7 +17,7 @@ public class Lingua implements Serializable{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("lingua: ").append(lingua);
+        sb.append("Língua: ").append(lingua);
         sb.append(" (").append(nivel);
         sb.append(')');
         return sb.toString();
