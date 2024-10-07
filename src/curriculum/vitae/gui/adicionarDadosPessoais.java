@@ -4,7 +4,6 @@
  */
 package curriculum.vitae.gui;
 
-import curriculum.vitae.core.Utilizador;
 import curriculum.vitae.core.dadosPessoais;
 import java.awt.Image;
 import java.io.File;
@@ -37,7 +36,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     String descr;
     ImageIcon icon;
     byte[] byteIcon;
-    File f;
+    File f = new File("../Curriculum Vitae/utilizadores/users.user");
     dadosPessoais dadosP;
     int index;
 
@@ -398,6 +397,8 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
             Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
         }
         cv.listUsers.get(index).setImagem(byteIcon);
+        System.out.println(cv.listUsers.get(index).getImagem());
         cv.listUsers.get(index).setDados(dadosP);
+        Recursos.writeObject(cv.listUsers, f.getAbsolutePath());
     }
 }

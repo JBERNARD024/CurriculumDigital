@@ -9,6 +9,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JFrame;
 import utils.Recursos;
 

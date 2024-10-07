@@ -27,6 +27,7 @@ public class Utilizador implements Serializable{
     public Utilizador(Utilizador user) {
         this.email = user.email;
         this.password = user.password;
+        this.imagem = user.imagem;
         this.dados = user.dados;
         this.numLogin = user.numLogin;
         this.lastLogin = user.lastLogin;
