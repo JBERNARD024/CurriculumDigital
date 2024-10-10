@@ -6,7 +6,16 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Utilizador;
 import java.io.File;
+import java.security.Provider;
+import java.security.Security;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import utils.Recursos;
 
 /**
@@ -30,6 +39,8 @@ public class Registo extends java.awt.Dialog {
         super(parent, modal);
         this.setTitle("Registo");
         initComponents();
+        Security.addProvider(new BouncyCastleProvider());
+        loadProviders();
     }
 
     /**
@@ -169,8 +180,12 @@ public class Registo extends java.awt.Dialog {
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnRegistoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoActionPerformed
-        // TODO add your handling code here:
-        adicionarUtilizador();
+        try {
+            // TODO add your handling code here:
+            adicionarUtilizador();
+        } catch (Exception ex) {
+            Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnRegistoActionPerformed
 
     /**
@@ -190,14 +205,17 @@ public class Registo extends java.awt.Dialog {
     private javax.swing.JPasswordField txtPassword;
     // End of variables declaration//GEN-END:variables
 
-    private void adicionarUtilizador() {
+    private void adicionarUtilizador() throws Exception {
         email = txtEmail.getText().trim();
         password = new String(txtPassword.getPassword());
         confPassword = new String(txtConfPassword.getPassword());
-        if(verificaCampos() == true && verificaEmail(email) == false){
-            user = new Utilizador(email, password.getBytes());
+        if (verificaCampos() == true && verificaEmail(email) == false) {
+            user = new Utilizador(email);
+            user.criarPasta(password);
+            user.generateKeys();
+            user.save(password);
             cv.listUsers.add(user);
-            Recursos.writeObject(cv.listUsers, f.getAbsolutePath());            
+            //Recursos.writeObject(cv.listUsers, f.getAbsolutePath());
             dispose();
             new Login(cv, true).setVisible(true);
         }
@@ -210,7 +228,7 @@ public class Registo extends java.awt.Dialog {
         } else if (!password.equals(confPassword)) {
             JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
             return false;
-        } else if (!email.contains("@")){
+        } else if (!email.contains("@")) {
             JOptionPane.showConfirmDialog(null, "Email inválido!!", "Email Incorreto", 2);
             return false;
         } else {
@@ -226,9 +244,27 @@ public class Registo extends java.awt.Dialog {
                 JOptionPane.showConfirmDialog(null, "Email já está a ser utilizado!!", "Email Indisponível", 2);
                 break;
             } else {
-                 verifica = false;
+                verifica = false;
             }
         }
         return verifica;
+    }
+
+    public static void loadProviders() {
+        Provider providers[] = Security.getProviders();
+        //todos os fornecedores do segurança
+        for (Provider provider : providers) {
+            StringBuilder txt = new StringBuilder();
+            List<String> lst = new ArrayList<>();
+            //serviços fornecidos
+            Set<Provider.Service> services = provider.getServices();
+            for (Provider.Service service : services) {
+                lst.add(String.format("%-20s %s\n", service.getType(), service.getAlgorithm()));
+            }
+            Collections.sort(lst);
+            for (String service : lst) {
+                txt.append(service);
+            }
+        }
     }
 }

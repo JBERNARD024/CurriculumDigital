@@ -4,8 +4,18 @@
  */
 package curriculum.vitae.core;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import utils.SecurityUtils;
 
 /**
  *
@@ -13,24 +23,86 @@ import java.util.Date;
  */
 public class Utilizador implements Serializable{
     private String email;
-    private byte[] password;
     private byte[] imagem;
     private dadosPessoais dados;
     private int numLogin;
     private Date lastLogin;
+    private PublicKey pubKey;
+    private PrivateKey privKey;
 
-    public Utilizador(String email, byte[] password) {
+    public Utilizador(String email) {
         this.email = email;
-        this.password = password;
+        this.imagem = null;
+        this.dados = null;        
+        this.privKey = null;
+        this.pubKey = null;
     }
 
     public Utilizador(Utilizador user) {
         this.email = user.email;
-        this.password = user.password;
         this.imagem = user.imagem;
         this.dados = user.dados;
         this.numLogin = user.numLogin;
         this.lastLogin = user.lastLogin;
+        this.pubKey = user.pubKey;
+        this.privKey = user.privKey;
+    }
+    
+    //Esta função vai gerar as chaves do Utilizador
+    public void generateKeys() throws Exception {
+        KeyPair keyPair = SecurityUtils.generateRSAKeyPair(4096, "BC");
+        this.pubKey = keyPair.getPublic();
+        this.privKey = keyPair.getPrivate();
+    }
+    
+    public void criarPasta(String password){
+        //Definir o caminho da pasta
+        String caminho = "../Curriculum Vitae/utilizadores/" + email + "/";
+        File diretoria = new File(caminho);
+        //Verificar se a pasta já existe, caso contrário criar a pasta
+        if (!diretoria.exists()) {
+            boolean created = diretoria.mkdirs(); // mkdirs() cria também subpastas se necessário
+            if (created) {
+                System.out.println("Pasta criada com sucesso: " + caminho);
+            } else {
+                System.out.println("Falha ao criar a pasta.");
+            }
+        } else {
+            System.out.println("A pasta já existe.");
+        }
+    }
+    
+    public void save(String password) throws Exception {
+        String caminho = "../Curriculum Vitae/utilizadores/" + email + "/";
+        //Encriptar a chave privada
+        byte[] secret = SecurityUtils.encrypt(privKey.getEncoded(), password);
+        Files.write(Path.of(caminho + email + ".priv"), secret);
+         //Guardar a chave pública
+        Files.write(Path.of(caminho + email  + ".pub"), pubKey.getEncoded());
+    }
+
+    public boolean load(String password) throws Exception {
+        try {
+            String caminho = "../Curriculum Vitae/utilizadores/" + email + "/";
+            //Desencriptar a chave privada
+            byte[] privData = Files.readAllBytes(Path.of(caminho + email + ".priv"));
+            privData = SecurityUtils.decrypt(privData, password);
+            //Ler a chave pública
+            byte[] pubData = Files.readAllBytes(Path.of(caminho + email + ".pub"));
+            this.privKey = SecurityUtils.getPrivateKey(privData);
+            this.pubKey = SecurityUtils.getPublicKey(pubData);
+            return true;
+        } catch (IOException ex) {
+            Logger.getLogger(Utilizador.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
+    public void loadPublic() throws Exception {
+        String caminho = "../Curriculum Vitae/utilizadores/" + email + "/";
+        //Ler a chave pública
+        byte[] pubData = Files.readAllBytes(Path.of(caminho + email + ".pub"));
+        this.pubKey = SecurityUtils.getPublicKey(pubData);
     }
 
     public dadosPessoais getDados() {
@@ -48,20 +120,11 @@ public class Utilizador implements Serializable{
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public byte[] getPassword() {
-        return password;
-    }
-
-    public void setPassword(byte[] password) {
-        this.password = password;
-    }
     
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Email=").append(email);
-        sb.append(", Password=").append(password);
         return sb.toString();
     } 
 

@@ -5,10 +5,19 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Utilizador;
+import java.security.Provider;
+import java.security.Security;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  *
@@ -18,18 +27,22 @@ public class Login extends java.awt.Dialog {
 
     CurriculumVitae cv;
     String email;
-    byte[] password;
+    String password;
     Utilizador user;
     int index;
 
     /**
      * Creates new form Login2
+     * @param parent
+     * @param modal
      */
     public Login(CurriculumVitae parent, boolean modal) {
         this.cv = parent;
         super(parent, modal);
         this.setTitle("Login");
         initComponents();
+        Security.addProvider(new BouncyCastleProvider());
+        loadProviders();
     }
 
     /**
@@ -176,16 +189,16 @@ public class Login extends java.awt.Dialog {
 
     private void login() {
         email = txtEmail.getText().trim();
-        password = new String(txtPassword.getPassword()).getBytes();
+        password = new String(txtPassword.getPassword());
         if (verificaUtilizador(email)) {
-            if (verificaCampos()) {
+            if (verificaCampos(email, password)) {
                 user = new Utilizador(cv.listUsers.get(index));
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
-                cv.listUsers.get(index).setNumLogin(user.getNumLogin()+1);
+                cv.listUsers.get(index).setNumLogin(user.getNumLogin() + 1);
                 cv.listUsers.get(index).setLastLogin(Date.from(Instant.now()));
                 if (user.getNumLogin() == 0) {
                     new adicionarDadosPessoais(cv, true, index).setVisible(true);
-                }else{
+                } else {
                     dispose();
                     new perfil(cv, true, index).setVisible(true);
                 }
@@ -197,17 +210,21 @@ public class Login extends java.awt.Dialog {
         }
     }
 
-    private boolean verificaCampos() {
+    private boolean verificaCampos(String email, String password) {
         boolean verifica = false;
         for (int i = 0; i < cv.listUsers.size(); i++) {
-            user = new Utilizador(cv.listUsers.get(i));
-            if (email.equals(user.getEmail()) == true && Arrays.equals(password, user.getPassword()) == true) {
-                index = i;
-                verifica = true;
-                break;
-            } else {
+            try {
+                user = new Utilizador(email);
+                if (user.load(password)) {
+                    index = i;
+                    verifica = true;
+                    break;
+                } else {
 
-                verifica = false;
+                    verifica = false;
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return verifica;
@@ -225,5 +242,23 @@ public class Login extends java.awt.Dialog {
             }
         }
         return verifica;
+    }
+    
+    public static void loadProviders() {
+        Provider providers[] = Security.getProviders();
+        //todos os fornecedores do segurança
+        for (Provider provider : providers) {
+            StringBuilder txt = new StringBuilder();
+            List<String> lst = new ArrayList<>();
+            //serviços fornecidos
+            Set<Provider.Service> services = provider.getServices();
+            for (Provider.Service service : services) {
+                lst.add(String.format("%-20s %s\n", service.getType(), service.getAlgorithm()));
+            }
+            Collections.sort(lst);
+            for (String service : lst) {
+                txt.append(service);
+            }
+        }
     }
 }
