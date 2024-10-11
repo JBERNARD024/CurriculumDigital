@@ -4,6 +4,7 @@
  */
 package curriculum.vitae.gui;
 
+import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Utilizador;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -18,27 +19,39 @@ import utils.Recursos;
  * @author joaob
  */
 public class CurriculumVitae extends javax.swing.JFrame {
+
     ArrayList<Utilizador> listUsers = new ArrayList<>();
-    File f;
+    ArrayList<Instituto> listInst = new ArrayList<>();
+    File fichUsers;
+    File fichInst;
 
     /**
      * Creates new form PaginaInicial
      */
     public CurriculumVitae() {
         initComponents();
-        f = new File("../Curriculum Vitae/utilizadores/users.user");
-        listUsers = (ArrayList<Utilizador>) Recursos.readObject(f.getAbsolutePath());
+        fichUsers = new File("../Curriculum Vitae/utilizadores/users.user");
+        fichInst = new File("../Curriculum Vitae/institutos/institutos.inst");
+        listUsers = (ArrayList<Utilizador>) Recursos.readObject(fichUsers.getAbsolutePath());
+        listInst = (ArrayList<Instituto>) Recursos.readObject(fichInst.getAbsolutePath());
         //Fecha a janela principal da aplicação e encerra a aplicação
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //Vai guardar a lista de todos os utilizadores durante a atividade no sistema.
         addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e){
+            public void windowClosing(WindowEvent e) {
                 try {
-                    Recursos.writeObject(listUsers, f.getAbsolutePath());
-                    System.out.println("Lista de utilizadores gravada com sucesso");
+                    Recursos.writeObject(listUsers, fichUsers.getAbsolutePath());
+                    System.out.println("Lista de Utilizadores gravada com sucesso");
                 } catch (Exception ex) {
-                    System.err.println("Erro ao gravar a lista de utilizadores = " + ex.getMessage());
+                    System.err.println("Erro ao gravar a lista de Utilizadores = " + ex.getMessage());
+                }
+
+                try {
+                    Recursos.writeObject(listInst, fichInst.getAbsolutePath());
+                    System.out.println("Lista de Institutos gravada com sucesso");
+                } catch (Exception ex) {
+                    System.err.println("Erro ao gravar a lista de Institutos = " + ex.getMessage());
                 }
             }
         });
@@ -88,22 +101,25 @@ public class CurriculumVitae extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1)
             .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnCriarCurriculum, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAboutUs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnCriarCurriculum, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnAboutUs, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(btnCriarCurriculum, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAboutUs, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addGap(17, 17, 17))
         );
 
         pack();
