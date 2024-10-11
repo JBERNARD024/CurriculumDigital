@@ -4,11 +4,20 @@
  */
 package curriculum.vitae.gui;
 
+import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Utilizador;
+import java.security.Provider;
+import java.security.Security;
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  *
@@ -18,18 +27,25 @@ public class Login extends java.awt.Dialog {
 
     CurriculumVitae cv;
     String email;
-    byte[] password;
+    String password;
+    String codNome;
     Utilizador user;
+    Instituto instituto;
     int index;
 
     /**
      * Creates new form Login2
+     *
+     * @param parent
+     * @param modal
      */
     public Login(CurriculumVitae parent, boolean modal) {
         this.cv = parent;
         super(parent, modal);
         this.setTitle("Login");
         initComponents();
+        Security.addProvider(new BouncyCastleProvider());
+        loadProviders();
     }
 
     /**
@@ -40,14 +56,25 @@ public class Login extends java.awt.Dialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnRegisto = new javax.swing.JButton();
-        btnLogin = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        txtEmail = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        txtPassword = new javax.swing.JPasswordField();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        painelLoginUsers = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        txtPasswordUser = new javax.swing.JPasswordField();
+        btnRegistoUser = new javax.swing.JButton();
+        txtEmailUser = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        btnLoginUser = new javax.swing.JButton();
+        painelLoginInstituto = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        txtCodNomeInst = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        txtPasswordInst = new javax.swing.JPasswordField();
+        btnLoginInst = new javax.swing.JButton();
+        btnRegistoInst = new javax.swing.JButton();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -55,85 +82,180 @@ public class Login extends java.awt.Dialog {
             }
         });
 
-        btnRegisto.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnRegisto.setForeground(new java.awt.Color(86, 137, 171));
-        btnRegisto.setText("Registar-me");
-        btnRegisto.setPreferredSize(new java.awt.Dimension(75, 30));
-        btnRegisto.addActionListener(new java.awt.event.ActionListener() {
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/loginImage.jpeg"))); // NOI18N
+        jLabel5.setMaximumSize(new java.awt.Dimension(150, 125));
+        jLabel5.setMinimumSize(new java.awt.Dimension(150, 125));
+        jLabel5.setPreferredSize(new java.awt.Dimension(150, 150));
+
+        btnRegistoUser.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnRegistoUser.setForeground(new java.awt.Color(86, 137, 171));
+        btnRegistoUser.setText("Registar-me");
+        btnRegistoUser.setPreferredSize(new java.awt.Dimension(75, 30));
+        btnRegistoUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistoActionPerformed(evt);
+                btnRegistoUserActionPerformed(evt);
             }
         });
 
-        btnLogin.setBackground(new java.awt.Color(86, 137, 171));
-        btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnLogin.setForeground(new java.awt.Color(255, 255, 255));
-        btnLogin.setText("Login");
-        btnLogin.setPreferredSize(new java.awt.Dimension(75, 30));
-        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(86, 137, 171));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("LOGIN");
+
+        jLabel7.setText("Email");
+
+        jLabel8.setText("Password");
+
+        btnLoginUser.setBackground(new java.awt.Color(86, 137, 171));
+        btnLoginUser.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnLoginUser.setForeground(new java.awt.Color(255, 255, 255));
+        btnLoginUser.setText("Login");
+        btnLoginUser.setPreferredSize(new java.awt.Dimension(75, 30));
+        btnLoginUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLoginActionPerformed(evt);
+                btnLoginUserActionPerformed(evt);
             }
         });
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/loginImage.jpeg"))); // NOI18N
-        jLabel1.setMaximumSize(new java.awt.Dimension(150, 125));
-        jLabel1.setMinimumSize(new java.awt.Dimension(150, 125));
-        jLabel1.setPreferredSize(new java.awt.Dimension(150, 150));
+        javax.swing.GroupLayout painelLoginUsersLayout = new javax.swing.GroupLayout(painelLoginUsers);
+        painelLoginUsers.setLayout(painelLoginUsersLayout);
+        painelLoginUsersLayout.setHorizontalGroup(
+            painelLoginUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelLoginUsersLayout.createSequentialGroup()
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(painelLoginUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelLoginUsersLayout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addGroup(painelLoginUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(painelLoginUsersLayout.createSequentialGroup()
+                                .addComponent(btnLoginUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(13, 13, 13)
+                                .addComponent(btnRegistoUser, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE))
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel7)
+                            .addComponent(txtEmailUser)
+                            .addComponent(txtPasswordUser)))
+                    .addGroup(painelLoginUsersLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+        painelLoginUsersLayout.setVerticalGroup(
+            painelLoginUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelLoginUsersLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel6)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtEmailUser, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtPasswordUser, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(59, 59, 59)
+                .addGroup(painelLoginUsersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnLoginUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRegistoUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20))
+            .addGroup(painelLoginUsersLayout.createSequentialGroup()
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
 
-        jLabel4.setText("Password");
+        jTabbedPane1.addTab("<html>&nbsp; Utilizador</html>", new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/user.png")), painelLoginUsers); // NOI18N
 
-        jLabel3.setText("Email");
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/loginInstituto.jpg"))); // NOI18N
+        jLabel9.setMaximumSize(new java.awt.Dimension(150, 125));
+        jLabel9.setMinimumSize(new java.awt.Dimension(150, 125));
+        jLabel9.setPreferredSize(new java.awt.Dimension(150, 150));
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("LOGIN");
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(0, 153, 51));
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("LOGIN");
+
+        jLabel11.setText("Código do Instituto");
+
+        jLabel12.setText("Password");
+
+        btnLoginInst.setBackground(new java.awt.Color(0, 153, 51));
+        btnLoginInst.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnLoginInst.setForeground(new java.awt.Color(255, 255, 255));
+        btnLoginInst.setText("Login");
+        btnLoginInst.setPreferredSize(new java.awt.Dimension(75, 30));
+        btnLoginInst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginInstActionPerformed(evt);
+            }
+        });
+
+        btnRegistoInst.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnRegistoInst.setForeground(new java.awt.Color(0, 153, 51));
+        btnRegistoInst.setText("Registar-me");
+        btnRegistoInst.setPreferredSize(new java.awt.Dimension(75, 30));
+        btnRegistoInst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistoInstActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout painelLoginInstitutoLayout = new javax.swing.GroupLayout(painelLoginInstituto);
+        painelLoginInstituto.setLayout(painelLoginInstitutoLayout);
+        painelLoginInstitutoLayout.setHorizontalGroup(
+            painelLoginInstitutoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelLoginInstitutoLayout.createSequentialGroup()
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(painelLoginInstitutoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelLoginInstitutoLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(painelLoginInstitutoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(painelLoginInstitutoLayout.createSequentialGroup()
+                                .addComponent(btnLoginInst, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(13, 13, 13)
+                                .addComponent(btnRegistoInst, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel12)
+                            .addComponent(jLabel11)
+                            .addComponent(txtCodNomeInst)
+                            .addComponent(txtPasswordInst, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 18, Short.MAX_VALUE))
+        );
+        painelLoginInstitutoLayout.setVerticalGroup(
+            painelLoginInstitutoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelLoginInstitutoLayout.createSequentialGroup()
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(painelLoginInstitutoLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jLabel10)
+                .addGap(24, 24, 24)
+                .addComponent(jLabel11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtCodNomeInst, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtPasswordInst, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
+                .addGroup(painelLoginInstitutoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnLoginInst, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRegistoInst, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("<html>&nbsp;Instituto</html>", new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/Instituto.png")), painelLoginInstituto); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnRegisto, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(txtPassword))
-                        .addContainerGap(12, Short.MAX_VALUE))))
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jLabel2)
-                .addGap(30, 30, 30)
-                .addComponent(jLabel3)
-                .addGap(12, 12, 12)
-                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRegisto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -148,44 +270,67 @@ public class Login extends java.awt.Dialog {
         dispose();
     }//GEN-LAST:event_closeDialog
 
-    private void btnRegistoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoActionPerformed
+    private void btnRegistoUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoUserActionPerformed
         // TODO add your handling code here:
         dispose();
         new Registo(cv, true).setVisible(true);
-    }//GEN-LAST:event_btnRegistoActionPerformed
+    }//GEN-LAST:event_btnRegistoUserActionPerformed
 
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+    private void btnLoginUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginUserActionPerformed
         // TODO add your handling code here:
-        login();
-    }//GEN-LAST:event_btnLoginActionPerformed
+        loginUser();
+    }//GEN-LAST:event_btnLoginUserActionPerformed
+
+    private void btnLoginInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginInstActionPerformed
+        // TODO add your handling code here:
+        loginInst();
+    }//GEN-LAST:event_btnLoginInstActionPerformed
+
+    private void btnRegistoInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoInstActionPerformed
+        // TODO add your handling code here:
+        dispose();
+        new Registo(cv, true).setVisible(true);
+    }//GEN-LAST:event_btnRegistoInstActionPerformed
 
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnLogin;
-    private javax.swing.JButton btnRegisto;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JTextField txtEmail;
-    private javax.swing.JPasswordField txtPassword;
+    private javax.swing.JButton btnLoginInst;
+    private javax.swing.JButton btnLoginUser;
+    private javax.swing.JButton btnRegistoInst;
+    private javax.swing.JButton btnRegistoUser;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel painelLoginInstituto;
+    private javax.swing.JPanel painelLoginUsers;
+    private javax.swing.JTextField txtCodNomeInst;
+    private javax.swing.JTextField txtEmailUser;
+    private javax.swing.JPasswordField txtPasswordInst;
+    private javax.swing.JPasswordField txtPasswordUser;
     // End of variables declaration//GEN-END:variables
 
-    private void login() {
-        email = txtEmail.getText().trim();
-        password = new String(txtPassword.getPassword()).getBytes();
+    //################################################## U T I L I Z A D O R ################################################################
+    private void loginUser() {
+        email = txtEmailUser.getText().trim();
+        password = new String(txtPasswordUser.getPassword());
         if (verificaUtilizador(email)) {
-            if (verificaCampos()) {
+            if (verificaCamposUser(email, password)) {
                 user = new Utilizador(cv.listUsers.get(index));
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
-                cv.listUsers.get(index).setNumLogin(user.getNumLogin()+1);
+                cv.listUsers.get(index).setNumLogin(user.getNumLogin() + 1);
                 cv.listUsers.get(index).setLastLogin(Date.from(Instant.now()));
                 if (user.getNumLogin() == 0) {
                     new adicionarDadosPessoais(cv, true, index).setVisible(true);
-                }else{
+                } else {
                     dispose();
                     new perfil(cv, true, index).setVisible(true);
                 }
@@ -197,17 +342,21 @@ public class Login extends java.awt.Dialog {
         }
     }
 
-    private boolean verificaCampos() {
+    private boolean verificaCamposUser(String email, String password) {
         boolean verifica = false;
         for (int i = 0; i < cv.listUsers.size(); i++) {
-            user = new Utilizador(cv.listUsers.get(i));
-            if (email.equals(user.getEmail()) == true && Arrays.equals(password, user.getPassword()) == true) {
-                index = i;
-                verifica = true;
-                break;
-            } else {
+            try {
+                user = new Utilizador(email);
+                if (user.load(password)) {
+                    index = i;
+                    verifica = true;
+                    break;
+                } else {
 
-                verifica = false;
+                    verifica = false;
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return verifica;
@@ -225,5 +374,84 @@ public class Login extends java.awt.Dialog {
             }
         }
         return verifica;
+    }
+
+    //################################################## I N S T I T U T O ################################################################
+    private void loginInst() {
+        codNome = txtCodNomeInst.getText().trim();
+        password = new String(txtPasswordInst.getPassword());
+        if (verificaInstituto(codNome)) {
+            if (verificaCamposInstituto(codNome, password)) {
+                instituto = new Instituto(cv.listInst.get(index));
+                JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
+                cv.listInst.get(index).setNumLogin(instituto.getNumLogin() + 1);
+                cv.listInst.get(index).setLastLogin(Date.from(Instant.now()));
+                if (instituto.getNumLogin() == 0) {
+                    dispose();
+                    new adicionarDadosPessoais(cv, true, index).setVisible(true);
+                } else {
+                    dispose();
+                    new perfil(cv, true, index).setVisible(true);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
+            }
+        } else {
+            JOptionPane.showConfirmDialog(null, "Código Nome não está registado no sistema!!", "Código Nome Inválido", 2);
+        }
+    }
+    
+    
+    boolean verificaCamposInstituto(String codNome, String password) {
+        boolean verifica = false;
+        for (int i = 0; i < cv.listInst.size(); i++) {
+            try {
+                instituto = new Instituto(codNome);
+                if (instituto.load(password)) {
+                    index = i;
+                    verifica = true;
+                    break;
+                } else {
+
+                    verifica = false;
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return verifica;
+    }
+
+    private boolean verificaInstituto(String codNome) {
+        boolean verifica = false;
+        for (int i = 0; i < cv.listInst.size(); i++) {
+            instituto = new Instituto(cv.listInst.get(i));
+            if (!instituto.getCodNome().equals(codNome)) {
+                verifica = false;
+            } else {
+                verifica = true;
+                break;
+            }
+        }
+        return verifica;
+    }
+
+    //################################################## P R O V I D E R ################################################################
+    public static void loadProviders() {
+        Provider providers[] = Security.getProviders();
+        //todos os fornecedores do segurança
+        for (Provider provider : providers) {
+            StringBuilder txt = new StringBuilder();
+            List<String> lst = new ArrayList<>();
+            //serviços fornecidos
+            Set<Provider.Service> services = provider.getServices();
+            for (Provider.Service service : services) {
+                lst.add(String.format("%-20s %s\n", service.getType(), service.getAlgorithm()));
+            }
+            Collections.sort(lst);
+            for (String service : lst) {
+                txt.append(service);
+            }
+        }
     }
 }
