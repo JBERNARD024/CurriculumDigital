@@ -16,6 +16,7 @@ public class aboutUs extends java.awt.Dialog {
     public aboutUs(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.setTitle("About Us");
     }
 
     /**

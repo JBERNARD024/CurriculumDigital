@@ -26,14 +26,18 @@ import utils.SecurityUtils;
 public class Instituto implements Serializable{
 
     private String codNome;
+    private byte[] imagem;
     private PrivateKey privKey;
     private PublicKey pubKey;
     private Key simKey;
+    private dadosInstitucionais dadosInst;
     private int numLogin;
     private Date lastLogin;
 
     public Instituto(String codNome) {
         this.codNome = codNome;
+        this.imagem = null;
+        this.dadosInst = null;
         this.privKey = null;
         this.pubKey = null;
         this.simKey = null;
@@ -44,15 +48,18 @@ public class Instituto implements Serializable{
         this.privKey = privKey;
         this.pubKey = pubKey;
         this.simKey = simKey;
+        this.dadosInst = null;
     }
 
     public Instituto(Instituto inst) {
         this.codNome = inst.codNome;
+        this.imagem = inst.imagem;
         this.privKey = inst.privKey;
         this.pubKey = inst.pubKey;
         this.simKey = inst.simKey;
         this.numLogin = inst.numLogin;
         this.lastLogin = inst.lastLogin;
+        this.dadosInst = inst.dadosInst;
     }
 
     //Função que vai criar o par de chaves assimétricas e a chave simétrica de um instituto
@@ -176,4 +183,22 @@ public class Instituto implements Serializable{
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
     }
+
+    public dadosInstitucionais getDadosInst() {
+        return dadosInst;
+    }
+
+    public void setDadosInst(dadosInstitucionais dadosInst) {
+        this.dadosInst = dadosInst;
+    }
+
+    public byte[] getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(byte[] imagem) {
+        this.imagem = imagem;
+    }
+    
+    
 }

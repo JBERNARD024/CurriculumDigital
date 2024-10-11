@@ -329,10 +329,11 @@ public class Login extends java.awt.Dialog {
                 cv.listUsers.get(index).setNumLogin(user.getNumLogin() + 1);
                 cv.listUsers.get(index).setLastLogin(Date.from(Instant.now()));
                 if (user.getNumLogin() == 0) {
+                    dispose();
                     new adicionarDadosPessoais(cv, true, index).setVisible(true);
                 } else {
                     dispose();
-                    new perfil(cv, true, index).setVisible(true);
+                    new perfilUser(cv, true, index).setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
@@ -388,10 +389,10 @@ public class Login extends java.awt.Dialog {
                 cv.listInst.get(index).setLastLogin(Date.from(Instant.now()));
                 if (instituto.getNumLogin() == 0) {
                     dispose();
-                    new adicionarDadosPessoais(cv, true, index).setVisible(true);
+                    new adicionarDadosInstitucionais(cv, true, index).setVisible(true);
                 } else {
                     dispose();
-                    new perfil(cv, true, index).setVisible(true);
+                    new perfilInstituto(cv, true, index).setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);

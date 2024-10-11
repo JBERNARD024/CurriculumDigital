@@ -475,7 +475,7 @@ public class listaExperienciaProfissional extends java.awt.Dialog {
     private void btnDadosPessoaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDadosPessoaisActionPerformed
         // TODO add your handling code here:
         dispose();
-        new perfil(cv, true, index).setVisible(true);
+        new perfilUser(cv, true, index).setVisible(true);
     }//GEN-LAST:event_btnDadosPessoaisActionPerformed
 
     private void btnEducacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducacaoActionPerformed
