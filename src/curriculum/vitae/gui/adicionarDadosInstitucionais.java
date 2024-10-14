@@ -39,7 +39,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
     String descr;
     ImageIcon icon;
     byte[] byteIcon;
-    File f = new File("../Curriculum Vitae/institutos/institutos.inst");
+    File f;
     dadosInstitucionais dadosInst;
     int index;
 
@@ -55,6 +55,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
         this.cv = parent;
         this.index = index;
         initComponents();
+        f = new File(cv.pathInst);
         this.setTitle("Adicionar Dados Institucionais");
         txtCodNome.setText(cv.listInst.get(index).getCodNome());
     }
@@ -276,9 +277,9 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel15)
-                                    .addComponent(jLabel16))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel16)
+                                    .addComponent(jLabel15))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)

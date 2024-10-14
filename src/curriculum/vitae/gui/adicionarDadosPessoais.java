@@ -36,7 +36,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     String descr;
     ImageIcon icon;
     byte[] byteIcon;
-    File f = new File("../Curriculum Vitae/utilizadores/users.user");
+    File f;
     dadosPessoais dadosP;
     int index;
 
@@ -53,6 +53,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         this.cv = parent;
         this.index = index;
         initComponents();
+        f = new File(cv.pathUsers);
         this.setTitle("Adicionar Dados Pessoais");
         txtEmail.setText(cv.listUsers.get(index).getEmail());
     }
@@ -311,7 +312,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     private void btnVerPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerPerfilActionPerformed
         // TODO add your handling code here:
         dispose();
-        new adicionarExperienciaProfissional(cv, true, index).setVisible(true);
+        new perfilUser(cv, true, index).setVisible(true);
     }//GEN-LAST:event_btnVerPerfilActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed

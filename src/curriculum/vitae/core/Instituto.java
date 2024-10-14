@@ -16,7 +16,6 @@ import java.security.PublicKey;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.KeyGenerator;
 import utils.SecurityUtils;
 
 /**
@@ -36,11 +35,7 @@ public class Instituto implements Serializable{
 
     public Instituto(String codNome) {
         this.codNome = codNome;
-        this.imagem = null;
-        this.dadosInst = null;
-        this.privKey = null;
-        this.pubKey = null;
-        this.simKey = null;
+        this.numLogin = 0;
     }
 
     public Instituto(String codNome, PrivateKey privKey, PublicKey pubKey, Key simKey) {
@@ -67,16 +62,11 @@ public class Instituto implements Serializable{
         KeyPair keyPair = SecurityUtils.generateECKeyPair(521, "BC");
         this.pubKey = keyPair.getPublic();
         this.privKey = keyPair.getPrivate();
-        //Vai criar a chave, segundo o algoritmo e o provider definido, respetivamente
-        KeyGenerator keyGen = KeyGenerator.getInstance("Threefish-1024", "BC");
-        //Tamanho da chave
-        keyGen.init(1024);
-        //Gerar a chave assimétrica
-        this.simKey = keyGen.generateKey();
+        this.simKey = SecurityUtils.generateKey("AES", 256, "BC");
     }
 
     //Esta função, vai criar uma pasta para guardar as chaves de um instituto
-    public void criarPasta(String password) {
+    public void criarPasta() {
         //Definir o caminho da pasta
         String caminho = "../Curriculum Vitae/institutos/" + codNome + "/";
         File diretoria = new File(caminho);
@@ -199,6 +189,4 @@ public class Instituto implements Serializable{
     public void setImagem(byte[] imagem) {
         this.imagem = imagem;
     }
-    
-    
 }

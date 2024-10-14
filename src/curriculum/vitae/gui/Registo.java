@@ -32,8 +32,8 @@ public class Registo extends java.awt.Dialog {
     String codNome;
     Utilizador user;
     Instituto instituto;
-    File fichUsers = new File("../Curriculum Vitae/utilizadores/users.user");
-    File fichInst = new File("../Curriculum Vitae/institutos/institutos.inst");
+    File fichUsers = new File(cv.pathUsers);
+    File fichInst = new File(cv.pathInst);
 
     /**
      * Creates new form Registo
@@ -356,7 +356,7 @@ public class Registo extends java.awt.Dialog {
         confPassword = new String(txtConfPasswordSuer.getPassword());
         if (verificaCamposUser() == true && verificaEmail(email) == false) {
             user = new Utilizador(email);
-            user.criarPasta(password);
+            user.criarPasta();
             user.generateKeys();
             user.save(password);
             cv.listUsers.add(user);
@@ -373,7 +373,7 @@ public class Registo extends java.awt.Dialog {
         confPassword = new String(txtConfPasswordInst.getPassword());
         if (verificaCamposInst()== true && verificaCodNome(codNome) == false) {
             instituto = new Instituto(codNome);
-            instituto.criarPasta(password);
+            instituto.criarPasta();
             instituto.generateKeys();
             instituto.save(password);
             cv.listInst.add(instituto);

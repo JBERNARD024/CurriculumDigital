@@ -367,7 +367,7 @@ public class perfilInstituto extends java.awt.Dialog {
     private void btnAdicionarCurriculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarCurriculoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaExperienciaProfissional(cv, true, index).setVisible(true);
+        new adicionarEducacao(cv, true, index).setVisible(true);
     }//GEN-LAST:event_btnAdicionarCurriculoActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed

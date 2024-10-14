@@ -21,6 +21,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created on 22/08/2022, 10:09:17
@@ -70,8 +71,11 @@ public class BlockChain implements Serializable {
         txt.append("Blochain size = ").append(chain.size()).append("\n");
         for (Block block : chain) {
             txt.append(block.toString()).append("\n");
-        }        
+        }
         return txt.toString();
+    }
+    public List<Block> getChain() {
+       return chain;
     }
 
     public void save(String fileName) throws Exception {
