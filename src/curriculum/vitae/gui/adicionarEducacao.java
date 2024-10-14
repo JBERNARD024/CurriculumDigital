@@ -53,6 +53,7 @@ public class adicionarEducacao extends java.awt.Dialog {
         for (Utilizador users : cv.listUsers) {
             txtUtilizadores.addItem(users.getDados().getNome());
         }
+        System.out.println(txtUtilizadores.toString());
         
         inst = new Instituto(cv.listInst.get(indexInst));
         txtInstituicao.setText(inst.getDadosInst().getNome());
@@ -287,7 +288,7 @@ public class adicionarEducacao extends java.awt.Dialog {
     private void btnEducacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducacaoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaEducacao(cv, true, indexInst).setVisible(true);
+        new listaEducacao(cv, true, indexUser).setVisible(true);
     }//GEN-LAST:event_btnEducacaoActionPerformed
 
 
@@ -322,7 +323,7 @@ public class adicionarEducacao extends java.awt.Dialog {
 
     private void adicionarEducacao() {
         try {
-            indexInst = txtUtilizadores.getSelectedIndex();
+            indexUser = txtUtilizadores.getSelectedIndex();
             qualificacao = (String) txtQualificacao.getSelectedItem();
             areaEstudo = txtAreaEstudo.getText();
             instituicao = txtInstituicao.getText();

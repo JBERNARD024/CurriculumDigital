@@ -39,7 +39,8 @@ public class Login extends java.awt.Dialog {
     String codNome;
     Utilizador user;
     Instituto instituto;
-    int index;
+    int indexUser = 0;
+    int indexInst = 0;
 
     /**
      * Creates new form Login2
@@ -338,18 +339,19 @@ public class Login extends java.awt.Dialog {
     private void loginUser() throws IOException, Exception {
         email = txtEmailUser.getText().trim();
         password = new String(txtPasswordUser.getPassword());
+        user = new Utilizador(email);
         if (verificaUtilizador(email)) {
             if (verificaCamposUser(email, password)) {
-                user = new Utilizador(cv.listUsers.get(index));
+                user = new Utilizador(cv.listUsers.get(indexUser));
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
-                cv.listUsers.get(index).setNumLogin(user.getNumLogin() + 1);
-                cv.listUsers.get(index).setLastLogin(Date.from(Instant.now()));
+                cv.listUsers.get(indexUser).setNumLogin(user.getNumLogin() + 1);
+                cv.listUsers.get(indexUser).setLastLogin(Date.from(Instant.now()));
                 if (user.getNumLogin() == 0) {
                     dispose();
-                    new adicionarDadosPessoais(cv, true, index).setVisible(true);
+                    new adicionarDadosPessoais(cv, true, indexUser).setVisible(true);
                 } else {
                     dispose();
-                    new perfilUser(cv, true, index).setVisible(true);
+                    new perfilUser(cv, true, indexUser).setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
@@ -365,11 +367,9 @@ public class Login extends java.awt.Dialog {
             try {
                 user = new Utilizador(email);
                 if (user.load(password)) {
-                    index = i;
                     verifica = true;
                     break;
                 } else {
-
                     verifica = false;
                 }
             } catch (Exception ex) {
@@ -386,6 +386,7 @@ public class Login extends java.awt.Dialog {
             if (!user.getEmail().equals(email)) {
                 verifica = false;
             } else {
+                indexUser = i;
                 verifica = true;
                 break;
             }
@@ -399,17 +400,17 @@ public class Login extends java.awt.Dialog {
         password = new String(txtPasswordInst.getPassword());
         if (verificaInstituto(codNome)) {
             if (verificaCamposInstituto(codNome, password)) {
-                instituto = new Instituto(cv.listInst.get(index));
+                instituto = new Instituto(cv.listInst.get(indexInst));
                 instituto.load(password);
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
-                cv.listInst.get(index).setNumLogin(instituto.getNumLogin() + 1);
-                cv.listInst.get(index).setLastLogin(Date.from(Instant.now()));
+                cv.listInst.get(indexInst).setNumLogin(instituto.getNumLogin() + 1);
+                cv.listInst.get(indexInst).setLastLogin(Date.from(Instant.now()));
                 if (instituto.getNumLogin() == 0) {
                     dispose();
-                    new adicionarDadosInstitucionais(cv, true, index).setVisible(true);
+                    new adicionarDadosInstitucionais(cv, true, indexInst).setVisible(true);
                 } else {
                     dispose();
-                    new perfilInstituto(cv, true, index).setVisible(true);
+                    new perfilInstituto(cv, true, indexInst).setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
@@ -425,11 +426,9 @@ public class Login extends java.awt.Dialog {
             try {
                 instituto = new Instituto(codNome);
                 if (instituto.load(password)) {
-                    index = i;
                     verifica = true;
                     break;
                 } else {
-
                     verifica = false;
                 }
             } catch (Exception ex) {
@@ -446,6 +445,7 @@ public class Login extends java.awt.Dialog {
             if (!instituto.getCodNome().equals(codNome)) {
                 verifica = false;
             } else {
+                indexInst = i;
                 verifica = true;
                 break;
             }
