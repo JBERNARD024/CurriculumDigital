@@ -39,8 +39,26 @@ public class Block implements Serializable {
         this.currentHash = calculateHash();
     }
 
+    public String getData() {
+        return data;
+    }
+
+    public String getPreviousHash() {
+        return previousHash;
+    }
+
+    public int getNonce() {
+        return nonce;
+    }
+    
+    
+
     public String calculateHash() {
         return Hash.getHash(nonce + previousHash + data);
+    }
+    
+    public String getCurrentHash(){
+        return currentHash;
     }
 
     public String toString() {

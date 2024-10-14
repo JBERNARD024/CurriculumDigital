@@ -32,19 +32,19 @@ import java.util.List;
  * @author IPT - Ant0nio M@nso
  * @version 1.0
  */
-public final class MerkleTreeString implements Serializable {
+public final class MerkleTree implements Serializable {
 
     // merkle tree hashs
     private List<List<String>> hashTree;
     // elements of tree
-    private List elements;
+    List elements;
 
     /**
      * Builds a merkle tree with an array of data
      *
      * @param arrayOfData list of data
      */
-    public MerkleTreeString(Object[] arrayOfData) {
+    public MerkleTree(Object[] arrayOfData) {
         this(Arrays.asList(arrayOfData));
 
     }
@@ -54,7 +54,7 @@ public final class MerkleTreeString implements Serializable {
      *
      * @param listOfData list of data
      */
-    public MerkleTreeString(List listOfData) {
+    public MerkleTree(List listOfData) {
         this(); //build lists
         //save data in elements
         elements.addAll(listOfData);
@@ -72,7 +72,7 @@ public final class MerkleTreeString implements Serializable {
     /**
      * Builds an empty merkle tree
      */
-    public MerkleTreeString() {
+    public MerkleTree() {
         //build lists
         hashTree = new ArrayList<>();
         elements = new ArrayList<>();
@@ -93,7 +93,7 @@ public final class MerkleTreeString implements Serializable {
      *
      * @param hashList list of hashs
      */
-    private void makeTree(List<String> hashList) {
+    public void makeTree(List<String> hashList) {
         //add hashlist to the beginning of tree
         hashTree.add(0, hashList);                
         //top of tree -> terminate
@@ -300,9 +300,9 @@ public final class MerkleTreeString implements Serializable {
         }
     }
 
-    public static MerkleTreeString loadFromFile(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static MerkleTree loadFromFile(String fileName) throws FileNotFoundException, IOException, ClassNotFoundException {
         try ( ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
-            return (MerkleTreeString) in.readObject();
+            return (MerkleTree) in.readObject();
         }
     }
 
@@ -322,6 +322,19 @@ public final class MerkleTreeString implements Serializable {
     public List getElements() {
         return elements;
     }
+    
+    /**
+     * gets the elements in the merkle tree
+     *
+     * @return elements
+     */
+    public String getElementsString() {
+        StringBuilder txt = new StringBuilder();
+        for (Object obj : elements) {
+            txt.append(obj.toString()+ "\n");
+        }
+        return txt.toString().trim();
+    }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //::::::                                                           :::::::::
@@ -337,7 +350,7 @@ public final class MerkleTreeString implements Serializable {
     }
 
     public static String intToHex(int i) {
-        return Integer.toString(Math.abs(i), 16).toUpperCase();
+        return Integer.toString(i, 16).toUpperCase();
     }
 
    

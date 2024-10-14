@@ -1,5 +1,6 @@
 package curriculum.vitae.gui;
 
+import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Utilizador;
 import curriculum.vitae.core.dadosPessoais;
 import java.awt.Color;
@@ -20,8 +21,8 @@ import javax.swing.ImageIcon;
  *
  * @author joaob
  */
-public class perfil extends java.awt.Dialog {
-    Utilizador user;
+public class perfilInstituto extends java.awt.Dialog {
+    Instituto inst;
     ImageIcon icon;
     Image Image;
     int index;
@@ -32,26 +33,28 @@ public class perfil extends java.awt.Dialog {
      * @param modal
      * @param index
      */
-    public perfil(CurriculumVitae cv, boolean modal, int index) {
+    public perfilInstituto(CurriculumVitae cv, boolean modal, int index) {
         super(cv, modal);
         this.cv = cv;
         this.index = index;
         initComponents();
-        user = new Utilizador(cv.listUsers.get(index));
-        txtNome.setText(user.getDados().getNome());
-        txtSexo.setText(user.getDados().getSexo());
-        txtData.setDate(user.getDados().getDataNasc());
-        txtData.setEnabled(false);
-        txtNacionalidade.setText(user.getDados().getNacionalidade());
-        txtEmail.setText(user.getEmail());
-        txtTelemovel.setText(user.getDados().getTelemovel());
-        txtLinkedin.setText(user.getDados().getLinkedin());
-        txtMorada.setText(user.getDados().getMorada());
-        txtLocalidade.setText(user.getDados().getLocalidade());
-        txtCodPostal.setText(user.getDados().getCodPostal());
-        txtPais.setText(user.getDados().getPais());
-        txtDescr.setText(user.getDados().getDescricao());
-        icon = new ImageIcon(user.getImagem());
+        this.setTitle("Perfil Instituto");
+        inst = new Instituto(cv.listInst.get(index));
+        txtNomeInst.setText(inst.getDadosInst().getNome());
+        txtNatureza.setText(inst.getDadosInst().getNatureza());
+        txtDataFund.setDate(inst.getDadosInst().getDataFundacao());
+        txtDataFund.setEnabled(false);
+        txtCidade.setText(inst.getDadosInst().getCidade());
+        txtCodeInst.setText(inst.getCodNome());
+        txtTipoEnsino.setText(inst.getDadosInst().getTipoEnsino());
+        txtTelefone.setText(inst.getDadosInst().getTelefone());
+        txtSitioWeb.setText(inst.getDadosInst().getSitioWeb());
+        txtMorada.setText(inst.getDadosInst().getMorada());
+        txtDistrito.setText(inst.getDadosInst().getDistrito());
+        txtCodPostal.setText(inst.getDadosInst().getCodPostal());
+        txtPais.setText(inst.getDadosInst().getPais());
+        txtDescr.setText(inst.getDadosInst().getDescricao());
+        icon = new ImageIcon(inst.getImagem());
         Image imagem = icon.getImage().getScaledInstance(labelFoto.getWidth(), labelFoto.getHeight(), Image.SCALE_SMOOTH);
         labelFoto.setBackground(Color.white);
         labelFoto.setIcon(new ImageIcon(imagem));
@@ -69,38 +72,38 @@ public class perfil extends java.awt.Dialog {
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        btnExpProf = new javax.swing.JButton();
-        btnEduc = new javax.swing.JButton();
-        btnLing = new javax.swing.JButton();
+        btnAdicionarCurriculo = new javax.swing.JButton();
         btnLogout = new javax.swing.JButton();
         labelFoto = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtNome = new javax.swing.JTextField();
+        txtNomeInst = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        txtData = new com.toedter.calendar.JDateChooser();
+        txtDataFund = new com.toedter.calendar.JDateChooser();
         jLabel5 = new javax.swing.JLabel();
-        txtSexo = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        txtNacionalidade = new javax.swing.JTextField();
+        txtCidade = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtPais = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        txtTelemovel = new javax.swing.JTextField();
-        txtEmail = new javax.swing.JTextField();
+        txtTelefone = new javax.swing.JTextField();
+        txtCodeInst = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        txtLinkedin = new javax.swing.JTextField();
+        txtSitioWeb = new javax.swing.JTextField();
         txtMorada = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         txtCodPostal = new javax.swing.JTextField();
-        txtLocalidade = new javax.swing.JTextField();
+        txtDistrito = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDescr = new javax.swing.JTextArea();
         btnEditar = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
+        txtTipoEnsino = new javax.swing.JTextField();
+        txtNatureza = new javax.swing.JTextField();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -115,29 +118,11 @@ public class perfil extends java.awt.Dialog {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
         jLabel1.setText("PERFIL");
 
-        btnExpProf.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnExpProf.setText("Experiência Profissional");
-        btnExpProf.addActionListener(new java.awt.event.ActionListener() {
+        btnAdicionarCurriculo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAdicionarCurriculo.setText("Adicionar Currículo");
+        btnAdicionarCurriculo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExpProfActionPerformed(evt);
-            }
-        });
-
-        btnEduc.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnEduc.setText("Educação");
-        btnEduc.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-        btnEduc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEducActionPerformed(evt);
-            }
-        });
-
-        btnLing.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnLing.setText("Competências Linguísticas");
-        btnLing.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-        btnLing.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLingActionPerformed(evt);
+                btnAdicionarCurriculoActionPerformed(evt);
             }
         });
 
@@ -153,22 +138,19 @@ public class perfil extends java.awt.Dialog {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(labelFoto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                            .addComponent(btnEduc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnExpProf, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnLing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addComponent(jLabel1)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnAdicionarCurriculo, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(15, 15, 15)
+                            .addComponent(labelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(83, 83, 83)
+                            .addComponent(jLabel1))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(51, 51, 51)
+                            .addComponent(btnLogout))))
                 .addContainerGap(15, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnLogout)
-                .addGap(56, 56, 56))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,61 +159,57 @@ public class perfil extends java.awt.Dialog {
                 .addComponent(jLabel1)
                 .addGap(59, 59, 59)
                 .addComponent(labelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(119, 119, 119)
+                .addComponent(btnAdicionarCurriculo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnExpProf, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnEduc, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnLing, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(79, 79, 79)
                 .addComponent(btnLogout)
                 .addGap(19, 19, 19))
         );
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel2.setText("Dados Pessoais");
+        jLabel2.setText("Dados Institucionais");
 
-        jLabel3.setText("Nome");
+        jLabel3.setText("Nome da Instituição");
 
-        txtNome.setEditable(false);
+        txtNomeInst.setEditable(false);
 
-        jLabel4.setText("Data de Nascimento");
+        jLabel4.setText("Data de Fundação");
 
-        jLabel5.setText("Sexo");
+        txtDataFund.setEnabled(false);
 
-        txtSexo.setEditable(false);
+        jLabel5.setText("Natureza");
 
-        jLabel6.setText("Nacionalidade");
+        jLabel6.setText("Cidade");
 
-        txtNacionalidade.setEditable(false);
+        txtCidade.setEditable(false);
 
         jLabel7.setText("País");
 
         txtPais.setEditable(false);
 
-        jLabel8.setText("Email");
+        jLabel8.setText("Código do Instituto");
 
-        jLabel9.setText("Telemóvel");
+        jLabel9.setText("Telefone");
 
-        txtTelemovel.setEditable(false);
+        txtTelefone.setEditable(false);
 
-        txtEmail.setEditable(false);
+        txtCodeInst.setEditable(false);
 
-        jLabel10.setText("Linkedin");
+        jLabel10.setText("Sítio Web");
 
-        txtLinkedin.setEditable(false);
+        txtSitioWeb.setEditable(false);
 
         txtMorada.setEditable(false);
 
         jLabel11.setText("Morada");
 
-        jLabel12.setText("Localidade");
+        jLabel12.setText("Distrito");
 
         jLabel13.setText("Código Postal");
 
         txtCodPostal.setEditable(false);
 
-        txtLocalidade.setEditable(false);
+        txtDistrito.setEditable(false);
 
         jLabel14.setText("Descrição");
 
@@ -246,6 +224,12 @@ public class perfil extends java.awt.Dialog {
                 btnEditarActionPerformed(evt);
             }
         });
+
+        jLabel15.setText("Tipo de Ensino");
+
+        txtTipoEnsino.setEditable(false);
+
+        txtNatureza.setEditable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -263,29 +247,30 @@ public class perfil extends java.awt.Dialog {
                                 .addComponent(jLabel10)
                                 .addComponent(jLabel11)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNomeInst, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel4)
-                                            .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel8))
+                                            .addComponent(txtDataFund, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addComponent(txtCodeInst, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING)))
                                         .addGap(29, 29, 29)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(jLabel5)
+                                            .addComponent(jLabel15)
+                                            .addComponent(txtTipoEnsino, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtNatureza, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(jLabel6)
-                                            .addComponent(txtNacionalidade, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                                            .addComponent(txtCidade, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                                             .addComponent(jLabel9)
-                                            .addComponent(txtTelemovel))))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(201, 201, 201))
+                                            .addComponent(txtTelefone))))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtLocalidade, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtDistrito, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jLabel12))
                                         .addGap(39, 39, 39)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -296,13 +281,13 @@ public class perfil extends java.awt.Dialog {
                                             .addComponent(txtPais, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jLabel7)))
                                     .addComponent(txtMorada, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtLinkedin, javax.swing.GroupLayout.Alignment.LEADING))
+                                    .addComponent(txtSitioWeb, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel14))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(174, 174, 174)
                         .addComponent(jLabel2)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addGap(21, 21, 21))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -312,7 +297,7 @@ public class perfil extends java.awt.Dialog {
                 .addGap(25, 25, 25)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtNomeInst, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -320,23 +305,26 @@ public class perfil extends java.awt.Dialog {
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDataFund, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtSexo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtNacionalidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtNatureza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel15))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtTelemovel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
+                            .addComponent(txtCodeInst, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTipoEnsino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(26, 26, 26)
                         .addComponent(jLabel10))
                     .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtLinkedin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtSitioWeb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel11)
                 .addGap(18, 18, 18)
@@ -346,7 +334,7 @@ public class perfil extends java.awt.Dialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel12)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtLocalidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtDistrito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -359,9 +347,9 @@ public class perfil extends java.awt.Dialog {
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnEditar)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addGap(19, 19, 19))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -376,23 +364,11 @@ public class perfil extends java.awt.Dialog {
         dispose();
     }//GEN-LAST:event_closeDialog
 
-    private void btnExpProfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExpProfActionPerformed
+    private void btnAdicionarCurriculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarCurriculoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaExperienciaProfissional(cv, true, index).setVisible(true);
-    }//GEN-LAST:event_btnExpProfActionPerformed
-
-    private void btnEducActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducActionPerformed
-        // TODO add your handling code here:
-        dispose();
-        new listaEducacao(cv, true, index).setVisible(true);
-    }//GEN-LAST:event_btnEducActionPerformed
-
-    private void btnLingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLingActionPerformed
-        // TODO add your handling code here:
-        dispose();
-        new adicionarLinguas(cv, true, index).setVisible(true);
-    }//GEN-LAST:event_btnLingActionPerformed
+        new adicionarEducacao(cv, true, index).setVisible(true);
+    }//GEN-LAST:event_btnAdicionarCurriculoActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
@@ -405,10 +381,8 @@ public class perfil extends java.awt.Dialog {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdicionarCurriculo;
     private javax.swing.JButton btnEditar;
-    private javax.swing.JButton btnEduc;
-    private javax.swing.JButton btnExpProf;
-    private javax.swing.JButton btnLing;
     private javax.swing.JButton btnLogout;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private com.toedter.calendar.JDateChooser jDateChooser1;
@@ -418,6 +392,7 @@ public class perfil extends java.awt.Dialog {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -429,17 +404,18 @@ public class perfil extends java.awt.Dialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelFoto;
+    private javax.swing.JTextField txtCidade;
     private javax.swing.JTextField txtCodPostal;
-    private com.toedter.calendar.JDateChooser txtData;
+    private javax.swing.JTextField txtCodeInst;
+    private com.toedter.calendar.JDateChooser txtDataFund;
     private javax.swing.JTextArea txtDescr;
-    private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtLinkedin;
-    private javax.swing.JTextField txtLocalidade;
+    private javax.swing.JTextField txtDistrito;
     private javax.swing.JTextField txtMorada;
-    private javax.swing.JTextField txtNacionalidade;
-    private javax.swing.JTextField txtNome;
+    private javax.swing.JTextField txtNatureza;
+    private javax.swing.JTextField txtNomeInst;
     private javax.swing.JTextField txtPais;
-    private javax.swing.JTextField txtSexo;
-    private javax.swing.JTextField txtTelemovel;
+    private javax.swing.JTextField txtSitioWeb;
+    private javax.swing.JTextField txtTelefone;
+    private javax.swing.JTextField txtTipoEnsino;
     // End of variables declaration//GEN-END:variables
 }

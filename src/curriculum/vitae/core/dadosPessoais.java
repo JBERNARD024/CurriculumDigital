@@ -42,6 +42,20 @@ public class dadosPessoais implements Serializable {
         this.pais = pais;
         this.descricao = descricao;
     }
+    
+    public dadosPessoais(dadosPessoais dP){
+        this.nome = dP.nome;
+        this.nacionalidade = dP.nacionalidade;
+        this.dataNasc = dP.dataNasc;
+        this.sexo = dP.sexo;
+        this.telemovel = dP.telemovel;
+        this.linkedin = dP.linkedin;
+        this.morada = dP.morada;
+        this.localidade = dP.localidade;
+        this.codPostal = dP.codPostal;
+        this.pais = dP.pais;
+        this.descricao = dP.descricao;
+    }
 
     public String getNome() {
         return nome;

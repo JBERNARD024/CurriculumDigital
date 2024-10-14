@@ -4,14 +4,19 @@
  */
 package curriculum.vitae.gui;
 
+import curriculum.vitae.core.RegistoCertificado;
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Utilizador;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
+import java.security.Security;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import utils.Recursos;
 
 /**
@@ -22,18 +27,28 @@ public class CurriculumVitae extends javax.swing.JFrame {
 
     ArrayList<Utilizador> listUsers = new ArrayList<>();
     ArrayList<Instituto> listInst = new ArrayList<>();
+    RegistoCertificado registoCerti = new RegistoCertificado();
+    String pathUsers = "../Curriculum Vitae/utilizadores/users.user";
+    String pathInst = "../Curriculum Vitae/institutos/institutos.inst";
+    String pathBlockchain = "../Curriculum Vitae/blockchain/blockchain.bc";
     File fichUsers;
     File fichInst;
+    File fichRegisto;
 
     /**
      * Creates new form PaginaInicial
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.io.IOException
      */
-    public CurriculumVitae() {
+    public CurriculumVitae() throws ClassNotFoundException, IOException, Exception {
         initComponents();
-        fichUsers = new File("../Curriculum Vitae/utilizadores/users.user");
-        fichInst = new File("../Curriculum Vitae/institutos/institutos.inst");
+        Security.addProvider(new BouncyCastleProvider());
+        fichUsers = new File(pathUsers);
+        fichInst = new File(pathInst);
+        fichRegisto = new File(pathBlockchain);
         listUsers = (ArrayList<Utilizador>) Recursos.readObject(fichUsers.getAbsolutePath());
         listInst = (ArrayList<Instituto>) Recursos.readObject(fichInst.getAbsolutePath());
+        registoCerti = (RegistoCertificado) Recursos.readObject(fichRegisto.getAbsolutePath());
         //Fecha a janela principal da aplicação e encerra a aplicação
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //Vai guardar a lista de todos os utilizadores durante a atividade no sistema.
@@ -53,6 +68,13 @@ public class CurriculumVitae extends javax.swing.JFrame {
                 } catch (Exception ex) {
                     System.err.println("Erro ao gravar a lista de Institutos = " + ex.getMessage());
                 }
+
+                try {
+                    Recursos.writeObject(registoCerti, fichRegisto.getAbsolutePath());
+                    System.out.println("Blockchain gravada com sucesso");
+                } catch (Exception ex) {
+                    System.err.println("Erro ao gravar a blockchain = " + ex.getMessage());
+                }
             }
         });
     }
@@ -69,6 +91,7 @@ public class CurriculumVitae extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnCriarCurriculum = new javax.swing.JButton();
         btnAboutUs = new javax.swing.JButton();
+        btnBlockChain = new javax.swing.JButton();
 
         setTitle("Página Inicial");
         setResizable(false);
@@ -97,6 +120,17 @@ public class CurriculumVitae extends javax.swing.JFrame {
             }
         });
 
+        btnBlockChain.setBackground(new java.awt.Color(86, 137, 171));
+        btnBlockChain.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnBlockChain.setForeground(new java.awt.Color(255, 255, 255));
+        btnBlockChain.setText("Blockchain");
+        btnBlockChain.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        btnBlockChain.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBlockChainActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -105,21 +139,25 @@ public class CurriculumVitae extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnCriarCurriculum, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnAboutUs, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(40, 40, 40)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnBlockChain, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(btnCriarCurriculum, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnAboutUs, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(btnCriarCurriculum, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAboutUs, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnBlockChain, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         pack();
@@ -135,6 +173,11 @@ public class CurriculumVitae extends javax.swing.JFrame {
         // TODO add your handling code here:
         new aboutUs(this, true).setVisible(true);
     }//GEN-LAST:event_btnAboutUsActionPerformed
+
+    private void btnBlockChainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBlockChainActionPerformed
+        // TODO add your handling code here:
+        new Blockchain(this, true).setVisible(true);
+    }//GEN-LAST:event_btnBlockChainActionPerformed
 
     /**
      * @param args the command line arguments
@@ -167,15 +210,22 @@ public class CurriculumVitae extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
                 new CurriculumVitae().setVisible(true);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(CurriculumVitae.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(CurriculumVitae.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(CurriculumVitae.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAboutUs;
+    private javax.swing.JButton btnBlockChain;
     private javax.swing.JButton btnCriarCurriculum;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables

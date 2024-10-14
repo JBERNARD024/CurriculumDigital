@@ -16,7 +16,6 @@ import java.security.PublicKey;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.crypto.KeyGenerator;
 import utils.SecurityUtils;
 
 /**
@@ -26,17 +25,17 @@ import utils.SecurityUtils;
 public class Instituto implements Serializable{
 
     private String codNome;
+    private byte[] imagem;
     private PrivateKey privKey;
     private PublicKey pubKey;
     private Key simKey;
+    private dadosInstitucionais dadosInst;
     private int numLogin;
     private Date lastLogin;
 
     public Instituto(String codNome) {
         this.codNome = codNome;
-        this.privKey = null;
-        this.pubKey = null;
-        this.simKey = null;
+        this.numLogin = 0;
     }
 
     public Instituto(String codNome, PrivateKey privKey, PublicKey pubKey, Key simKey) {
@@ -44,15 +43,18 @@ public class Instituto implements Serializable{
         this.privKey = privKey;
         this.pubKey = pubKey;
         this.simKey = simKey;
+        this.dadosInst = null;
     }
 
     public Instituto(Instituto inst) {
         this.codNome = inst.codNome;
+        this.imagem = inst.imagem;
         this.privKey = inst.privKey;
         this.pubKey = inst.pubKey;
         this.simKey = inst.simKey;
         this.numLogin = inst.numLogin;
         this.lastLogin = inst.lastLogin;
+        this.dadosInst = inst.dadosInst;
     }
 
     //Função que vai criar o par de chaves assimétricas e a chave simétrica de um instituto
@@ -60,16 +62,11 @@ public class Instituto implements Serializable{
         KeyPair keyPair = SecurityUtils.generateECKeyPair(521, "BC");
         this.pubKey = keyPair.getPublic();
         this.privKey = keyPair.getPrivate();
-        //Vai criar a chave, segundo o algoritmo e o provider definido, respetivamente
-        KeyGenerator keyGen = KeyGenerator.getInstance("Threefish-1024", "BC");
-        //Tamanho da chave
-        keyGen.init(1024);
-        //Gerar a chave assimétrica
-        this.simKey = keyGen.generateKey();
+        this.simKey = SecurityUtils.generateKey("AES", 256, "BC");
     }
 
     //Esta função, vai criar uma pasta para guardar as chaves de um instituto
-    public void criarPasta(String password) {
+    public void criarPasta() {
         //Definir o caminho da pasta
         String caminho = "../Curriculum Vitae/institutos/" + codNome + "/";
         File diretoria = new File(caminho);
@@ -175,5 +172,21 @@ public class Instituto implements Serializable{
 
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public dadosInstitucionais getDadosInst() {
+        return dadosInst;
+    }
+
+    public void setDadosInst(dadosInstitucionais dadosInst) {
+        this.dadosInst = dadosInst;
+    }
+
+    public byte[] getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(byte[] imagem) {
+        this.imagem = imagem;
     }
 }

@@ -6,10 +6,16 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Utilizador;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.security.Provider;
 import java.security.Security;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +24,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import utils.ObjectUtils;
+import utils.SecurityUtils;
 
 /**
  *
@@ -277,13 +285,21 @@ public class Login extends java.awt.Dialog {
     }//GEN-LAST:event_btnRegistoUserActionPerformed
 
     private void btnLoginUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginUserActionPerformed
-        // TODO add your handling code here:
-        loginUser();
+        try {
+            // TODO add your handling code here:
+            loginUser();
+        } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnLoginUserActionPerformed
 
     private void btnLoginInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginInstActionPerformed
-        // TODO add your handling code here:
-        loginInst();
+        try {
+            // TODO add your handling code here:
+            loginInst();
+        } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnLoginInstActionPerformed
 
     private void btnRegistoInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoInstActionPerformed
@@ -319,7 +335,7 @@ public class Login extends java.awt.Dialog {
     // End of variables declaration//GEN-END:variables
 
     //################################################## U T I L I Z A D O R ################################################################
-    private void loginUser() {
+    private void loginUser() throws IOException, Exception {
         email = txtEmailUser.getText().trim();
         password = new String(txtPasswordUser.getPassword());
         if (verificaUtilizador(email)) {
@@ -329,10 +345,11 @@ public class Login extends java.awt.Dialog {
                 cv.listUsers.get(index).setNumLogin(user.getNumLogin() + 1);
                 cv.listUsers.get(index).setLastLogin(Date.from(Instant.now()));
                 if (user.getNumLogin() == 0) {
+                    dispose();
                     new adicionarDadosPessoais(cv, true, index).setVisible(true);
                 } else {
                     dispose();
-                    new perfil(cv, true, index).setVisible(true);
+                    new perfilUser(cv, true, index).setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
@@ -377,21 +394,22 @@ public class Login extends java.awt.Dialog {
     }
 
     //################################################## I N S T I T U T O ################################################################
-    private void loginInst() {
+    private void loginInst() throws Exception {
         codNome = txtCodNomeInst.getText().trim();
         password = new String(txtPasswordInst.getPassword());
         if (verificaInstituto(codNome)) {
             if (verificaCamposInstituto(codNome, password)) {
                 instituto = new Instituto(cv.listInst.get(index));
+                instituto.load(password);
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
                 cv.listInst.get(index).setNumLogin(instituto.getNumLogin() + 1);
                 cv.listInst.get(index).setLastLogin(Date.from(Instant.now()));
                 if (instituto.getNumLogin() == 0) {
                     dispose();
-                    new adicionarDadosPessoais(cv, true, index).setVisible(true);
+                    new adicionarDadosInstitucionais(cv, true, index).setVisible(true);
                 } else {
                     dispose();
-                    new perfil(cv, true, index).setVisible(true);
+                    new perfilInstituto(cv, true, index).setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
@@ -400,8 +418,7 @@ public class Login extends java.awt.Dialog {
             JOptionPane.showConfirmDialog(null, "Código Nome não está registado no sistema!!", "Código Nome Inválido", 2);
         }
     }
-    
-    
+
     boolean verificaCamposInstituto(String codNome, String password) {
         boolean verifica = false;
         for (int i = 0; i < cv.listInst.size(); i++) {

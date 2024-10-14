@@ -28,7 +28,7 @@ public class Hash {
     }
 
     public static String getHash(String data) {
-        return toHexString(data.hashCode());
+        return toHexString(Math.abs(data.hashCode()));
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

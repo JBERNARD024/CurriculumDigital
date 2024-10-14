@@ -232,7 +232,7 @@ public class adicionarLinguas extends java.awt.Dialog {
 
     private void btnVerPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerPerfilActionPerformed
         // TODO add your handling code here:
-        new perfil(cv, true, index).setVisible(true);
+        new perfilUser(cv, true, index).setVisible(true);
     }//GEN-LAST:event_btnVerPerfilActionPerformed
 
     private void redireciona() {

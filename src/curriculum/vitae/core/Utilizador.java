@@ -32,10 +32,7 @@ public class Utilizador implements Serializable{
 
     public Utilizador(String email) {
         this.email = email;
-        this.imagem = null;
-        this.dados = null;        
-        this.privKey = null;
-        this.pubKey = null;
+        this.numLogin = 0;
     }
 
     public Utilizador(Utilizador user) {
@@ -55,7 +52,7 @@ public class Utilizador implements Serializable{
         this.privKey = keyPair.getPrivate();
     }
     
-    public void criarPasta(String password){
+    public void criarPasta(){
         //Definir o caminho da pasta
         String caminho = "../Curriculum Vitae/utilizadores/" + email + "/";
         File diretoria = new File(caminho);
@@ -151,4 +148,20 @@ public class Utilizador implements Serializable{
     public void setImagem(byte[] imagem) {
         this.imagem = imagem;
     }
+
+    public PublicKey getPubKey() {
+        return pubKey;
+    }
+
+    public void setPubKey(PublicKey pubKey) {
+        this.pubKey = pubKey;
+    }
+
+    public PrivateKey getPrivKey() {
+        return privKey;
+    }
+
+    public void setPrivKey(PrivateKey privKey) {
+        this.privKey = privKey;
+    }  
 }

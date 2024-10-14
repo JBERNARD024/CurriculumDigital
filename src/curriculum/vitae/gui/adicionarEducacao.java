@@ -4,13 +4,15 @@
  */
 package curriculum.vitae.gui;
 
+import curriculum.vitae.core.Certificado;
 import curriculum.vitae.core.Educacao;
-import curriculum.vitae.core.ExpProf;
+import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Utilizador;
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.time.Instant;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import utils.Recursos;
+import utils.SecurityUtils;
 
 /**
  *
@@ -18,9 +20,9 @@ import java.util.Date;
  */
 public class adicionarEducacao extends java.awt.Dialog {
 
-    private boolean selected = false;
     CurriculumVitae cv;
-    int index;
+    int indexInst;
+    int indexUser;
     String qualificacao;
     String areaEstudo;
     String instituicao;
@@ -33,32 +35,29 @@ public class adicionarEducacao extends java.awt.Dialog {
     Date dataFim;
     String descr;
     Educacao educacao;
+    Instituto inst;
 
     /**
      * Creates new form adicionarEducacao
      *
      * @param parent
      * @param modal
-     * @param user
+     * @param indexInst
      */
-    public adicionarEducacao(CurriculumVitae parent, boolean modal, int index) {
+    public adicionarEducacao(CurriculumVitae parent, boolean modal, int indexInst) {
         super(parent, modal);
         this.cv = parent;
-        this.index = index;
+        this.indexInst = indexInst;
         initComponents();
-        btnEmCurso.addActionListener((ActionEvent e) -> {
-            selected = btnEmCurso.isSelected();
 
-            if (selected) {
-                txtDataFim.setEnabled(false);
-                btnEmCurso.setBackground(Color.GREEN);
-                btnEmCurso.setForeground(Color.WHITE);
-            } else {
-                txtDataFim.setEnabled(true);
-                btnEmCurso.setBackground(Color.WHITE);
-                btnEmCurso.setForeground(Color.BLACK);
-            }
-        });
+        for (Utilizador users : cv.listUsers) {
+            txtUtilizadores.addItem(users.getDados().getNome());
+        }
+        
+        inst = new Instituto(cv.listInst.get(indexInst));
+        txtInstituicao.setText(inst.getDadosInst().getNome());
+        txtCidade.setText(inst.getDadosInst().getCidade());
+        txtPais.setText(inst.getDadosInst().getPais());
     }
 
     /**
@@ -79,8 +78,6 @@ public class adicionarEducacao extends java.awt.Dialog {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         txtQEQ = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
-        txtWeb = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         txtCidade = new javax.swing.JTextField();
         txtPais = new javax.swing.JTextField();
@@ -89,13 +86,14 @@ public class adicionarEducacao extends java.awt.Dialog {
         txtDataInic = new com.toedter.calendar.JDateChooser();
         jLabel11 = new javax.swing.JLabel();
         txtDataFim = new com.toedter.calendar.JDateChooser();
-        btnEmCurso = new javax.swing.JToggleButton();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDescr = new javax.swing.JTextArea();
         btnEducacao = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         txtMedia = new javax.swing.JSpinner();
+        txtUtilizadores = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -115,23 +113,25 @@ public class adicionarEducacao extends java.awt.Dialog {
 
         jLabel4.setText("Instituição");
 
+        txtInstituicao.setEditable(false);
+
         jLabel5.setText("Média Final");
 
         jLabel6.setText("Nível QEQ");
 
         txtQEQ.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nível 1 QEQ", "Nível 2 QEQ", "Nível 3 QEQ", "Nível 4 QEQ", "Nível 5 QEQ", "Nível 6 QEQ", "Nível 7 QEQ", "Nível 8 QEQ" }));
 
-        jLabel7.setText("Sítio Web");
-
         jLabel8.setText("Cidade");
+
+        txtCidade.setEditable(false);
+
+        txtPais.setEditable(false);
 
         jLabel9.setText("País");
 
         jLabel10.setText("Data Início");
 
         jLabel11.setText("Data Fim");
-
-        btnEmCurso.setText("Em Curso");
 
         jLabel12.setText("Descrição");
 
@@ -153,6 +153,8 @@ public class adicionarEducacao extends java.awt.Dialog {
             }
         });
 
+        jLabel7.setText("Nome do Graduado");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -162,55 +164,51 @@ public class adicionarEducacao extends java.awt.Dialog {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(80, 80, 80))
             .addGroup(layout.createSequentialGroup()
+                .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtMedia, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(btnGuardar)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEducacao, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel10)
+                                .addComponent(txtDataInic, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel12)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addComponent(btnGuardar)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnEducacao, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel10)
-                                    .addComponent(txtDataInic, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel12)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(148, 148, 148)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel11)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(txtDataFim, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(26, 26, 26)
-                                                .addComponent(btnEmCurso))))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(txtAreaEstudo, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtInstituicao, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(jLabel8))
-                                                .addGap(18, 18, 18)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(jLabel9)
-                                                    .addComponent(txtPais, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)))
-                                            .addComponent(txtWeb, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtQualificacao, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(jLabel5)
-                                            .addGap(93, 93, 93)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jLabel6)
-                                                .addComponent(txtQEQ, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                            .addComponent(jLabel7)))
+                                    .addGap(148, 148, 148)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel11)
+                                        .addComponent(txtDataFim, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel8))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel9)
+                                        .addComponent(txtPais, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGap(106, 106, 106)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(txtMedia, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(2, 2, 2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(93, 93, 93)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6)
+                                    .addComponent(txtQEQ, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtInstituicao)
+                            .addComponent(txtAreaEstudo)
+                            .addComponent(txtQualificacao, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtUtilizadores, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -218,6 +216,10 @@ public class adicionarEducacao extends java.awt.Dialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtUtilizadores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -239,10 +241,6 @@ public class adicionarEducacao extends java.awt.Dialog {
                     .addComponent(txtQEQ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtMedia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtWeb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jLabel9))
@@ -251,16 +249,13 @@ public class adicionarEducacao extends java.awt.Dialog {
                     .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPais, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel11))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtDataInic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDataFim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(btnEmCurso, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(txtDataInic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDataFim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel12)
                 .addGap(18, 18, 18)
@@ -292,13 +287,12 @@ public class adicionarEducacao extends java.awt.Dialog {
     private void btnEducacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducacaoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaEducacao(cv, true, index).setVisible(true);
+        new listaEducacao(cv, true, indexInst).setVisible(true);
     }//GEN-LAST:event_btnEducacaoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEducacao;
-    private javax.swing.JToggleButton btnEmCurso;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -323,26 +317,34 @@ public class adicionarEducacao extends java.awt.Dialog {
     private javax.swing.JTextField txtPais;
     private javax.swing.JComboBox<String> txtQEQ;
     private javax.swing.JComboBox<String> txtQualificacao;
-    private javax.swing.JTextField txtWeb;
+    private javax.swing.JComboBox<String> txtUtilizadores;
     // End of variables declaration//GEN-END:variables
 
     private void adicionarEducacao() {
-        qualificacao = (String) txtQualificacao.getSelectedItem();
-        areaEstudo = txtAreaEstudo.getText();
-        instituicao = txtInstituicao.getText();
-        mediaFinal = (int) txtMedia.getValue();
-        sitioWeb = txtWeb.getText();
-        nivelQEQ = (String) txtQEQ.getSelectedItem();
-        cidade = txtCidade.getText();
-        pais = txtPais.getText();
-        dataInic = txtDataInic.getDate();
-        if (selected) {
-            dataFim = Date.from(Instant.now());
-        } else {
+        try {
+            indexInst = txtUtilizadores.getSelectedIndex();
+            qualificacao = (String) txtQualificacao.getSelectedItem();
+            areaEstudo = txtAreaEstudo.getText();
+            instituicao = txtInstituicao.getText();
+            mediaFinal = (int) txtMedia.getValue();
+            nivelQEQ = (String) txtQEQ.getSelectedItem();
+            cidade = txtCidade.getText();
+            pais = txtPais.getText();
+            dataInic = txtDataInic.getDate();
             dataFim = txtDataFim.getDate();
+            descr = txtDescr.getText();
+            educacao = new Educacao(qualificacao, areaEstudo, instituicao, mediaFinal, nivelQEQ, cidade, pais, dataInic, dataFim, descr);
+            //Identificar o utilizador e o instituto que vão fazer parte do certificado
+            Utilizador user = new Utilizador(cv.listUsers.get(indexUser));
+            user.loadPublic();
+            Instituto inst = new Instituto(cv.listInst.get(indexInst));
+            inst.loadPublic();
+            //Adicionar o utilizador e o instituto ao certificado
+            Certificado c = new Certificado(inst, user, educacao);
+            cv.registoCerti.add(c);
+            Recursos.writeObject(cv.registoCerti, cv.pathBlockchain);
+        } catch (Exception ex) {
+            Logger.getLogger(adicionarEducacao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        descr = txtDescr.getText();
-        educacao = new Educacao(qualificacao, areaEstudo, instituicao, mediaFinal, sitioWeb, nivelQEQ, cidade, pais, dataInic, dataFim, descr);
-        cv.listUsers.get(index).getDados().getEducacao().add(educacao);
     }
 }
