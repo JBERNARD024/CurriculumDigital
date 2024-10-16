@@ -32,9 +32,9 @@ public class CurriculumVitae extends javax.swing.JFrame {
     ArrayList<Instituto> listInst = new ArrayList<>();
     RegistoCertificado registoCerti = new RegistoCertificado();
     String basePath = new File("").getAbsolutePath();
-    String pathUsers = "resources/utilizadores/users.user";
-    String pathInst = "resources/institutos/institutos.inst";
-    String pathBlockchain = "resources/blockchain/blockchain.bc";
+    String pathUsers = basePath + "/resources/utilizadores/users.user";
+    String pathInst = basePath + "/resources/institutos/institutos.inst";
+    String pathBlockchain = basePath + "/resources/blockchain/blockchain.bc";
     File fichUsers;
     File fichInst;
     File fichRegisto;

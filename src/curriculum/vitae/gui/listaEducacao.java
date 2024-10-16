@@ -463,7 +463,7 @@ public class listaEducacao extends java.awt.Dialog {
         try {
             // TODO add your handling code here:
             for (Block b : cv.registoCerti.getBc().getChain()) {
-                tree = (MerkleTree) Recursos.readObject("resources/merkleTree/" + b.getCurrentHash() + ".mk");
+                tree = (MerkleTree) Recursos.readObject(cv.basePath + "resources/merkleTree/" + b.getCurrentHash() + ".mk");
                 for (int i = 0; i < cv.registoCerti.getRegisto().size(); i++) {
                     String cert = cv.registoCerti.getRegisto().get(i);
                     List<String> proof = tree.getProof(cert);

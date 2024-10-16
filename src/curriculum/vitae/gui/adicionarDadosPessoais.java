@@ -317,7 +317,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     }//GEN-LAST:event_btnVerPerfilActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
-        JFileChooser escolheFoto = new JFileChooser("resources/utilizadores/");
+        JFileChooser escolheFoto = new JFileChooser(cv.basePath + "resources/utilizadores/");
         if (escolheFoto.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
                 File fich = escolheFoto.getSelectedFile();
@@ -386,7 +386,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         dadosP = new dadosPessoais(nome, nacionalidade, dataNasc, sexo, telemovel, linkedin, morada, localidade, codPostal, pais, descr);
         if (icon == null) {
             try {
-                String caminhoImag = "resources/utilizadores/defaultUser.png";
+                String caminhoImag = cv.basePath + "resources/utilizadores/defaultUser.png";
                 icon = new ImageIcon(caminhoImag);
                 Image imagem = icon.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_SMOOTH);
                 btnFoto.setIcon(new ImageIcon(imagem));
