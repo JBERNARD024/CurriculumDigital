@@ -54,7 +54,7 @@ public class Utilizador implements Serializable{
     
     public void criarPasta(){
         //Definir o caminho da pasta
-        String caminho = "../CurriculumDigital/utilizadores/" + email + "/";
+        String caminho = "resources/utilizadores/" + email + "/";
         File diretoria = new File(caminho);
         //Verificar se a pasta já existe, caso contrário criar a pasta
         if (!diretoria.exists()) {
@@ -70,7 +70,7 @@ public class Utilizador implements Serializable{
     }
     
     public void save(String password) throws Exception {
-        String caminho = "../CurriculumDigital/utilizadores/" + email + "/";
+        String caminho = "resources/utilizadores/" + email + "/";
         //Encriptar a chave privada
         byte[] secret = SecurityUtils.encrypt(privKey.getEncoded(), password);
         Files.write(Path.of(caminho + email + ".priv"), secret);
@@ -80,7 +80,7 @@ public class Utilizador implements Serializable{
 
     public boolean load(String password) throws Exception {
         try {
-            String caminho = "../CurriculumDigital/utilizadores/" + email + "/";
+            String caminho = "resources/utilizadores/" + email + "/";
             //Desencriptar a chave privada
             byte[] privData = Files.readAllBytes(Path.of(caminho + email + ".priv"));
             privData = SecurityUtils.decrypt(privData, password);
@@ -96,7 +96,7 @@ public class Utilizador implements Serializable{
     }
 
     public void loadPublic() throws Exception {
-        String caminho = "../CurriculumDigital/utilizadores/" + email + "/";
+        String caminho = "resources/utilizadores/" + email + "/";
         //Ler a chave pública
         byte[] pubData = Files.readAllBytes(Path.of(caminho + email + ".pub"));
         this.pubKey = SecurityUtils.getPublicKey(pubData);

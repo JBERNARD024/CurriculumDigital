@@ -45,7 +45,7 @@ public class RegistoCertificado implements Serializable {
             .append(registo.size())
             .append("\n\n");
         for (Block b : bc.getChain()) {
-            tree = (MerkleTree) Recursos.readObject("../CurriculumDigital/merkleTree/" + b.getCurrentHash() + ".mk");
+            tree = (MerkleTree) Recursos.readObject("resources/merkleTree/" + b.getCurrentHash() + ".mk");
             for (int i = 0; i < registo.size(); i++) {
                 String cert = getRegisto().get(i);
                 List<String> proof = tree.getProof(cert);
@@ -86,7 +86,7 @@ public class RegistoCertificado implements Serializable {
         if (temp.size() == MERKLE_TREE_SIZE) {
             tree = new MerkleTree(temp);
             bc.add(tree.getRoot(), DIFICULTY);
-            tree.saveToFile("../CurriculumDigital/merkleTree/" + bc.getLastBlockHash() + ".mk");
+            tree.saveToFile("resources/merkleTree/" + bc.getLastBlockHash() + ".mk");
             temp.clear();
             tree = new MerkleTree();
         }

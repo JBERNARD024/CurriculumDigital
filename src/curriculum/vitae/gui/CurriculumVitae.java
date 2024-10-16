@@ -10,7 +10,10 @@ import curriculum.vitae.core.Utilizador;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -28,15 +31,17 @@ public class CurriculumVitae extends javax.swing.JFrame {
     ArrayList<Utilizador> listUsers = new ArrayList<>();
     ArrayList<Instituto> listInst = new ArrayList<>();
     RegistoCertificado registoCerti = new RegistoCertificado();
-    String pathUsers = "../CurriculumDigital/utilizadores/users.user";
-    String pathInst = "../CurriculumDigital/institutos/institutos.inst";
-    String pathBlockchain = "../CurriculumDigital/blockchain/blockchain.bc";
+    String basePath = new File("").getAbsolutePath();
+    String pathUsers = "resources/utilizadores/users.user";
+    String pathInst = "resources/institutos/institutos.inst";
+    String pathBlockchain = "resources/blockchain/blockchain.bc";
     File fichUsers;
     File fichInst;
     File fichRegisto;
 
     /**
      * Creates new form PaginaInicial
+     *
      * @throws java.lang.ClassNotFoundException
      * @throws java.io.IOException
      */
