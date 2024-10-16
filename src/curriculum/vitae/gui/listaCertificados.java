@@ -5,14 +5,10 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Certificado;
-import curriculum.vitae.core.Educacao;
+import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Utilizador;
 import java.awt.Color;
 import java.awt.Image;
-import java.lang.reflect.Array;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,17 +18,16 @@ import utils.Block;
 import utils.Converter;
 import utils.MerkleTree;
 import utils.Recursos;
-import utils.SecurityUtils;
 
 /**
  *
  * @author joaob
  */
-public class listaEducacao extends java.awt.Dialog {
+public class listaCertificados extends java.awt.Dialog {
 
     CurriculumVitae cv;
     int index;
-    Utilizador user;
+    Instituto inst;
     ImageIcon icon;
     Image imagem;
     DefaultListModel myCertificados;
@@ -41,15 +36,18 @@ public class listaEducacao extends java.awt.Dialog {
 
     /**
      * Creates new form listaEducacao
+     * @param cv
+     * @param modal
+     * @param index
      */
-    public listaEducacao(CurriculumVitae cv, boolean modal, int index) {
+    public listaCertificados(CurriculumVitae cv, boolean modal, int index) {
         super(cv, modal);
         this.cv = cv;
         this.index = index;
         initComponents();
-        this.setTitle("Lista de Educação");
-        user = new Utilizador(cv.listUsers.get(index));
-        icon = new ImageIcon(user.getImagem());
+        this.setTitle("Lista de Certficados");
+        inst = new Instituto(cv.listInst.get(index));
+        icon = new ImageIcon(inst.getImagem());
         imagem = icon.getImage().getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_SMOOTH);
         lblFoto.setBackground(Color.white);
         lblFoto.setIcon(new ImageIcon(imagem));
@@ -71,7 +69,7 @@ public class listaEducacao extends java.awt.Dialog {
         jLabel3 = new javax.swing.JLabel();
         txtAreaEstudo = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        txtInstituicao = new javax.swing.JTextField();
+        txtGraduado = new javax.swing.JTextField();
         txtCidade = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -109,7 +107,7 @@ public class listaEducacao extends java.awt.Dialog {
         });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel2.setText("Lista de Educação");
+        jLabel2.setText("Lista de Certificados");
 
         jLabel1.setText("Qualificação");
 
@@ -124,9 +122,9 @@ public class listaEducacao extends java.awt.Dialog {
             }
         });
 
-        jLabel4.setText("Instituição");
+        jLabel4.setText("Nome do Graduado");
 
-        txtInstituicao.setEditable(false);
+        txtGraduado.setEditable(false);
 
         txtCidade.setEditable(false);
         txtCidade.setToolTipText("");
@@ -253,35 +251,40 @@ public class listaEducacao extends java.awt.Dialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtInstituicao, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtAreaEstudo, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel12)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtCidade, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-                                    .addComponent(jLabel5)
-                                    .addComponent(txtMedia, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel10)
-                                    .addComponent(txtDataInic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtDataFim, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel11)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel9)
-                                        .addComponent(jLabel17)
-                                        .addComponent(txtQEQ)
-                                        .addComponent(txtPais, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(24, 24, 24)
+                                    .addComponent(txtWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtGraduado, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtAreaEstudo, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel12)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtCidade, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                                            .addComponent(jLabel5)
+                                            .addComponent(txtMedia, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel8)
+                                            .addComponent(jLabel10)
+                                            .addComponent(txtDataInic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtDataFim, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel11)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(jLabel9)
+                                                .addComponent(jLabel17)
+                                                .addComponent(txtQEQ)
+                                                .addComponent(txtPais, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGap(24, 24, 24))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(txtQualificacao, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(txtQualificacao, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel13)
                                 .addGap(342, 342, 342)
@@ -307,6 +310,7 @@ public class listaEducacao extends java.awt.Dialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtQualificacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -314,10 +318,10 @@ public class listaEducacao extends java.awt.Dialog {
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtAreaEstudo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtInstituicao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtGraduado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel12)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -380,7 +384,7 @@ public class listaEducacao extends java.awt.Dialog {
     private void btnDadosPessoaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDadosPessoaisActionPerformed
         // TODO add your handling code here:
         dispose();
-        new perfilUser(cv, true, index).setVisible(true);
+        new perfilInstituto(cv, true, index).setVisible(true);
     }//GEN-LAST:event_btnDadosPessoaisActionPerformed
 
     private void certificadosListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_certificadosListValueChanged
@@ -391,7 +395,7 @@ public class listaEducacao extends java.awt.Dialog {
             Certificado c = (Certificado) certificadosList.getSelectedValues()[0];
             txtQualificacao.setText(c.getExperiencia().getQualificacao());
             txtAreaEstudo.setText(c.getExperiencia().getAreaEstudo());
-            txtInstituicao.setText(c.getInstituto().getDadosInst().getNome());
+            txtGraduado.setText(c.getGraduado().getDados().getNome());
             txtWeb.setText(c.getInstituto().getDadosInst().getSitioWeb());
             txtMedia.setValue(c.getExperiencia().getMediaFinal());
             txtQEQ.setText(c.getExperiencia().getNivelQEQ());
@@ -451,7 +455,7 @@ public class listaEducacao extends java.awt.Dialog {
     private com.toedter.calendar.JDateChooser txtDataFim;
     private com.toedter.calendar.JDateChooser txtDataInic;
     private javax.swing.JTextArea txtDescr;
-    private javax.swing.JTextField txtInstituicao;
+    private javax.swing.JTextField txtGraduado;
     private javax.swing.JSpinner txtMedia;
     private javax.swing.JTextField txtPais;
     private javax.swing.JTextField txtQEQ;
@@ -459,7 +463,7 @@ public class listaEducacao extends java.awt.Dialog {
     private javax.swing.JTextField txtWeb;
     // End of variables declaration//GEN-END:variables
 
-    private void getCertificados() {
+private void getCertificados() {
         try {
             // TODO add your handling code here:
             for (Block b : cv.registoCerti.getBc().getChain()) {
@@ -470,7 +474,7 @@ public class listaEducacao extends java.awt.Dialog {
                     boolean isProofValid = tree.isProofValid(cert, proof);
                     if(isProofValid){
                         Certificado c = (Certificado) Converter.hexToObject(cv.registoCerti.getRegisto().get(i));
-                        if(c.getGraduado().getEmail().equals(user.getEmail())){
+                        if(c.getInstituto().getCodNome().equals(inst.getCodNome())){
                             myCertificados.addElement(c);
                         }
                     }

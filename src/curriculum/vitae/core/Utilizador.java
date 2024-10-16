@@ -53,8 +53,9 @@ public class Utilizador implements Serializable{
     }
     
     public void criarPasta(){
+        String basePath = new File("").getAbsolutePath();
         //Definir o caminho da pasta
-        String caminho = "../Curriculum Vitae/utilizadores/" + email + "/";
+        String caminho = basePath + "resources/utilizadores/" + email + "/";
         File diretoria = new File(caminho);
         //Verificar se a pasta já existe, caso contrário criar a pasta
         if (!diretoria.exists()) {
@@ -70,7 +71,8 @@ public class Utilizador implements Serializable{
     }
     
     public void save(String password) throws Exception {
-        String caminho = "../Curriculum Vitae/utilizadores/" + email + "/";
+        String basePath = new File("").getAbsolutePath();
+        String caminho = basePath + "resources/utilizadores/" + email + "/";
         //Encriptar a chave privada
         byte[] secret = SecurityUtils.encrypt(privKey.getEncoded(), password);
         Files.write(Path.of(caminho + email + ".priv"), secret);
@@ -80,7 +82,8 @@ public class Utilizador implements Serializable{
 
     public boolean load(String password) throws Exception {
         try {
-            String caminho = "../Curriculum Vitae/utilizadores/" + email + "/";
+            String basePath = new File("").getAbsolutePath();
+            String caminho = basePath + "resources/utilizadores/" + email + "/";
             //Desencriptar a chave privada
             byte[] privData = Files.readAllBytes(Path.of(caminho + email + ".priv"));
             privData = SecurityUtils.decrypt(privData, password);
@@ -96,7 +99,8 @@ public class Utilizador implements Serializable{
     }
 
     public void loadPublic() throws Exception {
-        String caminho = "../Curriculum Vitae/utilizadores/" + email + "/";
+        String basePath = new File("").getAbsolutePath();
+        String caminho = basePath + "resources/utilizadores/" + email + "/";
         //Ler a chave pública
         byte[] pubData = Files.readAllBytes(Path.of(caminho + email + ".pub"));
         this.pubKey = SecurityUtils.getPublicKey(pubData);

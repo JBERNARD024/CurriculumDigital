@@ -319,6 +319,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -341,7 +342,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
     }//GEN-LAST:event_btnProximoActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
-        JFileChooser escolheFoto = new JFileChooser("../Curriculum Vitae/institutos/");
+        JFileChooser escolheFoto = new JFileChooser(cv.basePath + "resources/institutos");
         if (escolheFoto.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
                 File fich = escolheFoto.getSelectedFile();
@@ -413,7 +414,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
         dadosInst = new dadosInstitucionais(nome, dataFund, natureza, cidade, tipoEnsino, telefone, sitioWeb, morada, distrito, codPostal, pais, descr);
         if (icon == null) {
             try {
-                String caminhoImag = "../Curriculum Vitae/institutos/defaultInstituto.png";
+                String caminhoImag = cv.basePath + "resources/institutos/defaultInstituto.png";
                 icon = new ImageIcon(caminhoImag);
                 Image imagem = icon.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_SMOOTH);
                 btnFoto.setIcon(new ImageIcon(imagem));

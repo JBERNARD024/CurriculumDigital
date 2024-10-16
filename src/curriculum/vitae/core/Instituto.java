@@ -68,7 +68,8 @@ public class Instituto implements Serializable{
     //Esta função, vai criar uma pasta para guardar as chaves de um instituto
     public void criarPasta() {
         //Definir o caminho da pasta
-        String caminho = "../Curriculum Vitae/institutos/" + codNome + "/";
+        String basePath = new File("").getAbsolutePath();
+        String caminho = basePath + "resources/institutos/" + codNome + "/";
         File diretoria = new File(caminho);
         //Verificar se a pasta já existe, caso contrário criar a pasta
         if (!diretoria.exists()) {
@@ -85,7 +86,8 @@ public class Instituto implements Serializable{
 
     //Função que guarda as chaves criadas na pasta do Instituto
     public void save(String password) throws Exception {
-        String caminho = "../Curriculum Vitae/institutos/" + codNome + "/";
+        String basePath = new File("").getAbsolutePath();
+        String caminho = basePath + "resources/institutos/" + codNome + "/";
         //Encriptar a chave privada
         byte[] secret = SecurityUtils.encrypt(privKey.getEncoded(), password);
         Files.write(Path.of(caminho + codNome + ".priv"), secret);
@@ -99,7 +101,8 @@ public class Instituto implements Serializable{
     //Função que vai carregar as chaves guardadas na pasta com o codNome do Instituto
     public boolean load(String password) throws Exception {
         try {
-            String caminho = "../Curriculum Vitae/institutos/" + codNome + "/";
+            String basePath = new File("").getAbsolutePath();
+            String caminho = basePath + "resources/institutos/" + codNome + "/";
             //Desencriptar a chave privada
             byte[] privData = Files.readAllBytes(Path.of(caminho + codNome + ".priv"));
             privData = SecurityUtils.decrypt(privData, password);
@@ -120,7 +123,8 @@ public class Instituto implements Serializable{
 
     //Função que vai carregar a chave pública do Instituto
     public void loadPublic() throws Exception {
-        String caminho = "../Curriculum Vitae/institutos/" + codNome + "/";
+        String basePath = new File("").getAbsolutePath();
+        String caminho = basePath + "resources/institutos/" + codNome + "/";
         //Ler a chave pública
         byte[] pubData = Files.readAllBytes(Path.of(caminho + codNome + ".pub"));
         this.pubKey = SecurityUtils.getPublicKey(pubData);
