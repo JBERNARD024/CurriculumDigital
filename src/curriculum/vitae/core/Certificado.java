@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Base64;
+import utils.Converter;
 import utils.SecurityUtils;
 
 /**
@@ -95,19 +96,27 @@ public class Certificado implements Serializable {
     public void setAssinatura(String assinatura) {
         this.assinatura = assinatura;
     }
-    
+
+    public String toText() {
+        return Converter.objectToHex(this);
+    }
+
+    public static Certificado fromText(String obj) {
+        return (Certificado) Converter.hexToObject(obj);
+    }
+
     @Override
     public String toString() {
         StringBuilder txt = new StringBuilder();
         txt.append(instituto.getCodNome())
-            .append(" --> ")
-            .append(experiencia.getQualificacao())
-            .append(" em ")
-            .append(experiencia.getAreaEstudo())
-            .append("  ")
-            .append(isValid())
-            .append(" --> ")
-            .append(graduado.getDados().getNome());
+                .append(" --> ")
+                .append(experiencia.getQualificacao())
+                .append(" em ")
+                .append(experiencia.getAreaEstudo())
+                .append("  ")
+                .append(isValid())
+                .append(" --> ")
+                .append(graduado.getDados().getNome());
         return txt.toString();
     }
 }

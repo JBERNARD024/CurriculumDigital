@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import utils.Block;
 import utils.BlockChain;
+import utils.Converter;
 import utils.MerkleTree;
 import utils.ObjectUtils;
+import utils.Recursos;
 
 /**
  *
@@ -23,26 +25,43 @@ import utils.ObjectUtils;
  */
 public class RegistoCertificado implements Serializable {
 
-    ArrayList<Certificado> registo;
+    private ArrayList<String> registo;
+    private ArrayList<String> temp;
     private BlockChain bc;
     public static int DIFICULTY = 4;
     private static final int MERKLE_TREE_SIZE = 8;
+    MerkleTree tree;
 
     public RegistoCertificado() {
         registo = new ArrayList<>();
+        temp = new ArrayList<>();
         bc = new BlockChain();
     }
 
+    @Override
     public String toString() {
         StringBuilder txt = new StringBuilder();
+        txt.append("Registo de Certificados = ")
+            .append(registo.size())
+            .append("\n\n");
         for (Block b : bc.getChain()) {
-            Certificado c = (Certificado) ObjectUtils.convertBase64ToObject(b.getData());
-            txt.append(b.getPreviousHash() + " "
-                    + c.toString() + " "
-                    + b.getNonce() + " "
-                    + b.getCurrentHash()
-                    + "\n"
-            );
+            tree = (MerkleTree) Recursos.readObject("../CurriculumDigital/merkleTree/" + b.getCurrentHash() + ".mk");
+            for (int i = 0; i < registo.size(); i++) {
+                String cert = getRegisto().get(i);
+                List<String> proof = tree.getProof(cert);
+                boolean isProofValid = tree.isProofValid(cert, proof);
+                if (isProofValid) {
+                    Certificado c = (Certificado) Converter.hexToObject((String) getRegisto().get(i));
+                    txt.append(b.getPreviousHash())
+                            .append(" ")
+                            .append(c.toString())
+                            .append(" ")
+                            .append(b.getNonce())
+                            .append(" ")
+                            .append(b.getCurrentHash())
+                            .append("\n");
+                }
+            }
         }
         return txt.toString();
     }
@@ -62,9 +81,17 @@ public class RegistoCertificado implements Serializable {
     }
 
     public void add(Certificado c) throws Exception {
-        registo.add(c);
-        String txtCertificado = ObjectUtils.convertObjectToBase64(c);
-        bc.add(txtCertificado, DIFICULTY);
+        registo.add(c.toText());
+        temp.add(c.toText());
+        if (temp.size() == MERKLE_TREE_SIZE) {
+            tree = new MerkleTree(temp);
+            bc.add(tree.getRoot(), DIFICULTY);
+            tree.saveToFile("../CurriculumDigital/merkleTree/" + bc.getLastBlockHash() + ".mk");
+            temp.clear();
+            tree = new MerkleTree();
+        }
+        /*String txtCertificado = ObjectUtils.convertObjectToBase64(c);
+        bc.add(txtCertificado, DIFICULTY);*/
     }
 
     public List<Certificado> getCertificadoBlockchain() throws Exception {
@@ -82,5 +109,13 @@ public class RegistoCertificado implements Serializable {
 
     public void setBc(BlockChain bc) {
         this.bc = bc;
+    }
+
+    public ArrayList<String> getRegisto() {
+        return registo;
+    }
+
+    public void setRegisto(ArrayList<String> registo) {
+        this.registo = registo;
     }
 }

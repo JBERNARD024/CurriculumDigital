@@ -8,9 +8,13 @@ import curriculum.vitae.core.Certificado;
 import curriculum.vitae.core.Educacao;
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Utilizador;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import utils.Recursos;
 import utils.SecurityUtils;
 
@@ -18,7 +22,7 @@ import utils.SecurityUtils;
  *
  * @author joaob
  */
-public class adicionarEducacao extends java.awt.Dialog {
+public class adicionarCertificado extends java.awt.Dialog {
 
     CurriculumVitae cv;
     int indexInst;
@@ -44,21 +48,27 @@ public class adicionarEducacao extends java.awt.Dialog {
      * @param modal
      * @param indexInst
      */
-    public adicionarEducacao(CurriculumVitae parent, boolean modal, int indexInst) {
+    public adicionarCertificado(CurriculumVitae parent, boolean modal, int indexInst) {
         super(parent, modal);
         this.cv = parent;
         this.indexInst = indexInst;
         initComponents();
+        this.setTitle("Adicionar Certficado");
 
         for (Utilizador users : cv.listUsers) {
             txtUtilizadores.addItem(users.getDados().getNome());
-        }
-        System.out.println(txtUtilizadores.toString());
-        
+        }        
         inst = new Instituto(cv.listInst.get(indexInst));
         txtInstituicao.setText(inst.getDadosInst().getNome());
         txtCidade.setText(inst.getDadosInst().getCidade());
         txtPais.setText(inst.getDadosInst().getPais());
+        txtQualificacao.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = txtQualificacao.getSelectedIndex();
+                txtQEQ.setSelectedIndex(selectedIndex);
+            }
+        });
     }
 
     /**
@@ -104,7 +114,7 @@ public class adicionarEducacao extends java.awt.Dialog {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Educação");
+        jLabel2.setText("Adicionar Certificado");
 
         jLabel1.setText("Qualificação");
 
@@ -121,6 +131,7 @@ public class adicionarEducacao extends java.awt.Dialog {
         jLabel6.setText("Nível QEQ");
 
         txtQEQ.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nível 1 QEQ", "Nível 2 QEQ", "Nível 3 QEQ", "Nível 4 QEQ", "Nível 5 QEQ", "Nível 6 QEQ", "Nível 7 QEQ", "Nível 8 QEQ" }));
+        txtQEQ.setEnabled(false);
 
         jLabel8.setText("Cidade");
 
@@ -154,16 +165,14 @@ public class adicionarEducacao extends java.awt.Dialog {
             }
         });
 
+        txtMedia.setModel(new javax.swing.SpinnerNumberModel(10, 10, 20, 1));
+
         jLabel7.setText("Nome do Graduado");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(80, 80, 80))
             .addGroup(layout.createSequentialGroup()
                 .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -211,6 +220,10 @@ public class adicionarEducacao extends java.awt.Dialog {
                             .addComponent(txtQualificacao, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtUtilizadores, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(27, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(71, 71, 71))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,6 +282,7 @@ public class adicionarEducacao extends java.awt.Dialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -288,7 +302,7 @@ public class adicionarEducacao extends java.awt.Dialog {
     private void btnEducacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducacaoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaEducacao(cv, true, indexUser).setVisible(true);
+        new listaCertificados(cv, true, indexInst).setVisible(true);
     }//GEN-LAST:event_btnEducacaoActionPerformed
 
 
@@ -345,7 +359,7 @@ public class adicionarEducacao extends java.awt.Dialog {
             cv.registoCerti.add(c);
             Recursos.writeObject(cv.registoCerti, cv.pathBlockchain);
         } catch (Exception ex) {
-            Logger.getLogger(adicionarEducacao.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

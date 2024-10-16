@@ -28,9 +28,9 @@ public class CurriculumVitae extends javax.swing.JFrame {
     ArrayList<Utilizador> listUsers = new ArrayList<>();
     ArrayList<Instituto> listInst = new ArrayList<>();
     RegistoCertificado registoCerti = new RegistoCertificado();
-    String pathUsers = "../Curriculum Vitae/utilizadores/users.user";
-    String pathInst = "../Curriculum Vitae/institutos/institutos.inst";
-    String pathBlockchain = "../Curriculum Vitae/blockchain/blockchain.bc";
+    String pathUsers = "../CurriculumDigital/utilizadores/users.user";
+    String pathInst = "../CurriculumDigital/institutos/institutos.inst";
+    String pathBlockchain = "../CurriculumDigital/blockchain/blockchain.bc";
     File fichUsers;
     File fichInst;
     File fichRegisto;

@@ -58,6 +58,7 @@ public class aboutUs extends java.awt.Dialog {
         jTextArea1.setAlignmentX(0.0F);
         jTextArea1.setAlignmentY(0.0F);
         jTextArea1.setAutoscrolls(false);
+        jTextArea1.setCaretPosition(0);
         jTextArea1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         jScrollPane1.setViewportView(jTextArea1);
 
@@ -110,6 +111,7 @@ public class aboutUs extends java.awt.Dialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**

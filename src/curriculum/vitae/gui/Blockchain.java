@@ -19,7 +19,8 @@ public class Blockchain extends java.awt.Dialog {
         super(cv, modal);
         initComponents();
         setTitle("Blockchain");
-        txtBlockchain.setText(cv.registoCerti.toString());
+        jTextPane1.setText(cv.registoCerti.getBc().toString());
+        txtRegisto.setText(cv.registoCerti.toString());
     }
 
     /**
@@ -33,7 +34,9 @@ public class Blockchain extends java.awt.Dialog {
         panelBlock = new javax.swing.JTabbedPane();
         panelBlockchain = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        txtBlockchain = new javax.swing.JTextArea();
+        txtRegisto = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextPane1 = new javax.swing.JTextPane();
 
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -42,20 +45,28 @@ public class Blockchain extends java.awt.Dialog {
             }
         });
 
-        txtBlockchain.setColumns(20);
-        txtBlockchain.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        txtBlockchain.setRows(5);
-        jScrollPane1.setViewportView(txtBlockchain);
+        panelBlockchain.setPreferredSize(new java.awt.Dimension(1350, 365));
+
+        txtRegisto.setColumns(20);
+        txtRegisto.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtRegisto.setRows(5);
+        jScrollPane1.setViewportView(txtRegisto);
+
+        jScrollPane2.setViewportView(jTextPane1);
 
         javax.swing.GroupLayout panelBlockchainLayout = new javax.swing.GroupLayout(panelBlockchain);
         panelBlockchain.setLayout(panelBlockchainLayout);
         panelBlockchainLayout.setHorizontalGroup(
             panelBlockchainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBlockchainLayout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1011, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panelBlockchainLayout.setVerticalGroup(
             panelBlockchainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)
+            .addComponent(jScrollPane2)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
         );
 
         panelBlock.addTab("Blockchain", new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/blockchain.png")), panelBlockchain); // NOI18N
@@ -64,14 +75,15 @@ public class Blockchain extends java.awt.Dialog {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBlock)
+            .addComponent(panelBlock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelBlock)
+            .addComponent(panelBlock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -85,8 +97,10 @@ public class Blockchain extends java.awt.Dialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTabbedPane panelBlock;
     private javax.swing.JPanel panelBlockchain;
-    private javax.swing.JTextArea txtBlockchain;
+    private javax.swing.JTextArea txtRegisto;
     // End of variables declaration//GEN-END:variables
 }

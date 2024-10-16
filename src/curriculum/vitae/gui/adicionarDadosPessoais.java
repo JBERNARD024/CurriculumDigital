@@ -294,6 +294,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
@@ -316,7 +317,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     }//GEN-LAST:event_btnVerPerfilActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
-        JFileChooser escolheFoto = new JFileChooser("../Curriculum Vitae/utilizadores/");
+        JFileChooser escolheFoto = new JFileChooser("../CurriculumDigital/utilizadores/");
         if (escolheFoto.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
                 File fich = escolheFoto.getSelectedFile();
@@ -385,7 +386,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         dadosP = new dadosPessoais(nome, nacionalidade, dataNasc, sexo, telemovel, linkedin, morada, localidade, codPostal, pais, descr);
         if (icon == null) {
             try {
-                String caminhoImag = "../Curriculum Vitae/utilizadores/defaultUser.png";
+                String caminhoImag = "../CurriculumDigital/utilizadores/defaultUser.png";
                 icon = new ImageIcon(caminhoImag);
                 Image imagem = icon.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_SMOOTH);
                 btnFoto.setIcon(new ImageIcon(imagem));
