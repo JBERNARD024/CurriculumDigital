@@ -5,7 +5,7 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Instituto;
-import curriculum.vitae.core.Utilizador;
+import curriculum.vitae.core.Pessoa;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class Login extends java.awt.Dialog {
     String email;
     String password;
     String codNome;
-    Utilizador user;
+    Pessoa user;
     Instituto instituto;
     int indexUser = 0;
     int indexInst = 0;
@@ -53,7 +53,9 @@ public class Login extends java.awt.Dialog {
         super(parent, modal);
         this.setTitle("Login");
         initComponents();
+        //Adiciona o Bouncy Castle à lista providers de segurança
         Security.addProvider(new BouncyCastleProvider());
+        //Carrega todos os providers de serguança disponíveis no sistema
         loadProviders();
     }
 
@@ -172,7 +174,7 @@ public class Login extends java.awt.Dialog {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("<html>&nbsp; Utilizador</html>", new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/user.png")), painelLoginUsers); // NOI18N
+        jTabbedPane1.addTab("<html>&nbsp; Pessoa</html>", new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/user.png")), painelLoginUsers); // NOI18N
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/loginInstituto.jpg"))); // NOI18N
         jLabel9.setMaximumSize(new java.awt.Dimension(150, 125));
@@ -336,20 +338,30 @@ public class Login extends java.awt.Dialog {
     // End of variables declaration//GEN-END:variables
 
     //################################################## U T I L I Z A D O R ################################################################
+    //Dado o email e a password introduzida pela Pessoa, estabelece a sessão da Pessoa, caso sejam válidos
     private void loginUser() throws IOException, Exception {
         email = txtEmailUser.getText().trim();
         password = new String(txtPasswordUser.getPassword());
-        user = new Utilizador(email);
+        //Cria uma nova Pessoa com base no email introduzido pelo utilizador
+        user = new Pessoa(email);
+        //Vai verificar se o utilizador existe no sistema
         if (verificaUtilizador(email)) {
+            //Caso exista no sistema, vai verificar se a password introduzida, desencripta a chave privada
             if (verificaCamposUser(email, password)) {
-                user = new Utilizador(cv.listUsers.get(indexUser));
+                //Caso a password esteja correta, a Pessoa irá aceder ao sistema
+                user = new Pessoa(cv.listUsers.get(indexUser));
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
+                //O número de logins da Pessoa será incrementado
                 cv.listUsers.get(indexUser).setNumLogin(user.getNumLogin() + 1);
+                //A data do último login será redefinida
                 cv.listUsers.get(indexUser).setLastLogin(Date.from(Instant.now()));
-                if (user.getNumLogin() == 0) {
+                //Vai verificar se o utilizador já introduziu os dados pessoais
+                if (user.getDados() == null) {
+                    //Caso não tenha introduzido, será redirecionado para a página para adicionar os dados pessoais
                     dispose();
                     new adicionarDadosPessoais(cv, true, indexUser).setVisible(true);
                 } else {
+                    //Caso possua, é redirecionado para a página do perfil da Pessoa
                     dispose();
                     new perfilUser(cv, true, indexUser).setVisible(true);
                 }
@@ -361,11 +373,12 @@ public class Login extends java.awt.Dialog {
         }
     }
 
+    //Verifica se a password introduzida desencripta a chave privada de uma pessoa
     private boolean verificaCamposUser(String email, String password) {
         boolean verifica = false;
         for (int i = 0; i < cv.listUsers.size(); i++) {
             try {
-                user = new Utilizador(email);
+                user = new Pessoa(email);
                 if (user.load(password)) {
                     verifica = true;
                     break;
@@ -379,10 +392,11 @@ public class Login extends java.awt.Dialog {
         return verifica;
     }
 
+    //Verifica se a pessoa está registada no sistema
     private boolean verificaUtilizador(String email) {
         boolean verifica = false;
         for (int i = 0; i < cv.listUsers.size(); i++) {
-            user = new Utilizador(cv.listUsers.get(i));
+            user = new Pessoa(cv.listUsers.get(i));
             if (!user.getEmail().equals(email)) {
                 verifica = false;
             } else {
@@ -395,21 +409,30 @@ public class Login extends java.awt.Dialog {
     }
 
     //################################################## I N S T I T U T O ################################################################
+    //Dado o código nome e a password introduzida pelo Instituto, estabelece a sessão da Instituto, caso sejam válidos
     private void loginInst() throws Exception {
         codNome = txtCodNomeInst.getText().trim();
         password = new String(txtPasswordInst.getPassword());
+        //Verifica se o código nome está registado no sistema
         if (verificaInstituto(codNome)) {
+            //Caso esteja, vai verificar se a password introduzida é válida
             if (verificaCamposInstituto(codNome, password)) {
+                //Sendo a password válida, vai desencriptar a chave privada, enquanto estiver com a sessão ativa
                 instituto = new Instituto(cv.listInst.get(indexInst));
                 instituto.load(password);
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
+                //Incrementa o número de logins
                 cv.listInst.get(indexInst).setNumLogin(instituto.getNumLogin() + 1);
+                //Atualiza a data do último login efetuado
                 cv.listInst.get(indexInst).setLastLogin(Date.from(Instant.now()));
-                if (instituto.getNumLogin() == 0) {
+                //Verifica se os dados Institucionais, já foram definidos
+                if (instituto.getDadosInst()== null) {
+                    //Caso não tenham sido, redireciona o Instituto para a página para adicionar os dados
                     dispose();
                     new adicionarDadosInstitucionais(cv, true, indexInst).setVisible(true);
                 } else {
                     dispose();
+                    //Caso estejam definidos, o utilizador Instituto é redirecionado para o seu perfil
                     new perfilInstituto(cv, true, indexInst).setVisible(true);
                 }
             } else {
@@ -420,6 +443,7 @@ public class Login extends java.awt.Dialog {
         }
     }
 
+    //Verifica se a password introduzida é válida para um dado Instituto
     boolean verificaCamposInstituto(String codNome, String password) {
         boolean verifica = false;
         for (int i = 0; i < cv.listInst.size(); i++) {
@@ -438,6 +462,7 @@ public class Login extends java.awt.Dialog {
         return verifica;
     }
 
+    //Verifica se um Instituto existe no sistema
     private boolean verificaInstituto(String codNome) {
         boolean verifica = false;
         for (int i = 0; i < cv.listInst.size(); i++) {
@@ -454,6 +479,7 @@ public class Login extends java.awt.Dialog {
     }
 
     //################################################## P R O V I D E R ################################################################
+    //Carrega todos os providers existente na segurança
     public static void loadProviders() {
         Provider providers[] = Security.getProviders();
         //todos os fornecedores do segurança

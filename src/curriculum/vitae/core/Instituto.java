@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.Key;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -22,36 +21,37 @@ import utils.SecurityUtils;
  *
  * @author joaob
  */
+//Esta classe vai criar um objeto, que vai criar uma entidade emissora de certificados
 public class Instituto implements Serializable{
 
     private String codNome;
     private byte[] imagem;
     private PrivateKey privKey;
     private PublicKey pubKey;
-    private Key simKey;
     private dadosInstitucionais dadosInst;
     private int numLogin;
     private Date lastLogin;
 
+    //Construtor que cria o objeto Instituto, com apenas o seu código nome
     public Instituto(String codNome) {
         this.codNome = codNome;
         this.numLogin = 0;
     }
 
-    public Instituto(String codNome, PrivateKey privKey, PublicKey pubKey, Key simKey) {
+    //Construtor que cria um novo Instituto, com o seu código nome e o par de chaves assimétricas
+    public Instituto(String codNome, PrivateKey privKey, PublicKey pubKey) {
         this.codNome = codNome;
         this.privKey = privKey;
         this.pubKey = pubKey;
-        this.simKey = simKey;
         this.dadosInst = null;
     }
 
+    //Constutor que cria um novo objeto Instituto, a partir de outro objeto Instituto já existente
     public Instituto(Instituto inst) {
         this.codNome = inst.codNome;
         this.imagem = inst.imagem;
         this.privKey = inst.privKey;
         this.pubKey = inst.pubKey;
-        this.simKey = inst.simKey;
         this.numLogin = inst.numLogin;
         this.lastLogin = inst.lastLogin;
         this.dadosInst = inst.dadosInst;
@@ -62,14 +62,13 @@ public class Instituto implements Serializable{
         KeyPair keyPair = SecurityUtils.generateECKeyPair(521, "BC");
         this.pubKey = keyPair.getPublic();
         this.privKey = keyPair.getPrivate();
-        this.simKey = SecurityUtils.generateKey("AES", 256, "BC");
     }
 
     //Esta função, vai criar uma pasta para guardar as chaves de um instituto
     public void criarPasta() {
         //Definir o caminho da pasta
         String basePath = new File("").getAbsolutePath();
-        String caminho = basePath + "resources/institutos/" + codNome + "/";
+        String caminho = basePath + "/resources/institutos/" + codNome + "/";
         File diretoria = new File(caminho);
         //Verificar se a pasta já existe, caso contrário criar a pasta
         if (!diretoria.exists()) {
@@ -87,13 +86,10 @@ public class Instituto implements Serializable{
     //Função que guarda as chaves criadas na pasta do Instituto
     public void save(String password) throws Exception {
         String basePath = new File("").getAbsolutePath();
-        String caminho = basePath + "resources/institutos/" + codNome + "/";
+        String caminho = basePath + "/resources/institutos/" + codNome + "/";
         //Encriptar a chave privada
         byte[] secret = SecurityUtils.encrypt(privKey.getEncoded(), password);
         Files.write(Path.of(caminho + codNome + ".priv"), secret);
-        //Encriptar a chave simétrica
-        byte[] simData = SecurityUtils.encrypt(simKey.getEncoded(), password);
-        Files.write(Path.of(caminho + codNome + ".sim"), simData);
         //Guardar a chave pública
         Files.write(Path.of(caminho + codNome + ".pub"), pubKey.getEncoded());
     }
@@ -102,21 +98,17 @@ public class Instituto implements Serializable{
     public boolean load(String password) throws Exception {
         try {
             String basePath = new File("").getAbsolutePath();
-            String caminho = basePath + "resources/institutos/" + codNome + "/";
+            String caminho = basePath + "/resources/institutos/" + codNome + "/";
             //Desencriptar a chave privada
             byte[] privData = Files.readAllBytes(Path.of(caminho + codNome + ".priv"));
             privData = SecurityUtils.decrypt(privData, password);
-            //Desencriptar a chave simétrica
-            byte[] simData = Files.readAllBytes(Path.of(caminho + codNome + ".sim"));
-            simData = SecurityUtils.decrypt(simData, password);
             //Ler a chave pública
             byte[] pubData = Files.readAllBytes(Path.of(caminho + codNome + ".pub"));
             this.privKey = SecurityUtils.getPrivateKey(privData);
             this.pubKey = SecurityUtils.getPublicKey(pubData);
-            this.simKey = SecurityUtils.getKey(simData);
             return true;
         } catch (IOException ex) {
-            Logger.getLogger(Utilizador.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Pessoa.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
@@ -124,72 +116,78 @@ public class Instituto implements Serializable{
     //Função que vai carregar a chave pública do Instituto
     public void loadPublic() throws Exception {
         String basePath = new File("").getAbsolutePath();
-        String caminho = basePath + "resources/institutos/" + codNome + "/";
+        String caminho = basePath + "/resources/institutos/" + codNome + "/";
         //Ler a chave pública
         byte[] pubData = Files.readAllBytes(Path.of(caminho + codNome + ".pub"));
         this.pubKey = SecurityUtils.getPublicKey(pubData);
     }
 
+    //Devolve o código nome de um Instituto
     public String getCodNome() {
         return codNome;
     }
 
+    //Define o código nome de um Instituto
     public void setCodNome(String codNome) {
         this.codNome = codNome;
     }
 
+    //Devolve a chave privada de um Instituto
     public PrivateKey getPrivKey() {
         return privKey;
     }
 
+    //Define a chave privada de um Instituto
     public void setPrivKey(PrivateKey privKey) {
         this.privKey = privKey;
     }
 
+    //Obtêm a chave pública de um Instituto
     public PublicKey getPubKey() {
         return pubKey;
     }
 
+    //Define a chave pública de um Instituto
     public void setPubKey(PublicKey pubKey) {
         this.pubKey = pubKey;
     }
 
-    public Key getSimKey() {
-        return simKey;
-    }
-
-    public void setSimKey(Key simKey) {
-        this.simKey = simKey;
-    }
-
+    //Devolve o número de logins efetuados por um Instituto
     public int getNumLogin() {
         return numLogin;
     }
 
+    //Define o número de logins efetuados por um instituto
     public void setNumLogin(int numLogin) {
         this.numLogin = numLogin;
     }
 
+    //Devole a data do último realizado no sistema
     public Date getLastLogin() {
         return lastLogin;
     }
 
+    //Define a data do último login realizado
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
     }
 
+    //Obtém os dados Institutcionais de um Instituto
     public dadosInstitucionais getDadosInst() {
         return dadosInst;
     }
 
+    //Define os dados Institucionais de um Instituto
     public void setDadosInst(dadosInstitucionais dadosInst) {
         this.dadosInst = dadosInst;
     }
 
+    //Retorna sobre um array de bytes a imagem de um Instituto
     public byte[] getImagem() {
         return imagem;
     }
 
+    //Define a imagem sobre o formato de array de bytes 
     public void setImagem(byte[] imagem) {
         this.imagem = imagem;
     }

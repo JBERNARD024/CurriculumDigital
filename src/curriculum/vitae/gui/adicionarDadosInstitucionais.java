@@ -342,7 +342,8 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
     }//GEN-LAST:event_btnProximoActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
-        JFileChooser escolheFoto = new JFileChooser(cv.basePath + "resources/institutos");
+        //Escolhe uma imagem do sistema me que está correr a aplicação
+        JFileChooser escolheFoto = new JFileChooser(cv.basePath + "/resources/institutos");
         if (escolheFoto.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
                 File fich = escolheFoto.getSelectedFile();
@@ -398,6 +399,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
     private javax.swing.JTextField txtWeb;
     // End of variables declaration//GEN-END:variables
 
+    //Função que vai adicionar um Instituto ao sistema
     private void adicionarDadosInstitucionais() {
         nome = txtNome.getText().trim();
         dataFund = txtDataFund.getDate();
@@ -411,11 +413,14 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
         codPostal = txtCodPostal.getText().trim();
         pais = txtPais.getText().trim();
         descr = txtDescr.getText();
+        //Cria um objeto com os dados introduzidos pelo utilizador Instituto
         dadosInst = new dadosInstitucionais(nome, dataFund, natureza, cidade, tipoEnsino, telefone, sitioWeb, morada, distrito, codPostal, pais, descr);
         if (icon == null) {
             try {
-                String caminhoImag = cv.basePath + "resources/institutos/defaultInstituto.png";
+                //Caso não tenha sido adicionado uma imagem, é atribuída uma imagem por defeito
+                String caminhoImag = cv.basePath + "/resources/institutos/defaultInstituto.png";
                 icon = new ImageIcon(caminhoImag);
+                //A imagem é ajustada à largura e comprimento do botão
                 Image imagem = icon.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_SMOOTH);
                 btnFoto.setIcon(new ImageIcon(imagem));
             } catch (Exception e) {
@@ -428,8 +433,11 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
         } catch (IOException ex) {
             Logger.getLogger(adicionarDadosInstitucionais.class.getName()).log(Level.SEVERE, null, ex);
         }
+        //A imagem é definida e atribuída ao Instituto
         cv.listInst.get(index).setImagem(byteIcon);
+        //Os dados institucionais são definidos
         cv.listInst.get(index).setDadosInst(dadosInst);
+        //A lista de Institutos é atualizada e guardada no ficheiro
         Recursos.writeObject(cv.listInst, f.getAbsolutePath());
     }
 }

@@ -7,7 +7,7 @@ package curriculum.vitae.gui;
 import curriculum.vitae.core.Certificado;
 import curriculum.vitae.core.Educacao;
 import curriculum.vitae.core.Instituto;
-import curriculum.vitae.core.Utilizador;
+import curriculum.vitae.core.Pessoa;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
@@ -52,8 +52,11 @@ public class adicionarCertificado extends java.awt.Dialog {
         initComponents();
         this.setTitle("Adicionar Certficado");
 
-        for (Utilizador users : cv.listUsers) {
-            txtUtilizadores.addItem(users.getDados().getNome());
+        //Verifica se as pessoas existentes no sistema, têm dados pessoais preenchidos e caso tenham, são adicionados à lista de seleção de pessoas
+        for (Pessoa user : cv.listUsers) {
+            if (user.getDados() != null) {
+                txtUtilizadores.addItem(user.getDados().getNome());
+            }
         }        
         inst = new Instituto(cv.listInst.get(indexInst));
         txtInstituicao.setText(inst.getDadosInst().getNome());
@@ -345,15 +348,20 @@ public class adicionarCertificado extends java.awt.Dialog {
             dataInic = txtDataInic.getDate();
             dataFim = txtDataFim.getDate();
             descr = txtDescr.getText();
+            //Cria um objeto educação com base nas informações introduzidas pelo Instituto
             educacao = new Educacao(qualificacao, areaEstudo, instituicao, mediaFinal, nivelQEQ, cidade, pais, dataInic, dataFim, descr);
             //Identificar o utilizador e o instituto que vão fazer parte do certificado
-            Utilizador user = new Utilizador(cv.listUsers.get(indexUser));
+            Pessoa user = new Pessoa(cv.listUsers.get(indexUser));
+            //Carrega a chave pública da Pessoa
             user.loadPublic();
             Instituto inst = new Instituto(cv.listInst.get(indexInst));
+            //Carrega a chave pública do Instituto
             inst.loadPublic();
-            //Adicionar o utilizador e o instituto ao certificado
+            //Adicionar a pessoa e o instituto ao certificado
             Certificado c = new Certificado(inst, user, educacao);
+            //Adiciona o certificado à lista de certificados
             cv.registoCerti.add(c);
+            //Atualiza o ficheiro da lista de certificados e da blockchain
             Recursos.writeObject(cv.registoCerti, cv.pathBlockchain);
         } catch (Exception ex) {
             Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);

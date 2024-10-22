@@ -5,13 +5,13 @@
 package curriculum.vitae.core;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
  *
  * @author joaob
  */
+//Esta classe vai guardar os dados pessoais de uma Pessoa
 public class dadosPessoais implements Serializable {
 
     private String nome;
@@ -25,10 +25,8 @@ public class dadosPessoais implements Serializable {
     private String codPostal;
     private String pais;
     private String descricao;
-    private ArrayList<Lingua> linguas = new ArrayList<>();
-    private ArrayList<ExpProf> expProf = new ArrayList<>();
-    private ArrayList<Educacao> educacao = new ArrayList<>();
 
+    //Construtor que vai criar um objeto que vai guardar os dados pessoais de uma Pessoa
     public dadosPessoais(String nome, String nacionalidade, Date dataNasc, String sexo, String telemovel, String linkedin, String morada, String localidade, String codPostal, String pais, String descricao) {
         this.nome = nome;
         this.nacionalidade = nacionalidade;
@@ -43,6 +41,7 @@ public class dadosPessoais implements Serializable {
         this.descricao = descricao;
     }
     
+    //Construtor que cria os dados pessoais a partir de dados pessoais já existentes
     public dadosPessoais(dadosPessoais dP){
         this.nome = dP.nome;
         this.nacionalidade = dP.nacionalidade;
@@ -57,118 +56,117 @@ public class dadosPessoais implements Serializable {
         this.descricao = dP.descricao;
     }
 
+    //Devolve o nome completo da Pessoa
     public String getNome() {
         return nome;
     }
-
+    
+    //Define o nome completo da Pessoa
     public void setNome(String nome) {
         this.nome = nome;
     }
 
+    //Devolve a nacionalidade de uma Pessoa
     public String getNacionalidade() {
         return nacionalidade;
     }
 
+    //Define a nacionalidade de uma Pessoa
     public void setNacionalidade(String nacionalidade) {
         this.nacionalidade = nacionalidade;
     }
 
+    //Devolve a data de nascimento de uma pessoa
     public Date getDataNasc() {
         return dataNasc;
     }
 
+    //Define a data de nascimento de uma pessoa
     public void setDataNasc(Date dataNasc) {
         this.dataNasc = dataNasc;
     }
-
+ 
+    //Devole o número de telemóvel de uma pessoa
     public String getTelemovel() {
         return telemovel;
     }
 
+    //Define um novo número de telemóvel
     public void setTelemovel(String telemovel) {
         this.telemovel = telemovel;
     }
 
+    //Devolve o link do perfil de uma pessoa
     public String getLinkedin() {
         return linkedin;
     }
 
+    //Define o link do perfil de uma pessoa
     public void setLinkedin(String linkedin) {
         this.linkedin = linkedin;
     }
 
+    //Devolve a morada de uma pessoa
     public String getMorada() {
         return morada;
     }
 
+    //Define uma nova morada de uma pessoa
     public void setMorada(String morada) {
         this.morada = morada;
     }
 
+    //Devolve a descrição de uma pessoa
     public String getDescricao() {
         return descricao;
     }
 
+    //Define a descrição de uma pessoa
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
 
-    public ArrayList<ExpProf> getExpProf() {
-        return expProf;
-    }
-
-    public void setExpProf(ArrayList<ExpProf> expProf) {
-        this.expProf = expProf;
-    }
-
-    public ArrayList<Educacao> getEducacao() {
-        return educacao;
-    }
-
-    public void setEducacao(ArrayList<Educacao> educacao) {
-        this.educacao = educacao;
-    }
-
+    //Devolve o género de uma pessoa
     public String getSexo() {
         return sexo;
     }
 
+    //Define o género de uma pessoa
     public void setSexo(String sexo) {
         this.sexo = sexo;
     }
 
+    //Devolve a localidade em que vive a pessoa
     public String getLocalidade() {
         return localidade;
     }
-
+    
+    //Define uma  nova localidade em que vive a pessoa
     public void setLocalidade(String localidade) {
         this.localidade = localidade;
     }
 
+    //Devolve o código postal de onde vive a pessoa
     public String getCodPostal() {
         return codPostal;
     }
 
+    //Define um novo código postal de onde vive a pessoa
     public void setCodPostal(String codPostal) {
         this.codPostal = codPostal;
     }
 
+    //Devolve o país de origem da pessoa
     public String getPais() {
         return pais;
     }
 
+    //Define o país de origem da pessoa
     public void setPais(String pais) {
         this.pais = pais;
     }
 
-    public ArrayList<Lingua> getLinguas() {
-        return linguas;
-    }
-
-    public void setLinguas(ArrayList<Lingua> linguas) {
-        this.linguas = linguas;
-    }
-
+    //Apresenta todo os dados pessoais, em formato de String
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

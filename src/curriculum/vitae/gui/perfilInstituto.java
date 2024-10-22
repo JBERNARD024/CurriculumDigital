@@ -1,7 +1,7 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Instituto;
-import curriculum.vitae.core.Utilizador;
+import curriculum.vitae.core.Pessoa;
 import curriculum.vitae.core.dadosPessoais;
 import java.awt.Color;
 import java.awt.Image;

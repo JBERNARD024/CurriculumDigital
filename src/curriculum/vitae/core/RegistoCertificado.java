@@ -24,6 +24,7 @@ import utils.Recursos;
  *
  * @author joaob
  */
+//Esta classe vai guardar a lista de certificados emitidos e a blockchain
 public class RegistoCertificado implements Serializable {
 
     private ArrayList<String> registo;
@@ -33,12 +34,16 @@ public class RegistoCertificado implements Serializable {
     private static final int MERKLE_TREE_SIZE = 8;
     MerkleTree tree;
 
+    //Cria o objeto da classe RegistoCertificado, inicializando o registo de certificados, a blockchain e a lista temporária de certificados
     public RegistoCertificado() {
         registo = new ArrayList<>();
         temp = new ArrayList<>();
         bc = new BlockChain();
     }
 
+    /*Esta função vai apresentar a lista de todos os certificados, que já foram validados pela blockchain.
+    De forma a confirmar, queos certificados estão válidos, juntamente com os dados do certificado,
+    é apresentado também o Hash fdo bloco anterior, o nonce e o hash do bloco de que faz parte*/
     @Override
     public String toString() {
         String basePath = new File("").getAbsolutePath();
@@ -47,7 +52,7 @@ public class RegistoCertificado implements Serializable {
             .append(registo.size())
             .append("\n\n");
         for (Block b : bc.getChain()) {
-            tree = (MerkleTree) Recursos.readObject(basePath + "resources/merkleTree/" + b.getCurrentHash() + ".mk");
+            tree = (MerkleTree) Recursos.readObject(basePath + "/resources/merkleTree/" + b.getCurrentHash() + ".mk");
             for (int i = 0; i < registo.size(); i++) {
                 String cert = getRegisto().get(i);
                 List<String> proof = tree.getProof(cert);
@@ -68,6 +73,7 @@ public class RegistoCertificado implements Serializable {
         return txt.toString();
     }
 
+    //Guarda o ficheiro com o registo de Certificado emitidos e a blockchain
     public void save(String fileName) throws IOException {
         try (ObjectOutputStream out = new ObjectOutputStream(
                 new FileOutputStream(fileName))) {
@@ -75,6 +81,7 @@ public class RegistoCertificado implements Serializable {
         }
     }
 
+    //Carrega o ficheiro guardado que contém o registo de certificados e a blockchain
     public static RegistoCertificado load(String fileName) throws IOException, ClassNotFoundException {
         try (ObjectInputStream in = new ObjectInputStream(
                 new FileInputStream(fileName))) {
@@ -82,6 +89,8 @@ public class RegistoCertificado implements Serializable {
         }
     }
 
+    /*Adiciona à blockchain, um novo bloco em que os dados, são a root de uma árvore de merkle, composta por oito certificados
+    No fim de criada, guarda o ficheiro da merkleTree e limpa a lista temporária*/
     public void add(Certificado c) throws Exception {
         String basePath = new File("").getAbsolutePath();
         registo.add(c.toText());
@@ -89,35 +98,28 @@ public class RegistoCertificado implements Serializable {
         if (temp.size() == MERKLE_TREE_SIZE) {
             tree = new MerkleTree(temp);
             bc.add(tree.getRoot(), DIFICULTY);
-            tree.saveToFile(basePath + "resources/merkleTree/" + bc.getLastBlockHash() + ".mk");
+            tree.saveToFile(basePath + "/resources/merkleTree/" + bc.getLastBlockHash() + ".mk");
             temp.clear();
             tree = new MerkleTree();
         }
-        /*String txtCertificado = ObjectUtils.convertObjectToBase64(c);
-        bc.add(txtCertificado, DIFICULTY);*/
     }
 
-    public List<Certificado> getCertificadoBlockchain() throws Exception {
-        List<Certificado> lst = new ArrayList<>();
-        for (Block b : bc.getChain()) {
-            Certificado c = (Certificado) ObjectUtils.convertBase64ToObject(b.getData());
-            lst.add(c);
-        }
-        return lst;
-    }
-
+    //Devolve a blockchain
     public BlockChain getBc() {
         return bc;
     }
 
+    //Define uma blockchain
     public void setBc(BlockChain bc) {
         this.bc = bc;
     }
 
+    //Devolve todos os certificados emitidos
     public ArrayList<String> getRegisto() {
         return registo;
     }
 
+    //Define o registo dos certificados emitidos
     public void setRegisto(ArrayList<String> registo) {
         this.registo = registo;
     }

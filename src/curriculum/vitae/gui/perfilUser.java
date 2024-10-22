@@ -1,6 +1,6 @@
 package curriculum.vitae.gui;
 
-import curriculum.vitae.core.Utilizador;
+import curriculum.vitae.core.Pessoa;
 import curriculum.vitae.core.dadosPessoais;
 import java.awt.Color;
 import java.awt.Image;
@@ -21,7 +21,7 @@ import javax.swing.ImageIcon;
  * @author joaob
  */
 public class perfilUser extends java.awt.Dialog {
-    Utilizador user;
+    Pessoa user;
     ImageIcon icon;
     Image Image;
     int index;
@@ -38,7 +38,7 @@ public class perfilUser extends java.awt.Dialog {
         this.index = index;
         initComponents();
         this.setTitle("Perfil Utilizador");
-        user = new Utilizador(cv.listUsers.get(index));
+        user = new Pessoa(cv.listUsers.get(index));
         txtNome.setText(user.getDados().getNome());
         txtSexo.setText(user.getDados().getSexo());
         txtData.setDate(user.getDados().getDataNasc());
@@ -144,11 +144,11 @@ public class perfilUser extends java.awt.Dialog {
                             .addGap(23, 23, 23)
                             .addComponent(labelFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(91, 91, 91)
-                            .addComponent(jLabel1))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(54, 54, 54)
-                            .addComponent(btnLogout))))
+                            .addComponent(btnLogout))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(91, 91, 91)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -225,7 +225,7 @@ public class perfilUser extends java.awt.Dialog {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
+                        .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel10)
