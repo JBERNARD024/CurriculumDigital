@@ -5,7 +5,7 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Instituto;
-import curriculum.vitae.core.Utilizador;
+import curriculum.vitae.core.Pessoa;
 import java.io.File;
 import java.security.Provider;
 import java.security.Security;
@@ -30,7 +30,7 @@ public class Registo extends java.awt.Dialog {
     String password;
     String confPassword;
     String codNome;
-    Utilizador user;
+    Pessoa user;
     Instituto instituto;
     File fichUsers = new File(cv.pathUsers);
     File fichInst = new File(cv.pathInst);
@@ -179,7 +179,7 @@ public class Registo extends java.awt.Dialog {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        painelLogin.addTab("<html>&nbsp;Utilizador</html>", new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/user.png")), painelRegistoUsers); // NOI18N
+        painelLogin.addTab("<html>&nbsp; Pessoa</html>", new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/user.png")), painelRegistoUsers); // NOI18N
 
         painelRegistoInstituto.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
@@ -349,17 +349,24 @@ public class Registo extends java.awt.Dialog {
     private javax.swing.JPasswordField txtPasswordUser;
     // End of variables declaration//GEN-END:variables
 
-    //Função que adiciona um Utilizador à Lista de Utilizadores (ArrayList)
+    //Função que adiciona um Pessoa à Lista de Pessoas (ArrayList)
     private void adicionarUtilizador() throws Exception {
         email = txtEmailUser.getText().trim();
         password = new String(txtPasswordUser.getPassword());
         confPassword = new String(txtConfPasswordSuer.getPassword());
+        //Faz a validação dos campos
         if (verificaCamposUser() == true && verificaEmail(email) == false) {
-            user = new Utilizador(email);
+            //Estando a validação correta, o utilizador Pessoa é adicionado à lista de Pessoas
+            user = new Pessoa(email);
+            //É criada um pasta do utilizador Pessoa
             user.criarPasta();
+            //O par de chaves asssimétricas é criado
             user.generateKeys();
+            //O par de chaves assimétricas é guardado na pasta da Pessoa e a chave privada é encriptada com a password
             user.save(password);
+            //A pessoa é adicionada ao sistema
             cv.listUsers.add(user);
+            //A lista das pessoas é guardado num ficheiro
             Recursos.writeObject(cv.listUsers, fichUsers.getAbsolutePath());
             dispose();
             new Login(cv, true).setVisible(true);
@@ -371,12 +378,19 @@ public class Registo extends java.awt.Dialog {
         codNome = txtCodNomeInst.getText().trim();
         password = new String(txtPasswordInst.getPassword());
         confPassword = new String(txtConfPasswordInst.getPassword());
+        //Faz a validação dos campos
         if (verificaCamposInst()== true && verificaCodNome(codNome) == false) {
+             //Estando a validação correta, o utilizador Instituto é adicionado à lista de Institutos
             instituto = new Instituto(codNome);
+            //É criada um pasta do utilizador Instituto
             instituto.criarPasta();
+            //O par de chaves asssimétricas é criado
             instituto.generateKeys();
+            //O par de chaves assimétricas é guardado na pasta da Instituto e a chave privada é encriptada com a password
             instituto.save(password);
+            //O Instituto é adicionado ao sistema
             cv.listInst.add(instituto);
+            //A lista de Institutos é guardado num ficheiro
             Recursos.writeObject(cv.listInst, fichInst.getAbsolutePath());
             dispose();
             new Login(cv, true).setVisible(true);

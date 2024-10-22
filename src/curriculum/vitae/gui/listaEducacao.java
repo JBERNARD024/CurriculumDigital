@@ -6,7 +6,7 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Certificado;
 import curriculum.vitae.core.Educacao;
-import curriculum.vitae.core.Utilizador;
+import curriculum.vitae.core.Pessoa;
 import java.awt.Color;
 import java.awt.Image;
 import java.lang.reflect.Array;
@@ -32,7 +32,7 @@ public class listaEducacao extends java.awt.Dialog {
 
     CurriculumVitae cv;
     int index;
-    Utilizador user;
+    Pessoa user;
     ImageIcon icon;
     Image imagem;
     DefaultListModel myCertificados;
@@ -48,8 +48,9 @@ public class listaEducacao extends java.awt.Dialog {
         this.index = index;
         initComponents();
         this.setTitle("Lista de Educação");
-        user = new Utilizador(cv.listUsers.get(index));
+        user = new Pessoa(cv.listUsers.get(index));
         icon = new ImageIcon(user.getImagem());
+        //Define a imagem na tela da Pessoa com sessão iniciada
         imagem = icon.getImage().getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_SMOOTH);
         lblFoto.setBackground(Color.white);
         lblFoto.setIcon(new ImageIcon(imagem));
@@ -385,6 +386,7 @@ public class listaEducacao extends java.awt.Dialog {
 
     private void certificadosListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_certificadosListValueChanged
         // TODO add your handling code here:
+        //Quando é selecionado um novo certificado na lista, todos os campos vão ser ser atualizados com os dados do certificado selecionado 
         indexEducacao = certificadosList.getSelectedIndex();
         if (indexEducacao >= 0) {
             //mostraPanelEleitor();
@@ -459,18 +461,25 @@ public class listaEducacao extends java.awt.Dialog {
     private javax.swing.JTextField txtWeb;
     // End of variables declaration//GEN-END:variables
 
+    //Função que vai verificar quais os certificados que foram atribuídos à Pessoa
     private void getCertificados() {
         try {
             // TODO add your handling code here:
+            //Iteração dos blocos da Blockchain
             for (Block b : cv.registoCerti.getBc().getChain()) {
-                tree = (MerkleTree) Recursos.readObject(cv.basePath + "resources/merkleTree/" + b.getCurrentHash() + ".mk");
+                //Carrega o ficheiro da merkle cujo root é igual aos dados do bloco
+                tree = (MerkleTree) Recursos.readObject(cv.basePath + "/resources/merkleTree/" + b.getCurrentHash() + ".mk");
+                //Iteração da lista dos certificados emitidos
                 for (int i = 0; i < cv.registoCerti.getRegisto().size(); i++) {
                     String cert = cv.registoCerti.getRegisto().get(i);
                     List<String> proof = tree.getProof(cert);
                     boolean isProofValid = tree.isProofValid(cert, proof);
+                    //Vai verificar se o certificado presente na lista pertence à árvore de merkle, através da prova
                     if(isProofValid){
+                         //Se pertencer à árvore, vamos verificar se o certificado pertence à Pessoa com sessão inciada
                         Certificado c = (Certificado) Converter.hexToObject(cv.registoCerti.getRegisto().get(i));
                         if(c.getGraduado().getEmail().equals(user.getEmail())){
+                            //Se foi associada à Pessoa com sessão iniciada, é adicionado à lista dos seus certificados
                             myCertificados.addElement(c);
                         }
                     }

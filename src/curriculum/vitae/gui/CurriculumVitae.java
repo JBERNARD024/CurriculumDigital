@@ -6,7 +6,7 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.RegistoCertificado;
 import curriculum.vitae.core.Instituto;
-import curriculum.vitae.core.Utilizador;
+import curriculum.vitae.core.Pessoa;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -28,11 +28,11 @@ import utils.Recursos;
  */
 public class CurriculumVitae extends javax.swing.JFrame {
 
-    ArrayList<Utilizador> listUsers = new ArrayList<>();
+    ArrayList<Pessoa> listUsers = new ArrayList<>();
     ArrayList<Instituto> listInst = new ArrayList<>();
     RegistoCertificado registoCerti = new RegistoCertificado();
     String basePath = new File("").getAbsolutePath();
-    String pathUsers = basePath + "/resources/utilizadores/users.user";
+    String pathUsers = basePath + "/resources/pessoas/users.user";
     String pathInst = basePath + "/resources/institutos/institutos.inst";
     String pathBlockchain = basePath + "/resources/blockchain/blockchain.bc";
     File fichUsers;
@@ -47,18 +47,23 @@ public class CurriculumVitae extends javax.swing.JFrame {
      */
     public CurriculumVitae() throws ClassNotFoundException, IOException, Exception {
         initComponents();
+        //Adiciona o Bouncy Castle à lista providers de segurança
         Security.addProvider(new BouncyCastleProvider());
         fichUsers = new File(pathUsers);
         fichInst = new File(pathInst);
         fichRegisto = new File(pathBlockchain);
-        listUsers = (ArrayList<Utilizador>) Recursos.readObject(fichUsers.getAbsolutePath());
+        //Define o array de utilizadores com base no ficheiro de utilizadores
+        listUsers = (ArrayList<Pessoa>) Recursos.readObject(fichUsers.getAbsolutePath());
+        //Define o array de institutos com base no ficheiro de institutos
         listInst = (ArrayList<Instituto>) Recursos.readObject(fichInst.getAbsolutePath());
+        //Define o objeto RegistoCertificado com base no ficheiro RegistoCertificado
         registoCerti = (RegistoCertificado) Recursos.readObject(fichRegisto.getAbsolutePath());
         //Fecha a janela principal da aplicação e encerra a aplicação
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //Vai guardar a lista de todos os utilizadores durante a atividade no sistema.
         addWindowListener(new WindowAdapter() {
             @Override
+            //Ao fechar a aplicação, o sistema vai guardar a lista de utilizadores, institutos, certificados e a blockchain, para não se perderem os dados
             public void windowClosing(WindowEvent e) {
                 try {
                     Recursos.writeObject(listUsers, fichUsers.getAbsolutePath());
@@ -171,16 +176,19 @@ public class CurriculumVitae extends javax.swing.JFrame {
 
     private void btnCriarCurriculumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarCurriculumActionPerformed
         // TODO add your handling code here:
+        //Redireciona o utilizador para a página de Login
         new Login(this, true).setVisible(true);
     }//GEN-LAST:event_btnCriarCurriculumActionPerformed
 
     private void btnAboutUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAboutUsActionPerformed
         // TODO add your handling code here:
+        //Redireciona o utilizador para a página de aboutUs
         new aboutUs(this, true).setVisible(true);
     }//GEN-LAST:event_btnAboutUsActionPerformed
 
     private void btnBlockChainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBlockChainActionPerformed
         // TODO add your handling code here:
+        //Redireciona o utilizador para a página da Blockchain
         new Blockchain(this, true).setVisible(true);
     }//GEN-LAST:event_btnBlockChainActionPerformed
 

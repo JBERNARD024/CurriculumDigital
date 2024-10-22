@@ -317,7 +317,8 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     }//GEN-LAST:event_btnVerPerfilActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
-        JFileChooser escolheFoto = new JFileChooser(cv.basePath + "resources/utilizadores/");
+        //Escolhe uma imagem do sistema me que está correr a aplicação
+        JFileChooser escolheFoto = new JFileChooser(cv.basePath + "/resources/pessoas/");
         if (escolheFoto.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
                 File fich = escolheFoto.getSelectedFile();
@@ -371,6 +372,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     private javax.swing.JTextField txtTelemovel;
     // End of variables declaration//GEN-END:variables
 
+    //Função que vai adicionar uma Pessoa ao sistema
     private void adicionarDadosPessoais() {
         nome = txtNome.getText().trim();
         dataNasc = txtData.getDate();
@@ -383,11 +385,14 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         codPostal = txtCodPostal.getText().trim();
         pais = txtPais.getText().trim();
         descr = txtDescr.getText();
+        //Constroi um objeto com os dados introduzidos pela Pessoa
         dadosP = new dadosPessoais(nome, nacionalidade, dataNasc, sexo, telemovel, linkedin, morada, localidade, codPostal, pais, descr);
         if (icon == null) {
             try {
-                String caminhoImag = cv.basePath + "resources/utilizadores/defaultUser.png";
+                //Caso não tenha sido adicionado, é atribuída uma imagem por defeito
+                String caminhoImag = cv.basePath + "/resources/pessoas/defaultPessoa.png";
                 icon = new ImageIcon(caminhoImag);
+                //A imagem é ajustada à largura e comprimento do botão
                 Image imagem = icon.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_SMOOTH);
                 btnFoto.setIcon(new ImageIcon(imagem));
             } catch (Exception e) {
@@ -400,8 +405,11 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         } catch (IOException ex) {
             Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
         }
+        //A imagem é definida e atribuída à Pessoa
         cv.listUsers.get(index).setImagem(byteIcon);
+         //Os dados institucionais são definidos
         cv.listUsers.get(index).setDados(dadosP);
+        //A lista de Pessoas é atualizada e guardada no ficheiro
         Recursos.writeObject(cv.listUsers, f.getAbsolutePath());
     }
 }

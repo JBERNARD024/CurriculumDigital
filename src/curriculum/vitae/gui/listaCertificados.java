@@ -6,7 +6,7 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Certificado;
 import curriculum.vitae.core.Instituto;
-import curriculum.vitae.core.Utilizador;
+import curriculum.vitae.core.Pessoa;
 import java.awt.Color;
 import java.awt.Image;
 import java.util.List;
@@ -48,6 +48,7 @@ public class listaCertificados extends java.awt.Dialog {
         this.setTitle("Lista de Certficados");
         inst = new Instituto(cv.listInst.get(index));
         icon = new ImageIcon(inst.getImagem());
+        //Define a imagem na tela do Instituto com sessão iniciada
         imagem = icon.getImage().getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_SMOOTH);
         lblFoto.setBackground(Color.white);
         lblFoto.setIcon(new ImageIcon(imagem));
@@ -89,6 +90,7 @@ public class listaCertificados extends java.awt.Dialog {
         lblFoto = new javax.swing.JLabel();
         btnLogout = new javax.swing.JButton();
         btnObterCertificados = new javax.swing.JButton();
+        btnAdicionarCurriculo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         certificadosList = new javax.swing.JList<>();
         jLabel5 = new javax.swing.JLabel();
@@ -186,6 +188,14 @@ public class listaCertificados extends java.awt.Dialog {
             }
         });
 
+        btnAdicionarCurriculo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAdicionarCurriculo.setText("Adicionar Currículo");
+        btnAdicionarCurriculo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdicionarCurriculoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout painelPerfilLayout = new javax.swing.GroupLayout(painelPerfil);
         painelPerfil.setLayout(painelPerfilLayout);
         painelPerfilLayout.setHorizontalGroup(
@@ -204,7 +214,8 @@ public class listaCertificados extends java.awt.Dialog {
                             .addComponent(btnObterCertificados, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(painelPerfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(lblFoto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                                .addComponent(btnDadosPessoais, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(btnDadosPessoais, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btnAdicionarCurriculo, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
         painelPerfilLayout.setVerticalGroup(
@@ -214,9 +225,11 @@ public class listaCertificados extends java.awt.Dialog {
                 .addComponent(jLabel16)
                 .addGap(59, 59, 59)
                 .addComponent(lblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
                 .addComponent(btnDadosPessoais, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
+                .addGap(30, 30, 30)
+                .addComponent(btnAdicionarCurriculo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
                 .addComponent(btnObterCertificados, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(58, 58, 58)
                 .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -364,7 +377,7 @@ public class listaCertificados extends java.awt.Dialog {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(jScrollPane2)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(9, Short.MAX_VALUE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(painelPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -389,6 +402,7 @@ public class listaCertificados extends java.awt.Dialog {
 
     private void certificadosListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_certificadosListValueChanged
         // TODO add your handling code here:
+       //Quando é selecionado um novo certificado na lista, todos os campos vão ser ser atualizados com os dados do certificado selecionado 
         indexEducacao = certificadosList.getSelectedIndex();
         if (indexEducacao >= 0) {
             //mostraPanelEleitor();
@@ -423,10 +437,19 @@ public class listaCertificados extends java.awt.Dialog {
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
         dispose();
+        //Redireciona o Instituto para a página de Login
         new Login(cv, true).setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
+    private void btnAdicionarCurriculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarCurriculoActionPerformed
+        // TODO add your handling code here:
+        dispose();
+        //Redireciona o Instituto para a página para adicionar um certificado
+        new adicionarCertificado(cv, true, index).setVisible(true);
+    }//GEN-LAST:event_btnAdicionarCurriculoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdicionarCurriculo;
     private javax.swing.JButton btnDadosPessoais;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnObterCertificados;
@@ -463,18 +486,25 @@ public class listaCertificados extends java.awt.Dialog {
     private javax.swing.JTextField txtWeb;
     // End of variables declaration//GEN-END:variables
 
+//Função que percorrer a blockchain e procurar os certificados que possuam a chave pública do Instituto associada aos Certificados
 private void getCertificados() {
         try {
             // TODO add your handling code here:
+            //Iteração dos blocos da Blockchain
             for (Block b : cv.registoCerti.getBc().getChain()) {
-                tree = (MerkleTree) Recursos.readObject(cv.basePath + "resources/merkleTree/" + b.getCurrentHash() + ".mk");
+                //Carrega o ficheiro da merkle cujo root é igual aos dados do bloco
+                tree = (MerkleTree) Recursos.readObject(cv.basePath + "/resources/merkleTree/" + b.getCurrentHash() + ".mk");
+                //Iteração da lista dos certificados emitidos
                 for (int i = 0; i < cv.registoCerti.getRegisto().size(); i++) {
                     String cert = cv.registoCerti.getRegisto().get(i);
                     List<String> proof = tree.getProof(cert);
                     boolean isProofValid = tree.isProofValid(cert, proof);
+                    //Vai verificar se o certificado presente na lista pertence à árvore de merkle, através da prova
                     if(isProofValid){
+                        //Se pertencer à árvore, vamos verificar se o certificado foi emitido pelo Instituto com sessão inciada
                         Certificado c = (Certificado) Converter.hexToObject(cv.registoCerti.getRegisto().get(i));
                         if(c.getInstituto().getCodNome().equals(inst.getCodNome())){
+                            //Se foi o Instituto o emissor, é adicionado à lista dos seus certificados
                             myCertificados.addElement(c);
                         }
                     }
