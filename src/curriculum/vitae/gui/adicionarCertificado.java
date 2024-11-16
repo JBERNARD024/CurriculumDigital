@@ -8,11 +8,18 @@ import curriculum.vitae.core.Certificado;
 import curriculum.vitae.core.Educacao;
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import utils.Recursos;
 
 /**
@@ -57,7 +64,7 @@ public class adicionarCertificado extends java.awt.Dialog {
             if (user.getDados() != null) {
                 txtUtilizadores.addItem(user.getDados().getNome());
             }
-        }        
+        }
         inst = new Instituto(cv.listInst.get(indexInst));
         txtInstituicao.setText(inst.getDadosInst().getNome());
         txtCidade.setText(inst.getDadosInst().getCidade());
@@ -295,7 +302,7 @@ public class adicionarCertificado extends java.awt.Dialog {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-        adicionarEducacao();
+        adicionarCertificado();
         btnGuardar.setEnabled(false);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
@@ -335,36 +342,40 @@ public class adicionarCertificado extends java.awt.Dialog {
     private javax.swing.JComboBox<String> txtUtilizadores;
     // End of variables declaration//GEN-END:variables
 
-    private void adicionarEducacao() {
-        try {
-            indexUser = txtUtilizadores.getSelectedIndex();
-            qualificacao = (String) txtQualificacao.getSelectedItem();
-            areaEstudo = txtAreaEstudo.getText();
-            instituicao = txtInstituicao.getText();
-            mediaFinal = (int) txtMedia.getValue();
-            nivelQEQ = (String) txtQEQ.getSelectedItem();
-            cidade = txtCidade.getText();
-            pais = txtPais.getText();
-            dataInic = txtDataInic.getDate();
-            dataFim = txtDataFim.getDate();
-            descr = txtDescr.getText();
-            //Cria um objeto educação com base nas informações introduzidas pelo Instituto
-            educacao = new Educacao(qualificacao, areaEstudo, instituicao, mediaFinal, nivelQEQ, cidade, pais, dataInic, dataFim, descr);
-            //Identificar o utilizador e o instituto que vão fazer parte do certificado
-            Pessoa user = new Pessoa(cv.listUsers.get(indexUser));
-            //Carrega a chave pública da Pessoa
-            user.loadPublic();
-            Instituto inst = new Instituto(cv.listInst.get(indexInst));
-            //Carrega a chave pública do Instituto
-            inst.loadPublic();
-            //Adicionar a pessoa e o instituto ao certificado
-            Certificado c = new Certificado(inst, user, educacao);
-            //Adiciona o certificado à lista de certificados
-            cv.registoCerti.add(c);
-            //Atualiza o ficheiro da lista de certificados e da blockchain
-            Recursos.writeObject(cv.registoCerti, cv.pathBlockchain);
-        } catch (Exception ex) {
-            Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    //Função que adiciona um certificado
+    //O uso da Thread, é para prevenir que a interface seja bloqueada quando um novo bloco é gerado.
+    private void adicionarCertificado() {
+        new Thread(() -> {
+            try {
+                indexUser = txtUtilizadores.getSelectedIndex();
+                qualificacao = (String) txtQualificacao.getSelectedItem();
+                areaEstudo = txtAreaEstudo.getText();
+                instituicao = txtInstituicao.getText();
+                mediaFinal = (int) txtMedia.getValue();
+                nivelQEQ = (String) txtQEQ.getSelectedItem();
+                cidade = txtCidade.getText();
+                pais = txtPais.getText();
+                dataInic = txtDataInic.getDate();
+                dataFim = txtDataFim.getDate();
+                descr = txtDescr.getText();
+                //Cria um objeto educação com base nas informações introduzidas pelo Instituto
+                educacao = new Educacao(qualificacao, areaEstudo, instituicao, mediaFinal, nivelQEQ, cidade, pais, dataInic, dataFim, descr);
+                //Identificar o utilizador e o instituto que vão fazer parte do certificado
+                Pessoa user = new Pessoa(cv.listUsers.get(indexUser));
+                //Carrega a chave pública da Pessoa
+                user.loadPublic();
+                Instituto inst = new Instituto(cv.listInst.get(indexInst));
+                //Carrega a chave pública do Instituto
+                inst.loadPublic();
+                //Adicionar a pessoa e o instituto ao certificado
+                Certificado c = new Certificado(inst, user, educacao);
+                //Adiciona o certificado à lista de certificados
+                cv.registoCerti.add(c);
+                //Atualiza o ficheiro da lista de certificados e da blockchain
+                Recursos.writeObject(cv.registoCerti, cv.pathBlockchain);
+            } catch (Exception ex) {
+                Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }
 }
