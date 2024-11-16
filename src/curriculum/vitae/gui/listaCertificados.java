@@ -36,6 +36,7 @@ public class listaCertificados extends java.awt.Dialog {
 
     /**
      * Creates new form listaEducacao
+     *
      * @param cv
      * @param modal
      * @param index
@@ -402,7 +403,7 @@ public class listaCertificados extends java.awt.Dialog {
 
     private void certificadosListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_certificadosListValueChanged
         // TODO add your handling code here:
-       //Quando é selecionado um novo certificado na lista, todos os campos vão ser ser atualizados com os dados do certificado selecionado 
+        //Quando é selecionado um novo certificado na lista, todos os campos vão ser ser atualizados com os dados do certificado selecionado 
         indexEducacao = certificadosList.getSelectedIndex();
         if (indexEducacao >= 0) {
             //mostraPanelEleitor();
@@ -418,9 +419,9 @@ public class listaCertificados extends java.awt.Dialog {
             txtDataInic.setDate(c.getExperiencia().getDataInic());
             txtDataFim.setDate(c.getExperiencia().getDataFim());
             txtDescr.setText(c.getExperiencia().getDescr());
-            if(c.isValid()){
+            if (c.isValid()) {
                 txtAssinatura.setText("Válida");
-            }else{
+            } else {
                 txtAssinatura.setText("Inválida");
             }
         }
@@ -487,33 +488,37 @@ public class listaCertificados extends java.awt.Dialog {
     // End of variables declaration//GEN-END:variables
 
 //Função que percorrer a blockchain e procurar os certificados que possuam a chave pública do Instituto associada aos Certificados
-private void getCertificados() {
-        try {
-            // TODO add your handling code here:
-            //Iteração dos blocos da Blockchain
-            for (Block b : cv.registoCerti.getBc().getChain()) {
-                //Carrega o ficheiro da merkle cujo root é igual aos dados do bloco
-                tree = (MerkleTree) Recursos.readObject(cv.basePath + "/resources/merkleTree/" + b.getCurrentHash() + ".mk");
-                //Iteração da lista dos certificados emitidos
-                for (int i = 0; i < cv.registoCerti.getRegisto().size(); i++) {
-                    String cert = cv.registoCerti.getRegisto().get(i);
-                    List<String> proof = tree.getProof(cert);
-                    boolean isProofValid = tree.isProofValid(cert, proof);
-                    //Vai verificar se o certificado presente na lista pertence à árvore de merkle, através da prova
-                    if(isProofValid){
-                        //Se pertencer à árvore, vamos verificar se o certificado foi emitido pelo Instituto com sessão inciada
-                        Certificado c = (Certificado) Converter.hexToObject(cv.registoCerti.getRegisto().get(i));
-                        if(c.getInstituto().getCodNome().equals(inst.getCodNome())){
-                            //Se foi o Instituto o emissor, é adicionado à lista dos seus certificados
-                            myCertificados.addElement(c);
+    private void getCertificados() {
+        
+        new Thread(() -> {
+            try {
+                // TODO add your handling code here:
+                //Iteração dos blocos da Blockchain
+                for (Block b : cv.registoCerti.getBc().getChain()) {
+                    //Carrega o ficheiro da merkle cujo root é igual aos dados do bloco
+                    tree = (MerkleTree) Recursos.readObject(cv.basePath + "/resources/merkleTree/" + b.getCurrentHash() + ".mk");
+                    //Iteração da lista dos certificados emitidos
+                    for (int i = 0; i < cv.registoCerti.getRegisto().size(); i++) {
+                        String cert = cv.registoCerti.getRegisto().get(i);
+                        List<String> proof = tree.getProof(cert);
+                        boolean isProofValid = tree.isProofValid(cert, proof);
+                        //Vai verificar se o certificado presente na lista pertence à árvore de merkle, através da prova
+                        if (isProofValid) {
+                            //Se pertencer à árvore, vamos verificar se o certificado foi emitido pelo Instituto com sessão inciada
+                            Certificado c = (Certificado) Converter.hexToObject(cv.registoCerti.getRegisto().get(i));
+                            if (c.getInstituto().getCodNome().equals(inst.getCodNome())) {
+                                //Se foi o Instituto o emissor, é adicionado à lista dos seus certificados
+                                myCertificados.addElement(c);
+                            }
                         }
                     }
                 }
+                certificadosList.setModel(myCertificados);
+                certificadosList.setSelectedIndex(indexEducacao);
+            } catch (Exception ex) {
+                Logger.getLogger(listaEducacao.class.getName()).log(Level.SEVERE, null, ex);
             }
-            certificadosList.setModel(myCertificados);
-            certificadosList.setSelectedIndex(indexEducacao);
-        } catch (Exception ex) {
-            Logger.getLogger(listaEducacao.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            
+        }).start();
     }
 }

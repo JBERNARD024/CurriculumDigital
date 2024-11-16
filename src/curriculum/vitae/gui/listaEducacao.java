@@ -463,6 +463,8 @@ public class listaEducacao extends java.awt.Dialog {
 
     //Função que vai verificar quais os certificados que foram atribuídos à Pessoa
     private void getCertificados() {
+        new Thread(() -> {
+            
         try {
             // TODO add your handling code here:
             //Iteração dos blocos da Blockchain
@@ -490,5 +492,7 @@ public class listaEducacao extends java.awt.Dialog {
         } catch (Exception ex) {
             Logger.getLogger(listaEducacao.class.getName()).log(Level.SEVERE, null, ex);
         }
+            
+        }).start();
     }
 }

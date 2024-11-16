@@ -30,7 +30,7 @@ public class RegistoCertificado implements Serializable {
     private ArrayList<String> registo;
     private ArrayList<String> temp;
     private BlockChain bc;
-    public static int DIFICULTY = 4;
+    public static int DIFICULTY = 5;
     private static final int MERKLE_TREE_SIZE = 8;
     MerkleTree tree;
 

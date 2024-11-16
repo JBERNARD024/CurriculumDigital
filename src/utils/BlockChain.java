@@ -49,12 +49,13 @@ public class BlockChain implements Serializable {
      * adds data to the blockChain
      * @param data data to add in the block
      * @param dificulty dificulty of block to miners (POW)
+     * @throws java.lang.InterruptedException
      */
-    public void add(String data, int dificulty) {
+    public void add(String data, int dificulty) throws InterruptedException {
         //hash of previous block
         String prevHash = getLastBlockHash();
         //mining block
-        int nonce = Miner.getNonce(prevHash + data, dificulty);
+        int nonce = MinerConcurrent.getNonce(prevHash + data, dificulty);
         //build new block
         Block newBlock = new Block(prevHash, data, nonce);
         //add new block to the chain
