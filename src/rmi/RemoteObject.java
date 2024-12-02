@@ -17,13 +17,10 @@
 package rmi;
 
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,16 +34,10 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
 
     public RemoteObject(int port) throws RemoteException {
         super(port);
-        try {
-            //atualizar o nome do servidor
-            host = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
-            host = "unknow";
-        }
     }
 
     @Override
-    public String getMessage() {
+    public String getMessage() throws RemoteException{
         String client = "";
         try {
             //nome do cliente

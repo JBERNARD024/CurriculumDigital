@@ -25,5 +25,5 @@ import java.util.ArrayList;
  */
 public interface RemoteInterface extends Remote{
     //remote method
-    public String getMessage();
+    public String getMessage() throws RemoteException;;
 }
