@@ -14,7 +14,6 @@
 //::                                                               (c)2024   ::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //////////////////////////////////////////////////////////////////////////////
-
 package rmi;
 
 import curriculum.vitae.core.Instituto;
@@ -45,7 +44,6 @@ import utils.Recursos;
  *
  * @author Trabalho
  */
-
 public class RemoteObject extends UnicastRemoteObject implements RemoteInterface {
 
     String host; // nome do servidor
@@ -60,7 +58,9 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     File fichInst;
     File fichRegisto;
     Pessoa user;
+    Instituto inst;
     int indexUser;
+    int indexInst;
 
     public RemoteObject(int port) throws RemoteException {
         super(port);
@@ -105,6 +105,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
      * @return
      * @throws java.rmi.RemoteException
      */
+    //################################ LOGIN DE UM USER ################################
     @Override
     public Pessoa loginUser(String email, String password) throws RemoteException {
         //Retorna a Pessoa que efetuou sessão no sistema
@@ -147,10 +148,10 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         }
         return verifica;
     }
-    
-        
+
+    //################################ REGISTAR UM USER ################################
     @Override
-    public Pessoa registerUser(String email, String password){
+    public Pessoa registerUser(String email, String password) {
         user = new Pessoa(email);
         try {
             //É criada um pasta do utilizador Pessoa
@@ -169,9 +170,9 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         //Regista o user
         return user;
     }
-    
+
     @Override
-    public  boolean verificaRegistoUser(String email, String password, String confPassword){
+    public boolean verificaRegistoUser(String email, String password, String confPassword) {
         if (email.equals("") || password.equals("") || confPassword.equals("")) {
             JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
             return false;
@@ -185,9 +186,9 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
             return true;
         }
     }
-    
+
     @Override
-    public boolean verificaEmailRegisto(String email){
+    public boolean verificaEmailRegisto(String email) {
         boolean verifica = false;
         for (int i = 0; i < listUsers.size(); i++) {
             if (listUsers.get(i).getEmail().equals(email)) {
@@ -201,4 +202,99 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         return verifica;
     }
 
+    //################################ REGISTAR UMA INSTITUIÇÃO ################################
+    @Override
+    public Instituto registerInst(String codNome, String password) {
+        inst = new Instituto(codNome);
+        try {
+            //Estando a validação correta, o utilizador Instituto é adicionado à lista de Institutos
+            inst = new Instituto(codNome);
+            //É criada um pasta do utilizador Instituto
+            inst.criarPasta();
+            //O par de chaves asssimétricas é criado
+            inst.generateKeys();
+            //O par de chaves assimétricas é guardado na pasta da Instituto e a chave privada é encriptada com a password
+            inst.save(password);
+            //O Instituto é adicionado ao sistema
+            listInst.add(inst);
+            //A lista de Institutos é guardado num ficheiro
+            //Recursos.writeObject(cv.listInst, fichInst.getAbsolutePath());
+        } catch (Exception ex) {
+            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return inst;
+    }
+
+    @Override
+    public boolean verificaRegistoInst(String codNome, String password, String confPassword) {
+        if (codNome.equals("") || password.equals("") || confPassword.equals("")) {
+            JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
+            return false;
+        } else if (!password.equals(confPassword)) {
+            JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    @Override
+    public boolean verificaCodNome(String codNome) {
+        boolean verifica = false;
+        for (int i = 0; i < listInst.size(); i++) {
+            if (listInst.get(i).getCodNome().equals(codNome)) {
+                verifica = true;
+                JOptionPane.showConfirmDialog(null, "Este código já está a ser utilizado!!", "Código Indisponível", 2);
+                break;
+            } else {
+                verifica = false;
+            }
+        }
+        return verifica;
+    }
+    
+    //################################ LOGIN A UMA INSTITUIÇÃO ################################
+    
+    @Override
+    public Instituto LoginInst(String codNome, String password){
+        return inst = new Instituto(listInst.get(indexInst));
+    }
+
+    @Override
+    public boolean verificaLoginInst(String codNome, String password){
+        boolean verifica = false;
+        for (int i = 0; i < listInst.size(); i++) {
+            try {
+                inst = new Instituto(codNome);
+                if (inst.load(password)) {
+                    verifica = true;
+                    break;
+                } else {
+                    verifica = false;
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return verifica;
+    }
+    
+    @Override
+    public boolean verificaCodNomeLogin(String codNome){
+        boolean verifica = false;
+        for (int i = 0; i < listInst.size(); i++) {
+            inst = new Instituto(listInst.get(i));
+            if (!inst.getCodNome().equals(codNome)) {
+                verifica = false;
+            } else {
+                indexInst = i;
+                verifica = true;
+                break;
+            }
+        }
+        return verifica;
+    }
+    
+    
+    
 }

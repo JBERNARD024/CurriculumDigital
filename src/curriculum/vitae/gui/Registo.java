@@ -58,7 +58,6 @@ public class Registo extends java.awt.Dialog {
             Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
         } 
         Security.addProvider(new BouncyCastleProvider());
-        loadProviders();
     }
 
     /**
@@ -365,7 +364,6 @@ public class Registo extends java.awt.Dialog {
         email = txtEmailUser.getText().trim();
         password = new String(txtPasswordUser.getPassword());
         confPassword = new String(txtConfPasswordSuer.getPassword());
-        
         //Faz a validação dos campos
         if (rmtInterface.verificaRegistoUser(email, password, confPassword) == true && rmtInterface.verificaEmailRegisto(email) == false) {
             //Estando a validação correta, o utilizador Pessoa é adicionado à lista de Pessoas
@@ -381,100 +379,10 @@ public class Registo extends java.awt.Dialog {
         password = new String(txtPasswordInst.getPassword());
         confPassword = new String(txtConfPasswordInst.getPassword());
         //Faz a validação dos campos
-        if (verificaCamposInst()== true && verificaCodNome(codNome) == false) {
-             //Estando a validação correta, o utilizador Instituto é adicionado à lista de Institutos
-            instituto = new Instituto(codNome);
-            //É criada um pasta do utilizador Instituto
-            instituto.criarPasta();
-            //O par de chaves asssimétricas é criado
-            instituto.generateKeys();
-            //O par de chaves assimétricas é guardado na pasta da Instituto e a chave privada é encriptada com a password
-            instituto.save(password);
-            //O Instituto é adicionado ao sistema
-            cv.listInst.add(instituto);
-            //A lista de Institutos é guardado num ficheiro
-            //Recursos.writeObject(cv.listInst, fichInst.getAbsolutePath());
+        if (rmtInterface.verificaRegistoInst(codNome, password, confPassword)== true && rmtInterface.verificaCodNome(codNome) == false) {
+             
             dispose();
             new Login(null, true, rmtObject).setVisible(true);
-        }
-    }
-
-    //Função que verifica os campos da interface do utilizador
-    private boolean verificaCamposUser() {
-        if (email.equals("") || password.equals("") || confPassword.equals("")) {
-            JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
-            return false;
-        } else if (!password.equals(confPassword)) {
-            JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
-            return false;
-        } else if (!email.contains("@")) {
-            JOptionPane.showConfirmDialog(null, "Email inválido!!", "Email Incorreto", 2);
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
-    //Função que verifica os campos da interface da instituição
-    private boolean verificaCamposInst() {
-        if (codNome.equals("") || password.equals("") || confPassword.equals("")) {
-            JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
-            return false;
-        } else if (!password.equals(confPassword)) {
-            JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
-
-    //Função que verifica se um email de um novo utilizador, é válido
-    private boolean verificaEmail(String email) {
-        boolean verifica = false;
-        for (int i = 0; i < cv.listUsers.size(); i++) {
-            if (cv.listUsers.get(i).getEmail().equals(email)) {
-                verifica = true;
-                JOptionPane.showConfirmDialog(null, "Email já está a ser utilizado!!", "Email Indisponível", 2);
-                break;
-            } else {
-                verifica = false;
-            }
-        }
-        return verifica;
-    }
-    
-    //Função que verifica se um código de uma nova instituição, é válido
-    private boolean verificaCodNome(String codNome) {
-        boolean verifica = false;
-        for (int i = 0; i < cv.listInst.size(); i++) {
-            if (cv.listInst.get(i).getCodNome().equals(codNome)) {
-                verifica = true;
-                JOptionPane.showConfirmDialog(null, "Este código já está a ser utilizado!!", "Código Indisponível", 2);
-                break;
-            } else {
-                verifica = false;
-            }
-        }
-        return verifica;
-    }
-
-    //Função que carrega todos os providers existentes no sistema
-    public static void loadProviders() {
-        Provider providers[] = Security.getProviders();
-        //todos os fornecedores do segurança
-        for (Provider provider : providers) {
-            StringBuilder txt = new StringBuilder();
-            List<String> lst = new ArrayList<>();
-            //serviços fornecidos
-            Set<Provider.Service> services = provider.getServices();
-            for (Provider.Service service : services) {
-                lst.add(String.format("%-20s %s\n", service.getType(), service.getAlgorithm()));
-            }
-            Collections.sort(lst);
-            for (String service : lst) {
-                txt.append(service);
-            }
         }
     }
 }

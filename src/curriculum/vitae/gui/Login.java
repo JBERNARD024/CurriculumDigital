@@ -375,11 +375,11 @@ public class Login extends java.awt.Dialog {
         codNome = txtCodNomeInst.getText().trim();
         password = new String(txtPasswordInst.getPassword());
         //Verifica se o código nome está registado no sistema
-        if (verificaInstituto(codNome)) {
+        if (rmtInterface.verificaCodNomeLogin(codNome)) {
             //Caso esteja, vai verificar se a password introduzida é válida
-            if (verificaCamposInstituto(codNome, password)) {
+            if (rmtInterface.verificaLoginInst(codNome, password)) {
                 //Sendo a password válida, vai desencriptar a chave privada, enquanto estiver com a sessão ativa
-                instituto = new Instituto(cv.listInst.get(indexInst));
+                instituto = new Instituto(rmtInterface.LoginInst(codNome, password));
                 instituto.load(password);
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
                 //Incrementa o número de logins
