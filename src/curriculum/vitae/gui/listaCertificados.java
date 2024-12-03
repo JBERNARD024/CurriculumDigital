@@ -25,7 +25,7 @@ import utils.Recursos;
  */
 public class listaCertificados extends java.awt.Dialog {
 
-    CurriculumVitae cv;
+    String rmtObject;
     int index;
     Instituto inst;
     ImageIcon icon;
@@ -37,17 +37,18 @@ public class listaCertificados extends java.awt.Dialog {
     /**
      * Creates new form listaEducacao
      *
-     * @param cv
+     * @param parent
      * @param modal
      * @param index
+     * @param rmtObject
      */
-    public listaCertificados(CurriculumVitae cv, boolean modal, int index) {
-        super(cv, modal);
-        this.cv = cv;
+    public listaCertificados(java.awt.Frame parent, boolean modal, int index, String rmtObject) {
+        super(parent, modal);
         this.index = index;
+        this.rmtObject = rmtObject;
         initComponents();
         this.setTitle("Lista de Certficados");
-        inst = new Instituto(cv.listInst.get(index));
+        //inst = new Instituto(cv.listInst.get(index));
         icon = new ImageIcon(inst.getImagem());
         //Define a imagem na tela do Instituto com sessão iniciada
         imagem = icon.getImage().getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_SMOOTH);
@@ -398,7 +399,7 @@ public class listaCertificados extends java.awt.Dialog {
     private void btnDadosPessoaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDadosPessoaisActionPerformed
         // TODO add your handling code here:
         dispose();
-        new perfilInstituto(cv, true, index).setVisible(true);
+        new perfilInstituto(null, true, index, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnDadosPessoaisActionPerformed
 
     private void certificadosListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_certificadosListValueChanged
@@ -432,21 +433,21 @@ public class listaCertificados extends java.awt.Dialog {
     }//GEN-LAST:event_txtAreaEstudoActionPerformed
 
     private void btnObterCertificadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObterCertificadosActionPerformed
-        getCertificados();
+        //getCertificados();
     }//GEN-LAST:event_btnObterCertificadosActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
         dispose();
         //Redireciona o Instituto para a página de Login
-        new Login(cv, true).setVisible(true);
+        new Login(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnAdicionarCurriculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarCurriculoActionPerformed
         // TODO add your handling code here:
         dispose();
         //Redireciona o Instituto para a página para adicionar um certificado
-        new adicionarCertificado(cv, true, index).setVisible(true);
+        new adicionarCertificado(null, true, index, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnAdicionarCurriculoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -488,7 +489,7 @@ public class listaCertificados extends java.awt.Dialog {
     // End of variables declaration//GEN-END:variables
 
 //Função que percorrer a blockchain e procurar os certificados que possuam a chave pública do Instituto associada aos Certificados
-    private void getCertificados() {
+    /*private void getCertificados() {
         
         new Thread(() -> {
             try {
@@ -520,5 +521,5 @@ public class listaCertificados extends java.awt.Dialog {
             }
             
         }).start();
-    }
+    }*/
 }

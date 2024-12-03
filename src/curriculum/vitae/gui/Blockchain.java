@@ -15,12 +15,12 @@ public class Blockchain extends java.awt.Dialog {
      * @param cv
      * @param modal
      */
-    public Blockchain(CurriculumVitae cv, boolean modal) {
-        super(cv, modal);
+    public Blockchain(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
         setTitle("Blockchain");
-        jTextPane1.setText(cv.registoCerti.getBc().toString());
-        txtRegisto.setText(cv.registoCerti.toString());
+        /*jTextPane1.setText(cv.registoCerti.getBc().toString());
+        txtRegisto.setText(cv.registoCerti.toString());*/
     }
 
     /**

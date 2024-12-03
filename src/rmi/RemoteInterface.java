@@ -15,9 +15,9 @@
 //////////////////////////////////////////////////////////////////////////////
 package rmi;
 
+import curriculum.vitae.core.Pessoa;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 
 /**
  *
@@ -25,5 +25,14 @@ import java.util.ArrayList;
  */
 public interface RemoteInterface extends Remote{
     //remote method
-    public String getMessage() throws RemoteException;;
+    public String getMessage() throws RemoteException;
+    
+    public boolean verificaUtilizador(String email) throws RemoteException;
+    
+    public boolean verificaCamposUser(String email, String password) throws RemoteException;
+    
+    public Pessoa loginUser(String email, String password) throws RemoteException;
+    
+    
+    
 }

@@ -28,7 +28,7 @@ import utils.Recursos;
  */
 public class adicionarCertificado extends java.awt.Dialog {
 
-    CurriculumVitae cv;
+    String rmtObject;
     int indexInst;
     int indexUser;
     String qualificacao;
@@ -52,13 +52,14 @@ public class adicionarCertificado extends java.awt.Dialog {
      * @param modal
      * @param indexInst
      */
-    public adicionarCertificado(CurriculumVitae parent, boolean modal, int indexInst) {
+    public adicionarCertificado(java.awt.Frame parent, boolean modal, int indexInst, String rmtObject) {
         super(parent, modal);
-        this.cv = parent;
         this.indexInst = indexInst;
+        this.rmtObject = rmtObject;
         initComponents();
         this.setTitle("Adicionar Certficado");
 
+        /*
         //Verifica se as pessoas existentes no sistema, têm dados pessoais preenchidos e caso tenham, são adicionados à lista de seleção de pessoas
         for (Pessoa user : cv.listUsers) {
             if (user.getDados() != null) {
@@ -75,7 +76,7 @@ public class adicionarCertificado extends java.awt.Dialog {
                 int selectedIndex = txtQualificacao.getSelectedIndex();
                 txtQEQ.setSelectedIndex(selectedIndex);
             }
-        });
+        });*/
     }
 
     /**
@@ -302,14 +303,14 @@ public class adicionarCertificado extends java.awt.Dialog {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-        adicionarCertificado();
+        //adicionarCertificado();
         btnGuardar.setEnabled(false);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEducacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducacaoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaCertificados(cv, true, indexInst).setVisible(true);
+        new listaCertificados(null, true, indexInst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnEducacaoActionPerformed
 
 
@@ -344,7 +345,7 @@ public class adicionarCertificado extends java.awt.Dialog {
 
     //Função que adiciona um certificado
     //O uso da Thread, é para prevenir que a interface seja bloqueada quando um novo bloco é gerado.
-    private void adicionarCertificado() {
+    /*private void adicionarCertificado() {
         new Thread(() -> {
             try {
                 indexUser = txtUtilizadores.getSelectedIndex();
@@ -377,5 +378,5 @@ public class adicionarCertificado extends java.awt.Dialog {
                 Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
             }
         }).start();
-    }
+    }*/
 }

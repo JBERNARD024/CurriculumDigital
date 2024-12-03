@@ -25,20 +25,20 @@ public class perfilUser extends java.awt.Dialog {
     ImageIcon icon;
     Image Image;
     int index;
-    CurriculumVitae cv;
+    String rmtObject;
     /**
      * Creates new form perfil
-     * @param cv
+     * @param parent
      * @param modal
-     * @param index
+     * @param user
+     * @param rmtObject
      */
-    public perfilUser(CurriculumVitae cv, boolean modal, int index) {
-        super(cv, modal);
-        this.cv = cv;
-        this.index = index;
+    public perfilUser(java.awt.Frame parent, boolean modal, Pessoa user, String rmtObject) {
+        super(parent, modal);
         initComponents();
         this.setTitle("Perfil Utilizador");
-        user = new Pessoa(cv.listUsers.get(index));
+        this.user = new Pessoa(user);
+        this.rmtObject = rmtObject;
         txtNome.setText(user.getDados().getNome());
         txtSexo.setText(user.getDados().getSexo());
         txtData.setDate(user.getDados().getDataNasc());
@@ -346,13 +346,13 @@ public class perfilUser extends java.awt.Dialog {
     private void btnEducActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaEducacao(cv, true, index).setVisible(true);
+        new listaEducacao(null, true, index, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnEducActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
         dispose();
-        new Login(cv, true).setVisible(true);
+        new Login(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

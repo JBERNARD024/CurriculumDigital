@@ -26,20 +26,20 @@ public class perfilInstituto extends java.awt.Dialog {
     ImageIcon icon;
     Image Image;
     int index;
-    CurriculumVitae cv;
+    String rmtObject;
     /**
      * Creates new form perfil
-     * @param cv
+     * @param parent
      * @param modal
      * @param index
+     * @param rmtObject
      */
-    public perfilInstituto(CurriculumVitae cv, boolean modal, int index) {
-        super(cv, modal);
-        this.cv = cv;
+    public perfilInstituto(java.awt.Frame parent, boolean modal, int index, String rmtObject) {
+        super(parent, modal);
         this.index = index;
         initComponents();
         this.setTitle("Perfil Instituto");
-        inst = new Instituto(cv.listInst.get(index));
+        //inst = new Instituto(cv.listInst.get(index));
         txtNomeInst.setText(inst.getDadosInst().getNome());
         txtNatureza.setText(inst.getDadosInst().getNatureza());
         txtDataFund.setDate(inst.getDadosInst().getDataFundacao());
@@ -373,19 +373,19 @@ public class perfilInstituto extends java.awt.Dialog {
     private void btnAdicionarCurriculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarCurriculoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new adicionarCertificado(cv, true, index).setVisible(true);
+        new adicionarCertificado(null, true, index, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnAdicionarCurriculoActionPerformed
 
     private void btnVerCertificadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerCertificadosActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaCertificados(cv, true, index).setVisible(true);
+        new listaCertificados(null, true, index, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnVerCertificadosActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
         dispose();
-        new Login(cv, true).setVisible(true);
+        new Login(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

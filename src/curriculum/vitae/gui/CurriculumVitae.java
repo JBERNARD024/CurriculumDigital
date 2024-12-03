@@ -20,13 +20,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import rmi.Client;
 import utils.Recursos;
 
 /**
  *
  * @author joaob
  */
-public class CurriculumVitae extends javax.swing.JFrame {
+public class CurriculumVitae extends javax.swing.JDialog {
 
     ArrayList<Pessoa> listUsers = new ArrayList<>();
     ArrayList<Instituto> listInst = new ArrayList<>();
@@ -38,18 +39,23 @@ public class CurriculumVitae extends javax.swing.JFrame {
     File fichUsers;
     File fichInst;
     File fichRegisto;
+    String rmtObject;
 
     /**
      * Creates new form PaginaInicial
      *
+     * @param parent
+     * @param rmtObject
      * @throws java.lang.ClassNotFoundException
      * @throws java.io.IOException
      */
-    public CurriculumVitae() throws ClassNotFoundException, IOException, Exception {
+    public CurriculumVitae(java.awt.Frame parent, String rmtObject) throws ClassNotFoundException, IOException, Exception {
+        super(parent, true);
         initComponents();
+        this.rmtObject = rmtObject;
         //Adiciona o Bouncy Castle à lista providers de segurança
         Security.addProvider(new BouncyCastleProvider());
-        fichUsers = new File(pathUsers);
+        /*fichUsers = new File(pathUsers);
         fichInst = new File(pathInst);
         fichRegisto = new File(pathBlockchain);
         //Define o array de utilizadores com base no ficheiro de utilizadores
@@ -59,7 +65,7 @@ public class CurriculumVitae extends javax.swing.JFrame {
         //Define o objeto RegistoCertificado com base no ficheiro RegistoCertificado
         registoCerti = (RegistoCertificado) Recursos.readObject(fichRegisto.getAbsolutePath());
         //Fecha a janela principal da aplicação e encerra a aplicação
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         //Vai guardar a lista de todos os utilizadores durante a atividade no sistema.
         addWindowListener(new WindowAdapter() {
             @Override
@@ -86,7 +92,7 @@ public class CurriculumVitae extends javax.swing.JFrame {
                     System.err.println("Erro ao gravar a blockchain = " + ex.getMessage());
                 }
             }
-        });
+        });*/
     }
 
     /**
@@ -103,6 +109,7 @@ public class CurriculumVitae extends javax.swing.JFrame {
         btnAboutUs = new javax.swing.JButton();
         btnBlockChain = new javax.swing.JButton();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Página Inicial");
         setResizable(false);
 
@@ -177,64 +184,20 @@ public class CurriculumVitae extends javax.swing.JFrame {
     private void btnCriarCurriculumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarCurriculumActionPerformed
         // TODO add your handling code here:
         //Redireciona o utilizador para a página de Login
-        new Login(this, true).setVisible(true);
+        new Login(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnCriarCurriculumActionPerformed
 
     private void btnAboutUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAboutUsActionPerformed
         // TODO add your handling code here:
         //Redireciona o utilizador para a página de aboutUs
-        new aboutUs(this, true).setVisible(true);
+        new aboutUs(null, true).setVisible(true);
     }//GEN-LAST:event_btnAboutUsActionPerformed
 
     private void btnBlockChainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBlockChainActionPerformed
         // TODO add your handling code here:
-        //Redireciona o utilizador para a página da Blockchain
-        new Blockchain(this, true).setVisible(true);
+        //Redireciona o utilizador para a página da Blockchains
+        new Blockchain(null, true).setVisible(true);
     }//GEN-LAST:event_btnBlockChainActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CurriculumVitae.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CurriculumVitae.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CurriculumVitae.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CurriculumVitae.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            try {
-                new CurriculumVitae().setVisible(true);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(CurriculumVitae.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(CurriculumVitae.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (Exception ex) {
-                Logger.getLogger(CurriculumVitae.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAboutUs;

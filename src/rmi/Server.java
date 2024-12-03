@@ -10,6 +10,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import utils.GuiUtils;
 
 /**
  *
@@ -20,8 +21,7 @@ public class Server extends javax.swing.JFrame {
     int remotePort;
     String remoteObject;
     String txtLog;
-    
-    
+
     /**
      * Creates new form Server
      */
@@ -46,7 +46,7 @@ public class Server extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtServerLog = new javax.swing.JTextPane();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Server");
 
         btnStart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/startServer.png"))); // NOI18N
@@ -57,8 +57,9 @@ public class Server extends javax.swing.JFrame {
             }
         });
 
-        imgServerListen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/loading_blue.gif"))); // NOI18N
+        imgServerListen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/loading_green.gif"))); // NOI18N
         imgServerListen.setEnabled(false);
+        imgServerListen.setPreferredSize(new java.awt.Dimension(130, 130));
 
         txtRemoteObject.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         txtRemoteObject.setText("remoteObject");
@@ -75,24 +76,24 @@ public class Server extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnStart, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(9, 9, 9)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txtRemoteObject, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPortNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addComponent(imgServerListen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(imgServerListen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(txtPortNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtRemoteObject))
-                    .addComponent(btnStart, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(imgServerListen, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(imgServerListen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -105,41 +106,41 @@ public class Server extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(jScrollPane1))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
-        try {
-            //create object  to listen in the remote port
-            imgServerListen.setEnabled(true);
-            remotePort = Integer.parseInt(txtPortNumber.getText());
-            remoteObject = txtRemoteObject.getText();
-            RemoteObject rmtObject = new RemoteObject(10010);
-            //local adress of server
-            String host = InetAddress.getLocalHost().getHostAddress();
-            //create registry to object
-            LocateRegistry.createRegistry(10010);
-            //create adress of remote object
-            String address = String.format("//%s:%d/%s", host, 10010, remoteObject);
-            //link adress to object
-            Naming.rebind(address, rmtObject);
-            txtLog = "Remote object ready at " + address;
-            txtServerLog.setText(txtLog);
-        } catch (Exception ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new Thread(() -> {
+            try {
+                //create object  to listen in the remote port
+                imgServerListen.setEnabled(true);
+                remotePort = Integer.parseInt(txtPortNumber.getText());
+                remoteObject = txtRemoteObject.getText();
+                RemoteObject rmtObject = new RemoteObject(10010);
+                //local adress of server
+                String host = InetAddress.getLocalHost().getHostAddress();
+                //create registry to object
+                LocateRegistry.createRegistry(10010);
+                //create adress of remote object
+                String address = String.format("//%s:%d/%s", host, 10010, remoteObject);
+                //link adress to object
+                Naming.rebind(address, rmtObject);
+                txtLog = "Remote object ready at " + address;
+                GuiUtils.addText(txtServerLog, host, txtLog);
+            } catch (Exception ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }//GEN-LAST:event_btnStartActionPerformed
 
     /**
