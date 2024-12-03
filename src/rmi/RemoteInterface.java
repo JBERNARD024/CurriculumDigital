@@ -33,6 +33,12 @@ public interface RemoteInterface extends Remote{
     
     public Pessoa loginUser(String email, String password) throws RemoteException;
     
+    public Pessoa registerUser(String email, String password)throws RemoteException;
+    
+    public boolean verificaRegistoUser(String email, String password, String confPassword) throws RemoteException;
+    
+    public boolean verificaEmailRegisto(String email) throws RemoteException;
+    
     
     
 }

@@ -147,5 +147,58 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         }
         return verifica;
     }
+    
+        
+    @Override
+    public Pessoa registerUser(String email, String password){
+        user = new Pessoa(email);
+        try {
+            //É criada um pasta do utilizador Pessoa
+            user.criarPasta();
+            //O par de chaves asssimétricas é criado
+            user.generateKeys();
+            //O par de chaves assimétricas é guardado na pasta da Pessoa e a chave privada é encriptada com a password
+            user.save(password);
+            //A pessoa é adicionada ao sistema
+            listUsers.add(user);
+            //A lista das pessoas é guardado num ficheiro
+            Recursos.writeObject(listUsers, fichUsers.getAbsolutePath());
+        } catch (Exception ex) {
+            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //Regista o user
+        return user;
+    }
+    
+    @Override
+    public  boolean verificaRegistoUser(String email, String password, String confPassword){
+        if (email.equals("") || password.equals("") || confPassword.equals("")) {
+            JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
+            return false;
+        } else if (!password.equals(confPassword)) {
+            JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
+            return false;
+        } else if (!email.contains("@")) {
+            JOptionPane.showConfirmDialog(null, "Email inválido!!", "Email Incorreto", 2);
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    @Override
+    public boolean verificaEmailRegisto(String email){
+        boolean verifica = false;
+        for (int i = 0; i < listUsers.size(); i++) {
+            if (listUsers.get(i).getEmail().equals(email)) {
+                verifica = true;
+                JOptionPane.showConfirmDialog(null, "Email já está a ser utilizado!!", "Email Indisponível", 2);
+                break;
+            } else {
+                verifica = false;
+            }
+        }
+        return verifica;
+    }
 
 }

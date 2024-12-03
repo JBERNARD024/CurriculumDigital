@@ -7,7 +7,10 @@ package curriculum.vitae.gui;
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.security.Provider;
 import java.security.Security;
 import java.time.Instant;
@@ -37,6 +40,7 @@ public class Login extends java.awt.Dialog {
     int indexUser = 0;
     int indexInst = 0;
     String rmtObject;
+    RemoteInterface rmtInterface;
 
     /**
      * Creates new form Login2
@@ -49,6 +53,11 @@ public class Login extends java.awt.Dialog {
         super(parent, modal);
         this.setTitle("Login");
         this.rmtObject = rmtObject;
+        try {
+            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+        } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initComponents();
         //Adiciona o Bouncy Castle à lista providers de segurança
         Security.addProvider(new BouncyCastleProvider());
@@ -290,7 +299,6 @@ public class Login extends java.awt.Dialog {
                 try {
                     email = txtEmailUser.getText().trim();
                     password = new String(txtPasswordUser.getPassword());
-                    RemoteInterface rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
                     if (rmtInterface.verificaUtilizador(email)) {
                         if (rmtInterface.verificaCamposUser(email, password)) {
                             user = new Pessoa(rmtInterface.loginUser(email, password));

@@ -7,6 +7,10 @@ package curriculum.vitae.gui;
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.security.Provider;
 import java.security.Security;
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import rmi.RemoteInterface;
 import utils.Recursos;
 
 /**
@@ -33,6 +38,7 @@ public class Registo extends java.awt.Dialog {
     Pessoa user;
     Instituto instituto;
     String rmtObject;
+    RemoteInterface rmtInterface;
 
     /**
      * Creates new form Registo
@@ -46,6 +52,11 @@ public class Registo extends java.awt.Dialog {
         this.setTitle("Registo");
         initComponents();
         this.rmtObject = rmtObject;
+        try {
+            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+        } catch (Exception ex) {
+            Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
+        } 
         Security.addProvider(new BouncyCastleProvider());
         loadProviders();
     }
@@ -354,20 +365,11 @@ public class Registo extends java.awt.Dialog {
         email = txtEmailUser.getText().trim();
         password = new String(txtPasswordUser.getPassword());
         confPassword = new String(txtConfPasswordSuer.getPassword());
+        
         //Faz a validação dos campos
-        if (verificaCamposUser() == true && verificaEmail(email) == false) {
+        if (rmtInterface.verificaRegistoUser(email, password, confPassword) == true && rmtInterface.verificaEmailRegisto(email) == false) {
             //Estando a validação correta, o utilizador Pessoa é adicionado à lista de Pessoas
-            user = new Pessoa(email);
-            //É criada um pasta do utilizador Pessoa
-            user.criarPasta();
-            //O par de chaves asssimétricas é criado
-            user.generateKeys();
-            //O par de chaves assimétricas é guardado na pasta da Pessoa e a chave privada é encriptada com a password
-            user.save(password);
-            //A pessoa é adicionada ao sistema
-            cv.listUsers.add(user);
-            //A lista das pessoas é guardado num ficheiro
-            //Recursos.writeObject(cv.listUsers, fichUsers.getAbsolutePath());
+            user = new Pessoa(rmtInterface.registerUser(email, password));
             dispose();
             new Login(null, true, rmtObject).setVisible(true);
         }
