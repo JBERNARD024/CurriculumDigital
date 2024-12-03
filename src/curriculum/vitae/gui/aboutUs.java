@@ -42,7 +42,7 @@ public class aboutUs extends java.awt.Dialog {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Curriculum Digital 1.0");
+        jLabel1.setText("Curriculum Digital 2.0");
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/foto_Henrique.jpg"))); // NOI18N
         jLabel2.setText("jLabel2");

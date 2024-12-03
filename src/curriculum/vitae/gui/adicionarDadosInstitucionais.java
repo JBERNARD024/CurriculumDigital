@@ -23,7 +23,7 @@ import utils.Recursos;
  */
 public class adicionarDadosInstitucionais extends java.awt.Dialog {
 
-    CurriculumVitae cv;
+    String rmtObject;
     String nome;
     Date dataFund;
     String natureza;
@@ -50,14 +50,14 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
      * @param modal
      * @param index
      */
-    public adicionarDadosInstitucionais(CurriculumVitae parent, boolean modal, int index) {
+    public adicionarDadosInstitucionais(java.awt.Frame parent, boolean modal, int index, String rmtObject) {
         super(parent, modal);
-        this.cv = parent;
         this.index = index;
+        this.rmtObject = rmtObject;
         initComponents();
-        f = new File(cv.pathInst);
+        //f = new File(cv.pathInst);
         this.setTitle("Adicionar Dados Institucionais");
-        txtCodNome.setText(cv.listInst.get(index).getCodNome());
+        //txtCodNome.setText(cv.listInst.get(index).getCodNome());
     }
 
     /**
@@ -331,19 +331,19 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
     }//GEN-LAST:event_closeDialog
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        adicionarDadosInstitucionais();
+        //adicionarDadosInstitucionais();
         btnGuardar.setEnabled(false);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProximoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new perfilInstituto(cv, true, index).setVisible(true);
+        new perfilInstituto(null, true, index, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnProximoActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
         //Escolhe uma imagem do sistema me que está correr a aplicação
-        JFileChooser escolheFoto = new JFileChooser(cv.basePath + "/resources/institutos");
+        /*JFileChooser escolheFoto = new JFileChooser(cv.basePath + "/resources/institutos");
         if (escolheFoto.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
                 File fich = escolheFoto.getSelectedFile();
@@ -356,7 +356,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
             }
         } else {
             JOptionPane.showMessageDialog(null, "Ficheiro não Encontrado");
-        }
+        }*/
     }//GEN-LAST:event_btnFotoActionPerformed
 
     /**
@@ -400,7 +400,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
     // End of variables declaration//GEN-END:variables
 
     //Função que vai adicionar um Instituto ao sistema
-    private void adicionarDadosInstitucionais() {
+    /*private void adicionarDadosInstitucionais() {
         nome = txtNome.getText().trim();
         dataFund = txtDataFund.getDate();
         natureza = txtNatureza.getSelectedItem().toString();
@@ -439,5 +439,5 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
         cv.listInst.get(index).setDadosInst(dadosInst);
         //A lista de Institutos é atualizada e guardada no ficheiro
         Recursos.writeObject(cv.listInst, f.getAbsolutePath());
-    }
+    }*/
 }

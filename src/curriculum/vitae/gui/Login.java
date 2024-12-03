@@ -6,16 +6,12 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.rmi.Naming;
 import java.security.Provider;
 import java.security.Security;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -24,8 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import utils.ObjectUtils;
-import utils.SecurityUtils;
+import rmi.RemoteInterface;
 
 /**
  *
@@ -41,17 +36,19 @@ public class Login extends java.awt.Dialog {
     Instituto instituto;
     int indexUser = 0;
     int indexInst = 0;
+    String rmtObject;
 
     /**
      * Creates new form Login2
      *
      * @param parent
      * @param modal
+     * @param rmtObject
      */
-    public Login(CurriculumVitae parent, boolean modal) {
-        this.cv = parent;
+    public Login(java.awt.Frame parent, boolean modal, String rmtObject) {
         super(parent, modal);
         this.setTitle("Login");
+        this.rmtObject = rmtObject;
         initComponents();
         //Adiciona o Bouncy Castle à lista providers de segurança
         Security.addProvider(new BouncyCastleProvider());
@@ -284,13 +281,40 @@ public class Login extends java.awt.Dialog {
     private void btnRegistoUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoUserActionPerformed
         // TODO add your handling code here:
         dispose();
-        new Registo(cv, true).setVisible(true);
+        new Registo(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnRegistoUserActionPerformed
 
     private void btnLoginUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginUserActionPerformed
         try {
-            // TODO add your handling code here:
-            loginUser();
+            new Thread(() -> {
+                try {
+                    email = txtEmailUser.getText().trim();
+                    password = new String(txtPasswordUser.getPassword());
+                    RemoteInterface rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+                    if (rmtInterface.verificaUtilizador(email)) {
+                        if (rmtInterface.verificaCamposUser(email, password)) {
+                            user = new Pessoa(rmtInterface.loginUser(email, password));
+                            JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
+                            //Vai verificar se o utilizador já introduziu os dados pessoais
+                            if (user.getDados() == null) {
+                                //Caso não tenha introduzido, será redirecionado para a página para adicionar os dados pessoais
+                                dispose();
+                                new adicionarDadosPessoais(null, true, user, rmtObject).setVisible(true);
+                            } else {
+                                //Caso possua, é redirecionado para a página do perfil da Pessoa
+                                dispose();
+                                new perfilUser(null, true, user, rmtObject).setVisible(true);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
+                        }
+                    } else {
+                        JOptionPane.showConfirmDialog(null, "Email não está registado no sistema!!", "Email Inválido", 2);
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }).start();
         } catch (Exception ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -308,7 +332,7 @@ public class Login extends java.awt.Dialog {
     private void btnRegistoInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoInstActionPerformed
         // TODO add your handling code here:
         dispose();
-        new Registo(cv, true).setVisible(true);
+        new Registo(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnRegistoInstActionPerformed
 
     /**
@@ -337,77 +361,6 @@ public class Login extends java.awt.Dialog {
     private javax.swing.JPasswordField txtPasswordUser;
     // End of variables declaration//GEN-END:variables
 
-    //################################################## U T I L I Z A D O R ################################################################
-    //Dado o email e a password introduzida pela Pessoa, estabelece a sessão da Pessoa, caso sejam válidos
-    private void loginUser() throws IOException, Exception {
-        email = txtEmailUser.getText().trim();
-        password = new String(txtPasswordUser.getPassword());
-        //Cria uma nova Pessoa com base no email introduzido pelo utilizador
-        user = new Pessoa(email);
-        //Vai verificar se o utilizador existe no sistema
-        if (verificaUtilizador(email)) {
-            //Caso exista no sistema, vai verificar se a password introduzida, desencripta a chave privada
-            if (verificaCamposUser(email, password)) {
-                //Caso a password esteja correta, a Pessoa irá aceder ao sistema
-                user = new Pessoa(cv.listUsers.get(indexUser));
-                JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
-                //O número de logins da Pessoa será incrementado
-                cv.listUsers.get(indexUser).setNumLogin(user.getNumLogin() + 1);
-                //A data do último login será redefinida
-                cv.listUsers.get(indexUser).setLastLogin(Date.from(Instant.now()));
-                //Vai verificar se o utilizador já introduziu os dados pessoais
-                if (user.getDados() == null) {
-                    //Caso não tenha introduzido, será redirecionado para a página para adicionar os dados pessoais
-                    dispose();
-                    new adicionarDadosPessoais(cv, true, indexUser).setVisible(true);
-                } else {
-                    //Caso possua, é redirecionado para a página do perfil da Pessoa
-                    dispose();
-                    new perfilUser(cv, true, indexUser).setVisible(true);
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
-            }
-        } else {
-            JOptionPane.showConfirmDialog(null, "Email não está registado no sistema!!", "Email Inválido", 2);
-        }
-    }
-
-    //Verifica se a password introduzida desencripta a chave privada de uma pessoa
-    private boolean verificaCamposUser(String email, String password) {
-        boolean verifica = false;
-        for (int i = 0; i < cv.listUsers.size(); i++) {
-            try {
-                user = new Pessoa(email);
-                if (user.load(password)) {
-                    verifica = true;
-                    break;
-                } else {
-                    verifica = false;
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return verifica;
-    }
-
-    //Verifica se a pessoa está registada no sistema
-    private boolean verificaUtilizador(String email) {
-        boolean verifica = false;
-        for (int i = 0; i < cv.listUsers.size(); i++) {
-            user = new Pessoa(cv.listUsers.get(i));
-            if (!user.getEmail().equals(email)) {
-                verifica = false;
-            } else {
-                indexUser = i;
-                verifica = true;
-                break;
-            }
-        }
-        return verifica;
-    }
-
     //################################################## I N S T I T U T O ################################################################
     //Dado o código nome e a password introduzida pelo Instituto, estabelece a sessão da Instituto, caso sejam válidos
     private void loginInst() throws Exception {
@@ -426,14 +379,14 @@ public class Login extends java.awt.Dialog {
                 //Atualiza a data do último login efetuado
                 cv.listInst.get(indexInst).setLastLogin(Date.from(Instant.now()));
                 //Verifica se os dados Institucionais, já foram definidos
-                if (instituto.getDadosInst()== null) {
+                if (instituto.getDadosInst() == null) {
                     //Caso não tenham sido, redireciona o Instituto para a página para adicionar os dados
                     dispose();
-                    new adicionarDadosInstitucionais(cv, true, indexInst).setVisible(true);
+                    new adicionarDadosInstitucionais(null, true, indexInst, rmtObject).setVisible(true);
                 } else {
                     dispose();
                     //Caso estejam definidos, o utilizador Instituto é redirecionado para o seu perfil
-                    new perfilInstituto(cv, true, indexInst).setVisible(true);
+                    new perfilInstituto(null, true, indexInst, rmtObject).setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);

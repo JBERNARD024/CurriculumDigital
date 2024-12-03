@@ -30,7 +30,7 @@ import utils.SecurityUtils;
  */
 public class listaEducacao extends java.awt.Dialog {
 
-    CurriculumVitae cv;
+    String rmtObject;
     int index;
     Pessoa user;
     ImageIcon icon;
@@ -41,14 +41,18 @@ public class listaEducacao extends java.awt.Dialog {
 
     /**
      * Creates new form listaEducacao
+     * @param parent
+     * @param modal
+     * @param index
+     * @param rmtObject
      */
-    public listaEducacao(CurriculumVitae cv, boolean modal, int index) {
-        super(cv, modal);
-        this.cv = cv;
+    public listaEducacao(java.awt.Frame parent, boolean modal, int index, String rmtObject) {
+        super(parent, modal);
         this.index = index;
+        this.rmtObject = rmtObject;
         initComponents();
         this.setTitle("Lista de Educação");
-        user = new Pessoa(cv.listUsers.get(index));
+        //user = new Pessoa(cv.listUsers.get(index));
         icon = new ImageIcon(user.getImagem());
         //Define a imagem na tela da Pessoa com sessão iniciada
         imagem = icon.getImage().getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_SMOOTH);
@@ -381,7 +385,7 @@ public class listaEducacao extends java.awt.Dialog {
     private void btnDadosPessoaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDadosPessoaisActionPerformed
         // TODO add your handling code here:
         dispose();
-        new perfilUser(cv, true, index).setVisible(true);
+        //new perfilUser(null, true, index, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnDadosPessoaisActionPerformed
 
     private void certificadosListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_certificadosListValueChanged
@@ -415,13 +419,13 @@ public class listaEducacao extends java.awt.Dialog {
     }//GEN-LAST:event_txtAreaEstudoActionPerformed
 
     private void btnObterCertificadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObterCertificadosActionPerformed
-        getCertificados();
+        //getCertificados();
     }//GEN-LAST:event_btnObterCertificadosActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
         dispose();
-        new Login(cv, true).setVisible(true);
+        new Login(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -462,7 +466,7 @@ public class listaEducacao extends java.awt.Dialog {
     // End of variables declaration//GEN-END:variables
 
     //Função que vai verificar quais os certificados que foram atribuídos à Pessoa
-    private void getCertificados() {
+    /*private void getCertificados() {
         new Thread(() -> {
             
         try {
@@ -494,5 +498,5 @@ public class listaEducacao extends java.awt.Dialog {
         }
             
         }).start();
-    }
+    }*/
 }

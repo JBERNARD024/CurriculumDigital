@@ -4,6 +4,7 @@
  */
 package curriculum.vitae.gui;
 
+import curriculum.vitae.core.Pessoa;
 import curriculum.vitae.core.dadosPessoais;
 import java.awt.Image;
 import java.io.File;
@@ -22,7 +23,8 @@ import utils.Recursos;
  */
 public class adicionarDadosPessoais extends java.awt.Dialog {
 
-    CurriculumVitae cv;
+    Pessoa user;
+    String rmtObject;
     String nome;
     String nacionalidade;
     String sexo;
@@ -36,9 +38,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     String descr;
     ImageIcon icon;
     byte[] byteIcon;
-    File f;
     dadosPessoais dadosP;
-    int index;
 
     /**
      * Creates new form adicionarDadosPessoais
@@ -46,16 +46,15 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
      * @param parent
      * @param modal
      * @param user
-     * @param index
+     * @param rmtObject
      */
-    public adicionarDadosPessoais(CurriculumVitae parent, boolean modal, int index) {
+    public adicionarDadosPessoais(java.awt.Frame parent, boolean modal, Pessoa user, String rmtObject) {
         super(parent, modal);
-        this.cv = parent;
-        this.index = index;
+        this.user = user;
+        this.rmtObject = rmtObject;
         initComponents();
-        f = new File(cv.pathUsers);
         this.setTitle("Adicionar Dados Pessoais");
-        txtEmail.setText(cv.listUsers.get(index).getEmail());
+        txtEmail.setText(user.getEmail());
     }
 
     /**
@@ -306,19 +305,19 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     }//GEN-LAST:event_closeDialog
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        adicionarDadosPessoais();
+        //adicionarDadosPessoais();
         btnGuardar.setEnabled(false);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVerPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerPerfilActionPerformed
         // TODO add your handling code here:
         dispose();
-        new perfilUser(cv, true, index).setVisible(true);
+        new perfilUser(null, true, user, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnVerPerfilActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
         //Escolhe uma imagem do sistema me que está correr a aplicação
-        JFileChooser escolheFoto = new JFileChooser(cv.basePath + "/resources/pessoas/");
+        /*JFileChooser escolheFoto = new JFileChooser(cv.basePath + "/resources/pessoas/");
         if (escolheFoto.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
                 File fich = escolheFoto.getSelectedFile();
@@ -331,7 +330,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
             }
         } else {
             JOptionPane.showMessageDialog(null, "Ficheiro não Encontrado");
-        }
+        }*/
     }//GEN-LAST:event_btnFotoActionPerformed
 
     /**
@@ -373,7 +372,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     // End of variables declaration//GEN-END:variables
 
     //Função que vai adicionar uma Pessoa ao sistema
-    private void adicionarDadosPessoais() {
+    /*private void adicionarDadosPessoais() {
         nome = txtNome.getText().trim();
         dataNasc = txtData.getDate();
         sexo = txtSexo.getSelectedItem().toString();
@@ -411,5 +410,5 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         cv.listUsers.get(index).setDados(dadosP);
         //A lista de Pessoas é atualizada e guardada no ficheiro
         Recursos.writeObject(cv.listUsers, f.getAbsolutePath());
-    }
+    }*/
 }

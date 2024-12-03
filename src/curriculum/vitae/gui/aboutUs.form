@@ -74,7 +74,7 @@
           <Font name="Segoe UI" size="24" style="1"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="Curriculum Digital 1.0"/>
+        <Property name="text" type="java.lang.String" value="Curriculum Digital 2.0"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">

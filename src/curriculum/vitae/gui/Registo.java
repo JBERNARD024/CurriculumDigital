@@ -32,20 +32,20 @@ public class Registo extends java.awt.Dialog {
     String codNome;
     Pessoa user;
     Instituto instituto;
-    File fichUsers = new File(cv.pathUsers);
-    File fichInst = new File(cv.pathInst);
+    String rmtObject;
 
     /**
      * Creates new form Registo
      *
      * @param parent
      * @param modal
+     * @param rmtObject
      */
-    public Registo(CurriculumVitae parent, boolean modal) {
-        this.cv = parent;
+    public Registo(java.awt.Frame parent, boolean modal, String rmtObject) {
         super(parent, modal);
         this.setTitle("Registo");
         initComponents();
+        this.rmtObject = rmtObject;
         Security.addProvider(new BouncyCastleProvider());
         loadProviders();
     }
@@ -292,7 +292,7 @@ public class Registo extends java.awt.Dialog {
     private void btnLoginInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginInstActionPerformed
         // TODO add your handling code here:
         dispose();
-        new Login(cv, true).setVisible(true);
+        new Login(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnLoginInstActionPerformed
 
     private void btnRegistoInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoInstActionPerformed
@@ -307,7 +307,7 @@ public class Registo extends java.awt.Dialog {
     private void btnLoginUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginUserActionPerformed
         // TODO add your handling code here:
         dispose();
-        new Login(cv, true).setVisible(true);
+        new Login(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnLoginUserActionPerformed
 
     private void btnRegistoUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoUserActionPerformed
@@ -367,9 +367,9 @@ public class Registo extends java.awt.Dialog {
             //A pessoa é adicionada ao sistema
             cv.listUsers.add(user);
             //A lista das pessoas é guardado num ficheiro
-            Recursos.writeObject(cv.listUsers, fichUsers.getAbsolutePath());
+            //Recursos.writeObject(cv.listUsers, fichUsers.getAbsolutePath());
             dispose();
-            new Login(cv, true).setVisible(true);
+            new Login(null, true, rmtObject).setVisible(true);
         }
     }
     
@@ -391,9 +391,9 @@ public class Registo extends java.awt.Dialog {
             //O Instituto é adicionado ao sistema
             cv.listInst.add(instituto);
             //A lista de Institutos é guardado num ficheiro
-            Recursos.writeObject(cv.listInst, fichInst.getAbsolutePath());
+            //Recursos.writeObject(cv.listInst, fichInst.getAbsolutePath());
             dispose();
-            new Login(cv, true).setVisible(true);
+            new Login(null, true, rmtObject).setVisible(true);
         }
     }
 
