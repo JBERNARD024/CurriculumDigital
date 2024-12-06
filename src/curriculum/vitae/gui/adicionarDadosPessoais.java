@@ -318,8 +318,8 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         new Thread(() -> {
             adicionarDadosPessoais();
-            btnGuardar.setEnabled(false);
         }).start();
+        btnGuardar.setEnabled(false);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVerPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerPerfilActionPerformed
@@ -394,7 +394,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         codPostal = txtCodPostal.getText().trim();
         pais = txtPais.getText().trim();
         descr = txtDescr.getText();
-        //Constroi um objeto com os dados introduzidos pela Pessoa
+        //Constrói um objeto com os dados introduzidos pela Pessoa
         dadosP = new dadosPessoais(nome, nacionalidade, dataNasc, sexo, telemovel, linkedin, morada, localidade, codPostal, pais, descr);
         try {
             user = new Pessoa(rmtInterface.adicionaDadosPessoa(user.getEmail(), dadosP, icon));
@@ -421,6 +421,10 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
             Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        txtNome.setEnabled(false);
+        txtData.setEnabled(false);
+        txtSexo.setEnabled(false);
+        txtSexo.setSelectedIndex(1);
         txtNacionalidade.setEnabled(false);
         txtTelemovel.setEnabled(false);
         txtLinkedin.setEnabled(false);

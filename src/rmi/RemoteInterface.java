@@ -17,6 +17,7 @@ package rmi;
 
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
+import curriculum.vitae.core.dadosInstitucionais;
 import curriculum.vitae.core.dadosPessoais;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -64,5 +65,8 @@ public interface RemoteInterface extends Remote{
     
     /*########## Adicionar Dados Pessoais #########*/
     public Pessoa adicionaDadosPessoa(String email, dadosPessoais dadosP, ImageIcon icon) throws RemoteException;
+    
+     /*########## Adicionar Dados Institucionais #########*/
+    public Instituto adicionaDadosInst(String codNome, dadosInstitucionais dadosInst, ImageIcon icon) throws RemoteException;
     
 }

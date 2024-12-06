@@ -19,6 +19,7 @@ package rmi;
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
 import curriculum.vitae.core.RegistoCertificado;
+import curriculum.vitae.core.dadosInstitucionais;
 import curriculum.vitae.core.dadosPessoais;
 import curriculum.vitae.gui.Login;
 import java.awt.Image;
@@ -340,11 +341,44 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         Recursos.writeObject(listUsers, fichUsers.getAbsolutePath());
         return user;
     }
-    
-    private Pessoa getPessoa(String email) throws RemoteException{
+
+    @Override
+    public Instituto adicionaDadosInst(String codNome, dadosInstitucionais dadosInst, ImageIcon icon) throws RemoteException {
+        inst = new Instituto(getInstituto(codNome));
+        if (icon == null) {
+            try {
+                //Caso não tenha sido adicionado, é atribuída uma imagem por defeito
+                String caminhoImag = basePath + "/resources/institutos/defaultInstituto.png";
+                icon = new ImageIcon(caminhoImag);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        byte[] byteIcon = null;
+        try {
+            byteIcon = Recursos.iconToByteArray(icon);
+        } catch (IOException ex) {
+            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        inst.setImagem(byteIcon);
+        inst.setDadosInst(dadosInst);
+        Recursos.writeObject(listInst, fichInst.getAbsolutePath());
+        return inst;
+    }
+
+    private Pessoa getPessoa(String email) throws RemoteException {
         for (Pessoa pessoa : listUsers) {
-            if(pessoa.getEmail().equals(email)){
+            if (pessoa.getEmail().equals(email)) {
                 return pessoa;
+            }
+        }
+        return null;
+    }
+    
+    private Instituto getInstituto(String codNome) throws RemoteException {
+        for (Instituto instituto : listInst) {
+            if (instituto.getCodNome().equals(codNome)) {
+                return instituto;
             }
         }
         return null;
