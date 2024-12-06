@@ -17,8 +17,10 @@ package rmi;
 
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
+import curriculum.vitae.core.dadosPessoais;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -28,7 +30,7 @@ public interface RemoteInterface extends Remote{
     //remote method
     public String getMessage() throws RemoteException;
     
-    //########## Login da Pessoa ##########
+    /*########## Login da Pessoa ##########*/
     
     public boolean verificaUtilizador(String email) throws RemoteException;
     
@@ -36,7 +38,7 @@ public interface RemoteInterface extends Remote{
     
     public Pessoa loginUser(String password) throws RemoteException;
     
-    //########## Register da Pessoa ##########
+    /*########## Register da Pessoa ##########*/
     
     public Pessoa registerUser(String email, String password)throws RemoteException;
     
@@ -52,11 +54,15 @@ public interface RemoteInterface extends Remote{
     
     public boolean verificaCodNome(String codNome) throws RemoteException; 
     
-    //########## Login do Instituto ##########
+    /*########## Login do Instituto ##########*/
     
     public Instituto loginInst(String password) throws RemoteException;
     
     public boolean verificaLoginInst(String codNome, String password) throws RemoteException;
     
     public boolean verificaCodNomeLogin(String codNome) throws RemoteException;
+    
+    /*########## Adicionar Dados Pessoais #########*/
+    public Pessoa adicionaDadosPessoa(String email, dadosPessoais dadosP, ImageIcon icon) throws RemoteException;
+    
 }

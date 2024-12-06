@@ -19,8 +19,11 @@ package rmi;
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
 import curriculum.vitae.core.RegistoCertificado;
+import curriculum.vitae.core.dadosPessoais;
 import curriculum.vitae.gui.Login;
+import java.awt.Image;
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
@@ -33,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import utils.Recursos;
@@ -311,5 +315,38 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
             }
         }
         return verifica;
+    }
+
+    @Override
+    public Pessoa adicionaDadosPessoa(String email, dadosPessoais dadosP, ImageIcon icon) throws RemoteException {
+        user = new Pessoa(getPessoa(email));
+        if (icon == null) {
+            try {
+                //Caso não tenha sido adicionado, é atribuída uma imagem por defeito
+                String caminhoImag = basePath + "/resources/pessoas/defaultPessoa.png";
+                icon = new ImageIcon(caminhoImag);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        byte[] byteIcon = null;
+        try {
+            byteIcon = Recursos.iconToByteArray(icon);
+        } catch (IOException ex) {
+            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        user.setImagem(byteIcon);
+        user.setDados(dadosP);
+        Recursos.writeObject(listUsers, fichUsers.getAbsolutePath());
+        return user;
+    }
+    
+    private Pessoa getPessoa(String email) throws RemoteException{
+        for (Pessoa pessoa : listUsers) {
+            if(pessoa.getEmail().equals(email)){
+                return pessoa;
+            }
+        }
+        return null;
     }
 }

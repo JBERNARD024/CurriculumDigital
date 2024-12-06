@@ -6,15 +6,21 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Pessoa;
 import curriculum.vitae.core.dadosPessoais;
+import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import rmi.RemoteInterface;
 import utils.Recursos;
 
 /**
@@ -37,8 +43,8 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     String pais;
     String descr;
     ImageIcon icon;
-    byte[] byteIcon;
     dadosPessoais dadosP;
+    RemoteInterface rmtInterface;
 
     /**
      * Creates new form adicionarDadosPessoais
@@ -52,6 +58,11 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         super(parent, modal);
         this.user = user;
         this.rmtObject = rmtObject;
+        try {
+            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+        } catch (Exception ex) {
+            Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initComponents();
         this.setTitle("Adicionar Dados Pessoais");
         txtEmail.setText(user.getEmail());
@@ -305,8 +316,10 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     }//GEN-LAST:event_closeDialog
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        //adicionarDadosPessoais();
-        btnGuardar.setEnabled(false);
+        new Thread(() -> {
+            adicionarDadosPessoais();
+            btnGuardar.setEnabled(false);
+        }).start();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVerPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerPerfilActionPerformed
@@ -317,7 +330,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
         //Escolhe uma imagem do sistema me que está correr a aplicação
-        /*JFileChooser escolheFoto = new JFileChooser(cv.basePath + "/resources/pessoas/");
+        JFileChooser escolheFoto = new JFileChooser();
         if (escolheFoto.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
                 File fich = escolheFoto.getSelectedFile();
@@ -330,12 +343,9 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
             }
         } else {
             JOptionPane.showMessageDialog(null, "Ficheiro não Encontrado");
-        }*/
+        }
     }//GEN-LAST:event_btnFotoActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFoto;
@@ -372,7 +382,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     // End of variables declaration//GEN-END:variables
 
     //Função que vai adicionar uma Pessoa ao sistema
-    /*private void adicionarDadosPessoais() {
+    private void adicionarDadosPessoais() {
         nome = txtNome.getText().trim();
         dataNasc = txtData.getDate();
         sexo = txtSexo.getSelectedItem().toString();
@@ -386,29 +396,39 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         descr = txtDescr.getText();
         //Constroi um objeto com os dados introduzidos pela Pessoa
         dadosP = new dadosPessoais(nome, nacionalidade, dataNasc, sexo, telemovel, linkedin, morada, localidade, codPostal, pais, descr);
-        if (icon == null) {
-            try {
-                //Caso não tenha sido adicionado, é atribuída uma imagem por defeito
-                String caminhoImag = cv.basePath + "/resources/pessoas/defaultPessoa.png";
-                icon = new ImageIcon(caminhoImag);
-                //A imagem é ajustada à largura e comprimento do botão
-                Image imagem = icon.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_SMOOTH);
-                btnFoto.setIcon(new ImageIcon(imagem));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
         try {
-            byteIcon = Recursos.iconToByteArray(icon);
-        } catch (IOException ex) {
+            user = new Pessoa(rmtInterface.adicionaDadosPessoa(user.getEmail(), dadosP, icon));
+            txtNome.setText(user.getDados().getNome());
+            txtData.setDate(user.getDados().getDataNasc());
+            if (user.getDados().getSexo().equals("Masculino")) {
+                txtSexo.setSelectedIndex(0);
+            } else {
+                txtSexo.setSelectedIndex(1);
+            }
+            txtNacionalidade.setText(user.getDados().getNacionalidade());
+            txtTelemovel.setText(user.getDados().getTelemovel());
+            txtLinkedin.setText(user.getDados().getLinkedin());
+            txtMorada.setText(user.getDados().getMorada());
+            txtLocalidade.setText(user.getDados().getLocalidade());
+            txtCodPostal.setText(user.getDados().getCodPostal());
+            txtPais.setText(user.getDados().getPais());
+            txtDescr.setText(user.getDados().getDescricao());
+            icon = new ImageIcon(user.getImagem());
+            Image imagem = icon.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_SMOOTH);
+            btnFoto.setBackground(Color.white);
+            btnFoto.setIcon(new ImageIcon(imagem));
+        } catch (RemoteException ex) {
             Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //A imagem é definida e atribuída à Pessoa
-        cv.listUsers.get(index).setImagem(byteIcon);
-         //Os dados institucionais são definidos
-        cv.listUsers.get(index).setDados(dadosP);
-        //A lista de Pessoas é atualizada e guardada no ficheiro
-        Recursos.writeObject(cv.listUsers, f.getAbsolutePath());
-    }*/
+
+        txtNacionalidade.setEnabled(false);
+        txtTelemovel.setEnabled(false);
+        txtLinkedin.setEnabled(false);
+        txtMorada.setEnabled(false);
+        txtLocalidade.setEnabled(false);
+        txtCodPostal.setEnabled(false);
+        txtPais.setEnabled(false);
+        txtDescr.setEnabled(false);
+        btnFoto.setEnabled(false);
+    }
 }
