@@ -6,23 +6,10 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.security.Provider;
-import java.security.Security;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import rmi.RemoteInterface;
 
 /**
@@ -31,14 +18,11 @@ import rmi.RemoteInterface;
  */
 public class Login extends java.awt.Dialog {
 
-    CurriculumVitae cv;
     String email;
     String password;
     String codNome;
     Pessoa user;
     Instituto instituto;
-    int indexUser = 0;
-    int indexInst = 0;
     String rmtObject;
     RemoteInterface rmtInterface;
 
@@ -59,10 +43,6 @@ public class Login extends java.awt.Dialog {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
         initComponents();
-        //Adiciona o Bouncy Castle à lista providers de segurança
-        Security.addProvider(new BouncyCastleProvider());
-        //Carrega todos os providers de serguança disponíveis no sistema
-        loadProviders();
     }
 
     /**
@@ -294,47 +274,23 @@ public class Login extends java.awt.Dialog {
     }//GEN-LAST:event_btnRegistoUserActionPerformed
 
     private void btnLoginUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginUserActionPerformed
-        try {
-            new Thread(() -> {
-                try {
-                    email = txtEmailUser.getText().trim();
-                    password = new String(txtPasswordUser.getPassword());
-                    if (rmtInterface.verificaUtilizador(email)) {
-                        if (rmtInterface.verificaCamposUser(email, password)) {
-                            user = new Pessoa(rmtInterface.loginUser(email, password));
-                            JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
-                            //Vai verificar se o utilizador já introduziu os dados pessoais
-                            if (user.getDados() == null) {
-                                //Caso não tenha introduzido, será redirecionado para a página para adicionar os dados pessoais
-                                dispose();
-                                new adicionarDadosPessoais(null, true, user, rmtObject).setVisible(true);
-                            } else {
-                                //Caso possua, é redirecionado para a página do perfil da Pessoa
-                                dispose();
-                                new perfilUser(null, true, user, rmtObject).setVisible(true);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
-                        }
-                    } else {
-                        JOptionPane.showConfirmDialog(null, "Email não está registado no sistema!!", "Email Inválido", 2);
-                    }
-                } catch (Exception ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }).start();
-        } catch (Exception ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new Thread(() -> {
+            try {
+                loginPessoa();
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }//GEN-LAST:event_btnLoginUserActionPerformed
 
     private void btnLoginInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginInstActionPerformed
-        try {
-            // TODO add your handling code here:
-            loginInst();
-        } catch (Exception ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new Thread(() -> {
+            try {
+                loginInstituto();
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }//GEN-LAST:event_btnLoginInstActionPerformed
 
     private void btnRegistoInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoInstActionPerformed
@@ -342,10 +298,6 @@ public class Login extends java.awt.Dialog {
         dispose();
         new Registo(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnRegistoInstActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLoginInst;
@@ -368,10 +320,34 @@ public class Login extends java.awt.Dialog {
     private javax.swing.JPasswordField txtPasswordInst;
     private javax.swing.JPasswordField txtPasswordUser;
     // End of variables declaration//GEN-END:variables
+    //Função que efetua o login de uma Pessoa no Sistema
+    private void loginPessoa() throws Exception {
+        email = txtEmailUser.getText().trim();
+        password = new String(txtPasswordUser.getPassword());
+        if (rmtInterface.verificaUtilizador(email)) {
+            if (rmtInterface.verificaCamposUser(email, password)) {
+                user = new Pessoa(rmtInterface.loginUser(password));
+                JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
+                //Vai verificar se o utilizador já introduziu os dados pessoais
+                if (user.getDados() == null) {
+                    //Caso não tenha introduzido, será redirecionado para a página para adicionar os dados pessoais
+                    dispose();
+                    new adicionarDadosPessoais(null, true, user, rmtObject).setVisible(true);
+                } else {
+                    //Caso possua, é redirecionado para a página do perfil da Pessoa
+                    dispose();
+                    new perfilUser(null, true, user, rmtObject).setVisible(true);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
+            }
+        } else {
+            JOptionPane.showConfirmDialog(null, "Email não está registado no sistema!!", "Email Inválido", 2);
+        }
+    }
 
-    //################################################## I N S T I T U T O ################################################################
-    //Dado o código nome e a password introduzida pelo Instituto, estabelece a sessão da Instituto, caso sejam válidos
-    private void loginInst() throws Exception {
+    //Função que efetua o login de um Instituto no Sistema
+    private void loginInstituto() throws Exception {
         codNome = txtCodNomeInst.getText().trim();
         password = new String(txtPasswordInst.getPassword());
         //Verifica se o código nome está registado no sistema
@@ -379,83 +355,23 @@ public class Login extends java.awt.Dialog {
             //Caso esteja, vai verificar se a password introduzida é válida
             if (rmtInterface.verificaLoginInst(codNome, password)) {
                 //Sendo a password válida, vai desencriptar a chave privada, enquanto estiver com a sessão ativa
-                instituto = new Instituto(rmtInterface.LoginInst(codNome, password));
-                instituto.load(password);
+                instituto = new Instituto(rmtInterface.loginInst(password));
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
-                //Incrementa o número de logins
-                cv.listInst.get(indexInst).setNumLogin(instituto.getNumLogin() + 1);
-                //Atualiza a data do último login efetuado
-                cv.listInst.get(indexInst).setLastLogin(Date.from(Instant.now()));
                 //Verifica se os dados Institucionais, já foram definidos
                 if (instituto.getDadosInst() == null) {
                     //Caso não tenham sido, redireciona o Instituto para a página para adicionar os dados
                     dispose();
-                    new adicionarDadosInstitucionais(null, true, indexInst, rmtObject).setVisible(true);
+                    new adicionarDadosInstitucionais(null, true, instituto, rmtObject).setVisible(true);
                 } else {
                     dispose();
                     //Caso estejam definidos, o utilizador Instituto é redirecionado para o seu perfil
-                    new perfilInstituto(null, true, indexInst, rmtObject).setVisible(true);
+                    new perfilInstituto(null, true, instituto, rmtObject).setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
             }
         } else {
             JOptionPane.showConfirmDialog(null, "Código Nome não está registado no sistema!!", "Código Nome Inválido", 2);
-        }
-    }
-
-    //Verifica se a password introduzida é válida para um dado Instituto
-    boolean verificaCamposInstituto(String codNome, String password) {
-        boolean verifica = false;
-        for (int i = 0; i < cv.listInst.size(); i++) {
-            try {
-                instituto = new Instituto(codNome);
-                if (instituto.load(password)) {
-                    verifica = true;
-                    break;
-                } else {
-                    verifica = false;
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return verifica;
-    }
-
-    //Verifica se um Instituto existe no sistema
-    private boolean verificaInstituto(String codNome) {
-        boolean verifica = false;
-        for (int i = 0; i < cv.listInst.size(); i++) {
-            instituto = new Instituto(cv.listInst.get(i));
-            if (!instituto.getCodNome().equals(codNome)) {
-                verifica = false;
-            } else {
-                indexInst = i;
-                verifica = true;
-                break;
-            }
-        }
-        return verifica;
-    }
-
-    //################################################## P R O V I D E R ################################################################
-    //Carrega todos os providers existente na segurança
-    public static void loadProviders() {
-        Provider providers[] = Security.getProviders();
-        //todos os fornecedores do segurança
-        for (Provider provider : providers) {
-            StringBuilder txt = new StringBuilder();
-            List<String> lst = new ArrayList<>();
-            //serviços fornecidos
-            Set<Provider.Service> services = provider.getServices();
-            for (Provider.Service service : services) {
-                lst.add(String.format("%-20s %s\n", service.getType(), service.getAlgorithm()));
-            }
-            Collections.sort(lst);
-            for (String service : lst) {
-                txt.append(service);
-            }
         }
     }
 }

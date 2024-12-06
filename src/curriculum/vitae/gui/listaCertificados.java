@@ -6,18 +6,11 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Certificado;
 import curriculum.vitae.core.Instituto;
-import curriculum.vitae.core.Pessoa;
 import java.awt.Color;
 import java.awt.Image;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import utils.Block;
-import utils.Converter;
 import utils.MerkleTree;
-import utils.Recursos;
 
 /**
  *
@@ -26,7 +19,6 @@ import utils.Recursos;
 public class listaCertificados extends java.awt.Dialog {
 
     String rmtObject;
-    int index;
     Instituto inst;
     ImageIcon icon;
     Image imagem;
@@ -39,12 +31,12 @@ public class listaCertificados extends java.awt.Dialog {
      *
      * @param parent
      * @param modal
-     * @param index
+     * @param inst
      * @param rmtObject
      */
-    public listaCertificados(java.awt.Frame parent, boolean modal, int index, String rmtObject) {
+    public listaCertificados(java.awt.Frame parent, boolean modal, Instituto inst, String rmtObject) {
         super(parent, modal);
-        this.index = index;
+        this.inst = inst;
         this.rmtObject = rmtObject;
         initComponents();
         this.setTitle("Lista de Certficados");
@@ -399,7 +391,7 @@ public class listaCertificados extends java.awt.Dialog {
     private void btnDadosPessoaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDadosPessoaisActionPerformed
         // TODO add your handling code here:
         dispose();
-        new perfilInstituto(null, true, index, rmtObject).setVisible(true);
+        new perfilInstituto(null, true, inst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnDadosPessoaisActionPerformed
 
     private void certificadosListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_certificadosListValueChanged
@@ -447,7 +439,7 @@ public class listaCertificados extends java.awt.Dialog {
         // TODO add your handling code here:
         dispose();
         //Redireciona o Instituto para a página para adicionar um certificado
-        new adicionarCertificado(null, true, index, rmtObject).setVisible(true);
+        new adicionarCertificado(null, true, inst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnAdicionarCurriculoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

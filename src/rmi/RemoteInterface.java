@@ -28,15 +28,15 @@ public interface RemoteInterface extends Remote{
     //remote method
     public String getMessage() throws RemoteException;
     
-    //########## Login do User ##########
+    //########## Login da Pessoa ##########
     
     public boolean verificaUtilizador(String email) throws RemoteException;
     
     public boolean verificaCamposUser(String email, String password) throws RemoteException;
     
-    public Pessoa loginUser(String email, String password) throws RemoteException;
+    public Pessoa loginUser(String password) throws RemoteException;
     
-    //########## Register do User ##########
+    //########## Register da Pessoa ##########
     
     public Pessoa registerUser(String email, String password)throws RemoteException;
     
@@ -54,7 +54,7 @@ public interface RemoteInterface extends Remote{
     
     //########## Login do Instituto ##########
     
-    public Instituto LoginInst(String codNome, String password) throws RemoteException;
+    public Instituto loginInst(String password) throws RemoteException;
     
     public boolean verificaLoginInst(String codNome, String password) throws RemoteException;
     

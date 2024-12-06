@@ -20,10 +20,7 @@ import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
 import curriculum.vitae.core.RegistoCertificado;
 import curriculum.vitae.gui.Login;
-import curriculum.vitae.gui.adicionarDadosPessoais;
-import curriculum.vitae.gui.perfilUser;
 import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
@@ -96,20 +93,30 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         return host + " say Hello to " + client;
     }
 
-    //################################################## U T I L I Z A D O R ################################################################
+    //################################################## P E S S O A ################################################################
     //Dado o email e a password introduzida pela Pessoa, estabelece a sessão da Pessoa, caso sejam válidos
     /**
      *
-     * @param email
      * @param password
      * @return
      * @throws java.rmi.RemoteException
      */
-    //################################ LOGIN DE UM USER ################################
+    //################################ LOGIN DE UMA PESSOA ################################
     @Override
-    public Pessoa loginUser(String email, String password) throws RemoteException {
+    public Pessoa loginUser(String password) throws RemoteException {
+        user = new Pessoa(listUsers.get(indexUser));
+        //Atualiza a data do último login efetuado
+        user.setLastLogin(Date.from(Instant.now()));
+        //Incrementa o número de logins
+        user.setNumLogin(user.getNumLogin() + 1);
+        try {
+            //Desencript a chave privada
+            user.load(password);
+        } catch (Exception ex) {
+            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+        }
         //Retorna a Pessoa que efetuou sessão no sistema
-        return user = new Pessoa(listUsers.get(indexUser));
+        return user;
     }
 
     @Override
@@ -149,8 +156,9 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         return verifica;
     }
 
-    //################################ REGISTAR UM USER ################################
+    //################################ REGISTAR UMA PESSOA ################################
     @Override
+    //Regista uma pessoa no sistema e guarda as suas chaves assimétricas numa pasta
     public Pessoa registerUser(String email, String password) {
         user = new Pessoa(email);
         try {
@@ -162,7 +170,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
             user.save(password);
             //A pessoa é adicionada ao sistema
             listUsers.add(user);
-            //A lista das pessoas é guardado num ficheiro
+            //A pessoa é guardada no ficheiro da lista das pessoas
             Recursos.writeObject(listUsers, fichUsers.getAbsolutePath());
         } catch (Exception ex) {
             Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
@@ -172,6 +180,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     }
 
     @Override
+    //Verifica se os todos os campos foram preenchidos e cumprem os requisitos
     public boolean verificaRegistoUser(String email, String password, String confPassword) {
         if (email.equals("") || password.equals("") || confPassword.equals("")) {
             JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
@@ -188,6 +197,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     }
 
     @Override
+    //Verifica se o email introduzido no registo, está disponível ou já está em uso
     public boolean verificaEmailRegisto(String email) {
         boolean verifica = false;
         for (int i = 0; i < listUsers.size(); i++) {
@@ -207,8 +217,6 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     public Instituto registerInst(String codNome, String password) {
         inst = new Instituto(codNome);
         try {
-            //Estando a validação correta, o utilizador Instituto é adicionado à lista de Institutos
-            inst = new Instituto(codNome);
             //É criada um pasta do utilizador Instituto
             inst.criarPasta();
             //O par de chaves asssimétricas é criado
@@ -217,8 +225,8 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
             inst.save(password);
             //O Instituto é adicionado ao sistema
             listInst.add(inst);
-            //A lista de Institutos é guardado num ficheiro
-            //Recursos.writeObject(cv.listInst, fichInst.getAbsolutePath());
+            //O Instituto é guardado no ficheiro da lista de Institutos
+            Recursos.writeObject(listInst, fichInst.getAbsolutePath());
         } catch (Exception ex) {
             Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -237,7 +245,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
             return true;
         }
     }
-    
+
     @Override
     public boolean verificaCodNome(String codNome) {
         boolean verifica = false;
@@ -252,16 +260,26 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         }
         return verifica;
     }
-    
-    //################################ LOGIN A UMA INSTITUIÇÃO ################################
-    
+
+    //################################ LOGIN DE UMA INSTITUIÇÃO ################################
     @Override
-    public Instituto LoginInst(String codNome, String password){
-        return inst = new Instituto(listInst.get(indexInst));
+    public Instituto loginInst(String password) {
+        inst = new Instituto(listInst.get(indexInst));
+        //Incrementa o número de logins
+        inst.setNumLogin(inst.getNumLogin() + 1);
+        //Atualiza a data do último login efetuado
+        inst.setLastLogin(Date.from(Instant.now()));
+        try {
+            //Desencript a chave privada
+            inst.load(password);
+        } catch (Exception ex) {
+            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return inst;
     }
 
     @Override
-    public boolean verificaLoginInst(String codNome, String password){
+    public boolean verificaLoginInst(String codNome, String password) {
         boolean verifica = false;
         for (int i = 0; i < listInst.size(); i++) {
             try {
@@ -278,9 +296,9 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         }
         return verifica;
     }
-    
+
     @Override
-    public boolean verificaCodNomeLogin(String codNome){
+    public boolean verificaCodNomeLogin(String codNome) {
         boolean verifica = false;
         for (int i = 0; i < listInst.size(); i++) {
             inst = new Instituto(listInst.get(i));
@@ -294,7 +312,4 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         }
         return verifica;
     }
-    
-    
-    
 }

@@ -4,23 +4,9 @@
  */
 package curriculum.vitae.gui;
 
-import curriculum.vitae.core.Certificado;
 import curriculum.vitae.core.Educacao;
 import curriculum.vitae.core.Instituto;
-import curriculum.vitae.core.Pessoa;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import utils.Recursos;
 
 /**
  *
@@ -29,7 +15,6 @@ import utils.Recursos;
 public class adicionarCertificado extends java.awt.Dialog {
 
     String rmtObject;
-    int indexInst;
     int indexUser;
     String qualificacao;
     String areaEstudo;
@@ -50,11 +35,12 @@ public class adicionarCertificado extends java.awt.Dialog {
      *
      * @param parent
      * @param modal
-     * @param indexInst
+     * @param inst
+     * @param rmtObject
      */
-    public adicionarCertificado(java.awt.Frame parent, boolean modal, int indexInst, String rmtObject) {
+    public adicionarCertificado(java.awt.Frame parent, boolean modal, Instituto inst, String rmtObject) {
         super(parent, modal);
-        this.indexInst = indexInst;
+        this.inst = inst;
         this.rmtObject = rmtObject;
         initComponents();
         this.setTitle("Adicionar Certficado");
@@ -310,7 +296,7 @@ public class adicionarCertificado extends java.awt.Dialog {
     private void btnEducacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducacaoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaCertificados(null, true, indexInst, rmtObject).setVisible(true);
+        new listaCertificados(null, true, inst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnEducacaoActionPerformed
 
 

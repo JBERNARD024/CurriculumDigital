@@ -6,23 +6,10 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
-import java.io.File;
-import java.net.MalformedURLException;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.security.Provider;
-import java.security.Security;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import rmi.RemoteInterface;
-import utils.Recursos;
 
 /**
  *
@@ -56,8 +43,7 @@ public class Registo extends java.awt.Dialog {
             this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
         } catch (Exception ex) {
             Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        Security.addProvider(new BouncyCastleProvider());
+        }
     }
 
     /**
@@ -300,38 +286,34 @@ public class Registo extends java.awt.Dialog {
     }//GEN-LAST:event_closeDialog
 
     private void btnLoginInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginInstActionPerformed
-        // TODO add your handling code here:
         dispose();
         new Login(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnLoginInstActionPerformed
 
     private void btnRegistoInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoInstActionPerformed
-        try {
-            // TODO add your handling code here:
-            adicionarInstituto();
-        } catch (Exception ex) {
-            Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new Thread(() -> {
+            try {
+                adicionarInstituto();
+            } catch (Exception ex) {
+                Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }//GEN-LAST:event_btnRegistoInstActionPerformed
 
     private void btnLoginUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginUserActionPerformed
-        // TODO add your handling code here:
         dispose();
         new Login(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnLoginUserActionPerformed
 
     private void btnRegistoUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoUserActionPerformed
-        try {
-            // TODO add your handling code here:
-            adicionarUtilizador();
-        } catch (Exception ex) {
-            Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new Thread(() -> {
+            try {
+                adicionarPessoa();
+            } catch (Exception ex) {
+                Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }//GEN-LAST:event_btnRegistoUserActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLoginInst;
@@ -359,8 +341,8 @@ public class Registo extends java.awt.Dialog {
     private javax.swing.JPasswordField txtPasswordUser;
     // End of variables declaration//GEN-END:variables
 
-    //Função que adiciona um Pessoa à Lista de Pessoas (ArrayList)
-    private void adicionarUtilizador() throws Exception {
+    //Função que regista uma Pessoa no sistema
+    private void adicionarPessoa() throws Exception {
         email = txtEmailUser.getText().trim();
         password = new String(txtPasswordUser.getPassword());
         confPassword = new String(txtConfPasswordSuer.getPassword());
@@ -372,15 +354,16 @@ public class Registo extends java.awt.Dialog {
             new Login(null, true, rmtObject).setVisible(true);
         }
     }
-    
-    //Função que adiciona uma Instituição à Lista de Instituições (ArrayList)
+
+    //Função que regista um Instituto no sistema
     private void adicionarInstituto() throws Exception {
         codNome = txtCodNomeInst.getText().trim();
         password = new String(txtPasswordInst.getPassword());
         confPassword = new String(txtConfPasswordInst.getPassword());
         //Faz a validação dos campos
-        if (rmtInterface.verificaRegistoInst(codNome, password, confPassword)== true && rmtInterface.verificaCodNome(codNome) == false) {
-             
+        if (rmtInterface.verificaRegistoInst(codNome, password, confPassword) == true && rmtInterface.verificaCodNome(codNome) == false) {
+            //Estando a validação correta, o utilizador Pessoa é adicionado à lista de Pessoas
+            instituto = new Instituto(rmtInterface.registerInst(codNome, password));
             dispose();
             new Login(null, true, rmtObject).setVisible(true);
         }

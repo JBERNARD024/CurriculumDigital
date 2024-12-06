@@ -4,6 +4,7 @@
  */
 package curriculum.vitae.gui;
 
+import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.dadosInstitucionais;
 import curriculum.vitae.core.dadosPessoais;
 import java.awt.Image;
@@ -39,25 +40,24 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
     String descr;
     ImageIcon icon;
     byte[] byteIcon;
-    File f;
     dadosInstitucionais dadosInst;
-    int index;
+    Instituto inst;
 
     /**
      * Creates new form adicionarDadosPessoais
      *
      * @param parent
      * @param modal
-     * @param index
+     * @param inst
+     * @param rmtObject
      */
-    public adicionarDadosInstitucionais(java.awt.Frame parent, boolean modal, int index, String rmtObject) {
+    public adicionarDadosInstitucionais(java.awt.Frame parent, boolean modal, Instituto inst, String rmtObject) {
         super(parent, modal);
-        this.index = index;
+        this.inst = inst;
         this.rmtObject = rmtObject;
         initComponents();
-        //f = new File(cv.pathInst);
         this.setTitle("Adicionar Dados Institucionais");
-        //txtCodNome.setText(cv.listInst.get(index).getCodNome());
+        txtCodNome.setText(inst.getCodNome());
     }
 
     /**
@@ -338,7 +338,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
     private void btnProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProximoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new perfilInstituto(null, true, index, rmtObject).setVisible(true);
+        new perfilInstituto(null, true, inst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnProximoActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed

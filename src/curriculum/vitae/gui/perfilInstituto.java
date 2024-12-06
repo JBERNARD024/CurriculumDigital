@@ -1,13 +1,8 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Instituto;
-import curriculum.vitae.core.Pessoa;
-import curriculum.vitae.core.dadosPessoais;
 import java.awt.Color;
 import java.awt.Image;
-import java.io.File;
-import java.util.Arrays;
-import java.util.Date;
 import javax.swing.ImageIcon;
 
 /*
@@ -25,21 +20,19 @@ public class perfilInstituto extends java.awt.Dialog {
     Instituto inst;
     ImageIcon icon;
     Image Image;
-    int index;
     String rmtObject;
     /**
      * Creates new form perfil
      * @param parent
      * @param modal
-     * @param index
+     * @param inst
      * @param rmtObject
      */
-    public perfilInstituto(java.awt.Frame parent, boolean modal, int index, String rmtObject) {
+    public perfilInstituto(java.awt.Frame parent, boolean modal, Instituto inst, String rmtObject) {
         super(parent, modal);
-        this.index = index;
+        this.inst = inst;
         initComponents();
         this.setTitle("Perfil Instituto");
-        //inst = new Instituto(cv.listInst.get(index));
         txtNomeInst.setText(inst.getDadosInst().getNome());
         txtNatureza.setText(inst.getDadosInst().getNatureza());
         txtDataFund.setDate(inst.getDadosInst().getDataFundacao());
@@ -373,13 +366,13 @@ public class perfilInstituto extends java.awt.Dialog {
     private void btnAdicionarCurriculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarCurriculoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new adicionarCertificado(null, true, index, rmtObject).setVisible(true);
+        new adicionarCertificado(null, true, inst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnAdicionarCurriculoActionPerformed
 
     private void btnVerCertificadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerCertificadosActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaCertificados(null, true, index, rmtObject).setVisible(true);
+        new listaCertificados(null, true, inst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnVerCertificadosActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
