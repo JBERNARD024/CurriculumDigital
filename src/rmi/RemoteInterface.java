@@ -15,12 +15,17 @@
 //////////////////////////////////////////////////////////////////////////////
 package rmi;
 
+import curriculum.vitae.core.Educacao;
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
+import curriculum.vitae.core.RegistoCertificado;
 import curriculum.vitae.core.dadosInstitucionais;
 import curriculum.vitae.core.dadosPessoais;
+import curriculum.vitae.gui.Registo;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 
 /**
@@ -69,4 +74,18 @@ public interface RemoteInterface extends Remote{
      /*########## Adicionar Dados Institucionais #########*/
     public Instituto adicionaDadosInst(String codNome, dadosInstitucionais dadosInst, ImageIcon icon) throws RemoteException;
     
+    //Devolve a lista de todas as Pessoas registadas no sistema
+    public ArrayList<Pessoa> getPessoas () throws RemoteException;
+    
+    //Função que adiciona um certificado no sistema
+    public void adicionarCertificado(Educacao educacao, String email, String codNome) throws RemoteException;
+
+    //Função que devolve a lista de todos os certificados atribuídos a uma Pessoa
+    public DefaultListModel getCertificadosPessoa(Pessoa user) throws RemoteException;
+    
+    //Função que devolve a lista de todos os certificados criados por uma Pessoa
+    public DefaultListModel getCertificadosInst(Instituto inst) throws RemoteException;
+    
+    //Função que devolve a Blockchain
+    public RegistoCertificado getBlockchain() throws RemoteException;
 }

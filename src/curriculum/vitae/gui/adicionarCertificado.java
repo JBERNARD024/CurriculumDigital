@@ -6,7 +6,15 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Educacao;
 import curriculum.vitae.core.Instituto;
+import curriculum.vitae.core.Pessoa;
+import java.awt.event.ActionEvent;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import rmi.RemoteInterface;
 
 /**
  *
@@ -20,7 +28,6 @@ public class adicionarCertificado extends java.awt.Dialog {
     String areaEstudo;
     String instituicao;
     int mediaFinal;
-    String sitioWeb;
     String nivelQEQ;
     String cidade;
     String pais;
@@ -29,6 +36,8 @@ public class adicionarCertificado extends java.awt.Dialog {
     String descr;
     Educacao educacao;
     Instituto inst;
+    RemoteInterface rmtInterface;
+    ArrayList<Pessoa> listaPessoas = new ArrayList<>();
 
     /**
      * Creates new form adicionarEducacao
@@ -42,27 +51,32 @@ public class adicionarCertificado extends java.awt.Dialog {
         super(parent, modal);
         this.inst = inst;
         this.rmtObject = rmtObject;
+        try {
+            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+        } catch (Exception ex) {
+            Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
+        } 
         initComponents();
         this.setTitle("Adicionar Certficado");
+        try {
+            listaPessoas = new ArrayList<>(rmtInterface.getPessoas());
+        } catch (RemoteException ex) {
+            Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        /*
         //Verifica se as pessoas existentes no sistema, têm dados pessoais preenchidos e caso tenham, são adicionados à lista de seleção de pessoas
-        for (Pessoa user : cv.listUsers) {
+        for (Pessoa user : listaPessoas) {
             if (user.getDados() != null) {
                 txtUtilizadores.addItem(user.getDados().getNome());
             }
         }
-        inst = new Instituto(cv.listInst.get(indexInst));
         txtInstituicao.setText(inst.getDadosInst().getNome());
         txtCidade.setText(inst.getDadosInst().getCidade());
         txtPais.setText(inst.getDadosInst().getPais());
-        txtQualificacao.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedIndex = txtQualificacao.getSelectedIndex();
-                txtQEQ.setSelectedIndex(selectedIndex);
-            }
-        });*/
+        txtQualificacao.addActionListener((ActionEvent e) -> {
+            int selectedIndex = txtQualificacao.getSelectedIndex();
+            txtQEQ.setSelectedIndex(selectedIndex);
+        });
     }
 
     /**
@@ -289,7 +303,7 @@ public class adicionarCertificado extends java.awt.Dialog {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-        //adicionarCertificado();
+        adicionarCertificado();
         btnGuardar.setEnabled(false);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
@@ -331,10 +345,11 @@ public class adicionarCertificado extends java.awt.Dialog {
 
     //Função que adiciona um certificado
     //O uso da Thread, é para prevenir que a interface seja bloqueada quando um novo bloco é gerado.
-    /*private void adicionarCertificado() {
+    private void adicionarCertificado() {
         new Thread(() -> {
             try {
                 indexUser = txtUtilizadores.getSelectedIndex();
+                Pessoa user = new Pessoa(listaPessoas.get(indexUser));
                 qualificacao = (String) txtQualificacao.getSelectedItem();
                 areaEstudo = txtAreaEstudo.getText();
                 instituicao = txtInstituicao.getText();
@@ -348,21 +363,10 @@ public class adicionarCertificado extends java.awt.Dialog {
                 //Cria um objeto educação com base nas informações introduzidas pelo Instituto
                 educacao = new Educacao(qualificacao, areaEstudo, instituicao, mediaFinal, nivelQEQ, cidade, pais, dataInic, dataFim, descr);
                 //Identificar o utilizador e o instituto que vão fazer parte do certificado
-                Pessoa user = new Pessoa(cv.listUsers.get(indexUser));
-                //Carrega a chave pública da Pessoa
-                user.loadPublic();
-                Instituto inst = new Instituto(cv.listInst.get(indexInst));
-                //Carrega a chave pública do Instituto
-                inst.loadPublic();
-                //Adicionar a pessoa e o instituto ao certificado
-                Certificado c = new Certificado(inst, user, educacao);
-                //Adiciona o certificado à lista de certificados
-                cv.registoCerti.add(c);
-                //Atualiza o ficheiro da lista de certificados e da blockchain
-                Recursos.writeObject(cv.registoCerti, cv.pathBlockchain);
-            } catch (Exception ex) {
+                rmtInterface.adicionarCertificado(educacao, user.getEmail(), inst.getCodNome());
+            } catch (RemoteException ex) {
                 Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
             }
         }).start();
-    }*/
+    }
 }

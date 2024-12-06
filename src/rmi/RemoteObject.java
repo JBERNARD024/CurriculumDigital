@@ -16,13 +16,15 @@
 //////////////////////////////////////////////////////////////////////////////
 package rmi;
 
+import curriculum.vitae.core.Certificado;
+import curriculum.vitae.core.Educacao;
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
 import curriculum.vitae.core.RegistoCertificado;
 import curriculum.vitae.core.dadosInstitucionais;
 import curriculum.vitae.core.dadosPessoais;
 import curriculum.vitae.gui.Login;
-import java.awt.Image;
+import curriculum.vitae.gui.Registo;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -35,11 +37,16 @@ import java.security.Security;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import utils.Block;
+import utils.Converter;
+import utils.MerkleTree;
 import utils.Recursos;
 
 /**
@@ -61,6 +68,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     File fichRegisto;
     Pessoa user;
     Instituto inst;
+    MerkleTree tree;
     int indexUser;
     int indexInst;
 
@@ -76,12 +84,13 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         fichUsers = new File(pathUsers);
         fichInst = new File(pathInst);
         fichRegisto = new File(pathBlockchain);
+        /*
         //Define o array de utilizadores com base no ficheiro de utilizadores
         listUsers = (ArrayList<Pessoa>) Recursos.readObject(fichUsers.getAbsolutePath());
         //Define o array de institutos com base no ficheiro de institutos
         listInst = (ArrayList<Instituto>) Recursos.readObject(fichInst.getAbsolutePath());
         //Define o objeto RegistoCertificado com base no ficheiro RegistoCertificado
-        registoCerti = (RegistoCertificado) Recursos.readObject(fichRegisto.getAbsolutePath());
+        registoCerti = (RegistoCertificado) Recursos.readObject(fichRegisto.getAbsolutePath());*/
     }
 
     @Override
@@ -366,6 +375,85 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         return inst;
     }
 
+    //Devolve a lista de todas as Pessoas registadas no sistema
+    @Override
+    public ArrayList<Pessoa> getPessoas() throws RemoteException {
+        return (ArrayList<Pessoa>) Recursos.readObject(pathUsers);
+    }
+
+    @Override
+    public void adicionarCertificado(Educacao educacao, String email, String codNome) throws RemoteException {
+        try {
+            user = new Pessoa(getPessoa(email));
+            user.loadPublic();
+            inst = new Instituto(getInstituto(codNome));
+            inst.loadPublic();
+            Certificado c = new Certificado(inst, user, educacao);
+            registoCerti.add(c);
+            Recursos.writeObject(registoCerti, pathBlockchain);
+        } catch (Exception ex) {
+            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //Função que devolve a lista de todos os certificados atribuídos a uma Pessoa
+    @Override
+    public DefaultListModel getCertificadosPessoa(Pessoa user) throws RemoteException {
+        DefaultListModel myCertificados = new DefaultListModel();
+        for (Block b : registoCerti.getBc().getChain()) {
+            //Carrega o ficheiro da merkle cujo root é igual aos dados do bloco
+            tree = (MerkleTree) Recursos.readObject(basePath + "/resources/merkleTree/" + b.getCurrentHash() + ".mk");
+            //Iteração da lista dos certificados emitidos
+            for (int i = 0; i < registoCerti.getRegisto().size(); i++) {
+                String cert = registoCerti.getRegisto().get(i);
+                List<String> proof = tree.getProof(cert);
+                boolean isProofValid = tree.isProofValid(cert, proof);
+                //Vai verificar se o certificado presente na lista pertence à árvore de merkle, através da prova
+                if (isProofValid) {
+                    //Se pertencer à árvore, vamos verificar se o certificado pertence à Pessoa com sessão inciada
+                    Certificado c = (Certificado) Converter.hexToObject(registoCerti.getRegisto().get(i));
+                    if (c.getGraduado().getEmail().equals(user.getEmail())) {
+                        //Se foi associada à Pessoa com sessão iniciada, é adicionado à lista dos seus certificados
+                        myCertificados.addElement(c);
+                    }
+                }
+            }
+        }
+        return myCertificados;
+    }
+
+    //Função que devolve a lista de todos os certificados criados por uma Pessoa
+    public DefaultListModel getCertificadosInst(Instituto inst) throws RemoteException {
+        DefaultListModel myCertificados = new DefaultListModel();
+        for (Block b : registoCerti.getBc().getChain()) {
+            //Carrega o ficheiro da merkle cujo root é igual aos dados do bloco
+            tree = (MerkleTree) Recursos.readObject(basePath + "/resources/merkleTree/" + b.getCurrentHash() + ".mk");
+            //Iteração da lista dos certificados emitidos
+            for (int i = 0; i < registoCerti.getRegisto().size(); i++) {
+                String cert = registoCerti.getRegisto().get(i);
+                List<String> proof = tree.getProof(cert);
+                boolean isProofValid = tree.isProofValid(cert, proof);
+                //Vai verificar se o certificado presente na lista pertence à árvore de merkle, através da prova
+                if (isProofValid) {
+                    //Se pertencer à árvore, vamos verificar se o certificado foi emitido pelo Instituto com sessão inciada
+                    Certificado c = (Certificado) Converter.hexToObject(registoCerti.getRegisto().get(i));
+                    if (c.getInstituto().getCodNome().equals(inst.getCodNome())) {
+                        //Se foi o Instituto o emissor, é adicionado à lista dos seus certificados
+                        myCertificados.addElement(c);
+                    }
+                }
+            }
+        }
+        return myCertificados;
+    }
+    
+    @Override
+    public RegistoCertificado getBlockchain() throws RemoteException{
+        return (RegistoCertificado) Recursos.readObject(fichRegisto.getAbsolutePath());
+    }
+    
+    
+
     private Pessoa getPessoa(String email) throws RemoteException {
         for (Pessoa pessoa : listUsers) {
             if (pessoa.getEmail().equals(email)) {
@@ -374,7 +462,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         }
         return null;
     }
-    
+
     private Instituto getInstituto(String codNome) throws RemoteException {
         for (Instituto instituto : listInst) {
             if (instituto.getCodNome().equals(codNome)) {

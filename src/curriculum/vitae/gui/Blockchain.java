@@ -4,23 +4,40 @@
  */
 package curriculum.vitae.gui;
 
+import curriculum.vitae.core.RegistoCertificado;
+import java.net.MalformedURLException;
+import rmi.RemoteInterface;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author joaob
  */
 public class Blockchain extends java.awt.Dialog {
-
+    RemoteInterface rmtInterface;
+    RegistoCertificado registoCerti;
     /**
      * Creates new form Blockchain
-     * @param cv
+     * @param parent
      * @param modal
+     * @param rmtObject
+     * @throws java.rmi.RemoteException
      */
-    public Blockchain(java.awt.Frame parent, boolean modal) {
+    public Blockchain(java.awt.Frame parent, boolean modal, String rmtObject) throws RemoteException {
         super(parent, modal);
         initComponents();
         setTitle("Blockchain");
-        /*jTextPane1.setText(cv.registoCerti.getBc().toString());
-        txtRegisto.setText(cv.registoCerti.toString());*/
+        try {
+            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+        } catch (NotBoundException | MalformedURLException | RemoteException ex) {
+            Logger.getLogger(Blockchain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        registoCerti = rmtInterface.getBlockchain();
+        jTextPane1.setText(registoCerti.getBc().toString());
+        txtRegisto.setText(registoCerti.toString());
     }
 
     /**

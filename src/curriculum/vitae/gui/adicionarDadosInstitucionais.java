@@ -428,9 +428,9 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
             }
             txtCidade.setText(inst.getDadosInst().getCidade());
             if (inst.getDadosInst().getTipoEnsino().equals("Universitário")) {
-                txtNatureza.setSelectedIndex(0);
+                txtEnsino.setSelectedIndex(0);
             } else {
-                txtNatureza.setSelectedIndex(1);
+                txtEnsino.setSelectedIndex(1);
             }
 
             txtTelefone.setText(inst.getDadosInst().getTelefone());
@@ -444,18 +444,19 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
             Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        txtNome.setEnabled(false);
+        txtNome.setEditable(false);
         txtDataFund.setEnabled(false);
-        txtNatureza.setEnabled(false);
-        txtCidade.setEnabled(false);
-        txtNatureza.setEnabled(false);
-        txtTelefone.setEnabled(false);
-        txtWeb.setEnabled(false);
-        txtMorada.setEnabled(false);
-        txtDistrito.setEnabled(false);
-        txtCodPostal.setEnabled(false);
-        txtPais.setEnabled(false);
-        txtDescr.setEnabled(false);
+        txtNatureza.setEditable(false);
+        txtCidade.setEditable(false);
+        txtNatureza.setEditable(false);
+        txtEnsino.setEditable(false);
+        txtTelefone.setEditable(false);
+        txtWeb.setEditable(false);
+        txtMorada.setEditable(false);
+        txtDistrito.setEditable(false);
+        txtCodPostal.setEditable(false);
+        txtPais.setEditable(false);
+        txtDescr.setEditable(false);
         btnFoto.setEnabled(false);
     }
 }

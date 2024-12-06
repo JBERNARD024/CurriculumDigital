@@ -17,7 +17,6 @@ import utils.Block;
 import utils.BlockChain;
 import utils.Converter;
 import utils.MerkleTree;
-import utils.ObjectUtils;
 import utils.Recursos;
 
 /**
@@ -31,7 +30,7 @@ public class RegistoCertificado implements Serializable {
     private ArrayList<String> temp;
     private BlockChain bc;
     public static int DIFICULTY = 5;
-    private static final int MERKLE_TREE_SIZE = 8;
+    private static final int MERKLE_TREE_SIZE = 1;
     MerkleTree tree;
 
     //Cria o objeto da classe RegistoCertificado, inicializando o registo de certificados, a blockchain e a lista temporária de certificados
