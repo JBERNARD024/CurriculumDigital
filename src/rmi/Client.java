@@ -5,6 +5,7 @@
 package rmi;
 
 import curriculum.vitae.gui.CurriculumVitae;
+import java.net.InetAddress;
 import java.rmi.Naming;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -131,6 +132,7 @@ public class Client extends javax.swing.JFrame {
                 RemoteInterface rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
                 //execute remote method
                 GuiUtils.addText(txtClientLog, host, rmtInterface.getMessage());
+                rmtInterface.publish("Ligou-se ao servidor!");
                 new CurriculumVitae(null, rmtObject).setVisible(true);
             } catch (Exception ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);

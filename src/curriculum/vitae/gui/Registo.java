@@ -6,9 +6,11 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
+import curriculum.vitae.gui.Login;
 import java.rmi.Naming;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import rmi.RemoteInterface;
 
 /**
@@ -347,11 +349,26 @@ public class Registo extends java.awt.Dialog {
         password = new String(txtPasswordUser.getPassword());
         confPassword = new String(txtConfPasswordSuer.getPassword());
         //Faz a validação dos campos
-        if (rmtInterface.verificaRegistoUser(email, password, confPassword) == true && rmtInterface.verificaEmailRegisto(email) == false) {
-            //Estando a validação correta, o utilizador Pessoa é adicionado à lista de Pessoas
-            user = new Pessoa(rmtInterface.registerUser(email, password));
-            dispose();
-            new Login(null, true, rmtObject).setVisible(true);
+        switch (rmtInterface.verificaRegistoUser(email, password, confPassword)) {
+            case 1:
+                JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
+                break;
+            case 2:
+                JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
+                break;
+            case 3:
+                JOptionPane.showConfirmDialog(null, "Email inválido!!", "Email Incorreto", 2);
+                break;
+            case 4:
+                if (rmtInterface.verificaEmailRegisto(email) == false) {
+                    //Estando a validação correta, o utilizador Pessoa é adicionado à lista de Pessoas
+                    user = new Pessoa(rmtInterface.registerUser(email, password));
+                    dispose();
+                    new Login(null, true, rmtObject).setVisible(true);
+                } else {
+                    JOptionPane.showConfirmDialog(null, "Email já está a ser utilizado!!", "Email Indisponível", 2);
+                }
+                break;
         }
     }
 
@@ -361,11 +378,22 @@ public class Registo extends java.awt.Dialog {
         password = new String(txtPasswordInst.getPassword());
         confPassword = new String(txtConfPasswordInst.getPassword());
         //Faz a validação dos campos
-        if (rmtInterface.verificaRegistoInst(codNome, password, confPassword) == true && rmtInterface.verificaCodNome(codNome) == false) {
-            //Estando a validação correta, o utilizador Pessoa é adicionado à lista de Pessoas
-            instituto = new Instituto(rmtInterface.registerInst(codNome, password));
-            dispose();
-            new Login(null, true, rmtObject).setVisible(true);
+        switch (rmtInterface.verificaRegistoInst(codNome, password, confPassword)) {
+            case 1:
+                JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
+                break;
+            case 2:
+                JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
+                break;
+            case 3:
+                if (rmtInterface.verificaCodNome(codNome) == false) {
+                    //Estando a validação correta, o utilizador Pessoa é adicionado à lista de Pessoas
+                    instituto = new Instituto(rmtInterface.registerInst(codNome, password));
+                    dispose();
+                    new Login(null, true, rmtObject).setVisible(true);
+                } else {
+                    JOptionPane.showConfirmDialog(null, "Este código já está a ser utilizado!!", "Código Indisponível", 2);
+                }
         }
     }
 }

@@ -3,7 +3,11 @@ package curriculum.vitae.gui;
 import curriculum.vitae.core.Instituto;
 import java.awt.Color;
 import java.awt.Image;
+import java.rmi.Naming;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import rmi.RemoteInterface;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -21,6 +25,7 @@ public class perfilInstituto extends java.awt.Dialog {
     ImageIcon icon;
     Image Image;
     String rmtObject;
+    RemoteInterface rmtInterface;
     /**
      * Creates new form perfil
      * @param parent
@@ -31,6 +36,12 @@ public class perfilInstituto extends java.awt.Dialog {
     public perfilInstituto(java.awt.Frame parent, boolean modal, Instituto inst, String rmtObject) {
         super(parent, modal);
         this.inst = inst;
+        this.rmtObject = rmtObject;
+        try {
+            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+        } catch (Exception ex) {
+            Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initComponents();
         this.setTitle("Perfil Instituto");
         txtNomeInst.setText(inst.getDadosInst().getNome());

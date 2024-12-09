@@ -6,6 +6,7 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
+import java.net.InetAddress;
 import java.rmi.Naming;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -327,6 +328,7 @@ public class Login extends java.awt.Dialog {
         if (rmtInterface.verificaUtilizador(email)) {
             if (rmtInterface.verificaCamposUser(email, password)) {
                 user = new Pessoa(rmtInterface.loginUser(password));
+                rmtInterface.publish(user.getEmail() +  " iniciou sessão");
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
                 //Vai verificar se o utilizador já introduziu os dados pessoais
                 if (user.getDados() == null) {
@@ -340,9 +342,11 @@ public class Login extends java.awt.Dialog {
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
+                rmtInterface.publish("Password incorreta do utilizador " + user.getEmail());
             }
         } else {
             JOptionPane.showConfirmDialog(null, "Email não está registado no sistema!!", "Email Inválido", 2);
+            rmtInterface.publish("Introduziu um email que não existe no sistema!!");
         }
     }
 

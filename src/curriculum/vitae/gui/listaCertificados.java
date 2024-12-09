@@ -8,6 +8,7 @@ import curriculum.vitae.core.Certificado;
 import curriculum.vitae.core.Instituto;
 import java.awt.Color;
 import java.awt.Image;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,6 +42,11 @@ public class listaCertificados extends java.awt.Dialog {
         super(parent, modal);
         this.inst = inst;
         this.rmtObject = rmtObject;
+        try {
+            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+        } catch (Exception ex) {
+            Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initComponents();
         this.setTitle("Lista de Certficados");
         //inst = new Instituto(cv.listInst.get(index));

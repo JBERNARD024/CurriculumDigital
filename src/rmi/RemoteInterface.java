@@ -21,12 +21,12 @@ import curriculum.vitae.core.Pessoa;
 import curriculum.vitae.core.RegistoCertificado;
 import curriculum.vitae.core.dadosInstitucionais;
 import curriculum.vitae.core.dadosPessoais;
-import curriculum.vitae.gui.Registo;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import utils.MerkleTree;
 
 /**
  *
@@ -48,7 +48,7 @@ public interface RemoteInterface extends Remote{
     
     public Pessoa registerUser(String email, String password)throws RemoteException;
     
-    public boolean verificaRegistoUser(String email, String password, String confPassword) throws RemoteException;
+    public int verificaRegistoUser(String email, String password, String confPassword) throws RemoteException;
     
     public boolean verificaEmailRegisto(String email) throws RemoteException;
     
@@ -56,7 +56,7 @@ public interface RemoteInterface extends Remote{
     
     public Instituto registerInst(String codNome, String password)throws RemoteException;
     
-    public boolean verificaRegistoInst(String codNome, String password, String confPassword) throws RemoteException;  
+    public int verificaRegistoInst(String codNome, String password, String confPassword) throws RemoteException;  
     
     public boolean verificaCodNome(String codNome) throws RemoteException; 
     
@@ -88,4 +88,13 @@ public interface RemoteInterface extends Remote{
     
     //Função que devolve a Blockchain
     public RegistoCertificado getBlockchain() throws RemoteException;
+    
+    //Função que retorna uma merkle tree
+    public MerkleTree getTree(String hash) throws RemoteException;
+    
+    //Função que retorna a árvore em formato de texto
+    public String treeToString() throws RemoteException;
+    
+    //Função que envia uma mensagem para o servidor
+    public void publish(String msg) throws RemoteException;
 }

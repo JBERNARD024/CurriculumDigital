@@ -24,7 +24,6 @@ import curriculum.vitae.core.RegistoCertificado;
 import curriculum.vitae.core.dadosInstitucionais;
 import curriculum.vitae.core.dadosPessoais;
 import curriculum.vitae.gui.Login;
-import curriculum.vitae.gui.Registo;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -55,6 +54,7 @@ import utils.Recursos;
  */
 public class RemoteObject extends UnicastRemoteObject implements RemoteInterface {
 
+    MessengerInterface gui;
     String host; // nome do servidor
     ArrayList<Pessoa> listUsers = new ArrayList<>();
     ArrayList<Instituto> listInst = new ArrayList<>();
@@ -63,17 +63,15 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     String pathUsers = basePath + "/resources/pessoas/users.user";
     String pathInst = basePath + "/resources/institutos/institutos.inst";
     String pathBlockchain = basePath + "/resources/blockchain/blockchain.bc";
-    File fichUsers;
-    File fichInst;
-    File fichRegisto;
     Pessoa user;
     Instituto inst;
     MerkleTree tree;
     int indexUser;
     int indexInst;
 
-    public RemoteObject(int port) throws RemoteException {
+    public RemoteObject(int port, MessengerInterface gui) throws RemoteException, UnknownHostException {
         super(port);
+        this.gui = gui;
         try {
             //atualizar o nome do servidor
             host = InetAddress.getLocalHost().getHostName();
@@ -81,16 +79,12 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
             host = "unknow";
         }
         Security.addProvider(new BouncyCastleProvider());
-        fichUsers = new File(pathUsers);
-        fichInst = new File(pathInst);
-        fichRegisto = new File(pathBlockchain);
-        /*
         //Define o array de utilizadores com base no ficheiro de utilizadores
-        listUsers = (ArrayList<Pessoa>) Recursos.readObject(fichUsers.getAbsolutePath());
+        listUsers = (ArrayList<Pessoa>) Recursos.readObject(pathUsers);
         //Define o array de institutos com base no ficheiro de institutos
-        listInst = (ArrayList<Instituto>) Recursos.readObject(fichInst.getAbsolutePath());
+        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
         //Define o objeto RegistoCertificado com base no ficheiro RegistoCertificado
-        registoCerti = (RegistoCertificado) Recursos.readObject(fichRegisto.getAbsolutePath());*/
+        registoCerti = (RegistoCertificado) Recursos.readObject(pathBlockchain);
     }
 
     @Override
@@ -99,12 +93,11 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         try {
             //nome do cliente
             client = RemoteServer.getClientHost();
-            System.out.println("Message to " + client);
         } catch (ServerNotActiveException ex) {
             Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
         }
         //retornar uma mensagem
-        return host + " say Hello to " + client;
+        return host + " ligou-se ao servidor  " + client;
     }
 
     //################################################## P E S S O A ################################################################
@@ -118,6 +111,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     //################################ LOGIN DE UMA PESSOA ################################
     @Override
     public Pessoa loginUser(String password) throws RemoteException {
+        listUsers = (ArrayList<Pessoa>) Recursos.readObject(pathUsers);
         user = new Pessoa(listUsers.get(indexUser));
         //Atualiza a data do último login efetuado
         user.setLastLogin(Date.from(Instant.now()));
@@ -136,6 +130,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     @Override
     //Verifica se a password introduzida desencripta a chave privada de uma pessoa
     public boolean verificaCamposUser(String email, String password) {
+        listUsers = (ArrayList<Pessoa>) Recursos.readObject(pathUsers);
         boolean verifica = false;
         for (int i = 0; i < listUsers.size(); i++) {
             try {
@@ -156,6 +151,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     @Override
     //Verifica se a pessoa está registada no sistema
     public boolean verificaUtilizador(String email) {
+        listUsers = (ArrayList<Pessoa>) Recursos.readObject(pathUsers);
         boolean verifica = false;
         for (int i = 0; i < listUsers.size(); i++) {
             user = new Pessoa(listUsers.get(i));
@@ -174,6 +170,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     @Override
     //Regista uma pessoa no sistema e guarda as suas chaves assimétricas numa pasta
     public Pessoa registerUser(String email, String password) {
+        listUsers = (ArrayList<Pessoa>) Recursos.readObject(pathUsers);
         user = new Pessoa(email);
         try {
             //É criada um pasta do utilizador Pessoa
@@ -185,7 +182,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
             //A pessoa é adicionada ao sistema
             listUsers.add(user);
             //A pessoa é guardada no ficheiro da lista das pessoas
-            Recursos.writeObject(listUsers, fichUsers.getAbsolutePath());
+            Recursos.writeObject(listUsers, pathUsers);
         } catch (Exception ex) {
             Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -195,29 +192,29 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
 
     @Override
     //Verifica se os todos os campos foram preenchidos e cumprem os requisitos
-    public boolean verificaRegistoUser(String email, String password, String confPassword) {
+    public int verificaRegistoUser(String email, String password, String confPassword) {
         if (email.equals("") || password.equals("") || confPassword.equals("")) {
             JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
-            return false;
+            return 1;
         } else if (!password.equals(confPassword)) {
             JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
-            return false;
+            return 2;
         } else if (!email.contains("@")) {
             JOptionPane.showConfirmDialog(null, "Email inválido!!", "Email Incorreto", 2);
-            return false;
+            return 3;
         } else {
-            return true;
+            return 4;
         }
     }
 
     @Override
     //Verifica se o email introduzido no registo, está disponível ou já está em uso
     public boolean verificaEmailRegisto(String email) {
+        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
         boolean verifica = false;
         for (int i = 0; i < listUsers.size(); i++) {
             if (listUsers.get(i).getEmail().equals(email)) {
                 verifica = true;
-                JOptionPane.showConfirmDialog(null, "Email já está a ser utilizado!!", "Email Indisponível", 2);
                 break;
             } else {
                 verifica = false;
@@ -229,6 +226,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     //################################ REGISTAR UMA INSTITUIÇÃO ################################
     @Override
     public Instituto registerInst(String codNome, String password) {
+        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
         inst = new Instituto(codNome);
         try {
             //É criada um pasta do utilizador Instituto
@@ -240,7 +238,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
             //O Instituto é adicionado ao sistema
             listInst.add(inst);
             //O Instituto é guardado no ficheiro da lista de Institutos
-            Recursos.writeObject(listInst, fichInst.getAbsolutePath());
+            Recursos.writeObject(listInst, pathInst);
         } catch (Exception ex) {
             Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -248,25 +246,25 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     }
 
     @Override
-    public boolean verificaRegistoInst(String codNome, String password, String confPassword) {
+    public int verificaRegistoInst(String codNome, String password, String confPassword) {
         if (codNome.equals("") || password.equals("") || confPassword.equals("")) {
             JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
-            return false;
+            return 1;
         } else if (!password.equals(confPassword)) {
             JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
-            return false;
+            return 2;
         } else {
-            return true;
+            return 3;
         }
     }
 
     @Override
     public boolean verificaCodNome(String codNome) {
+        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
         boolean verifica = false;
         for (int i = 0; i < listInst.size(); i++) {
             if (listInst.get(i).getCodNome().equals(codNome)) {
                 verifica = true;
-                JOptionPane.showConfirmDialog(null, "Este código já está a ser utilizado!!", "Código Indisponível", 2);
                 break;
             } else {
                 verifica = false;
@@ -278,6 +276,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     //################################ LOGIN DE UMA INSTITUIÇÃO ################################
     @Override
     public Instituto loginInst(String password) {
+        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
         inst = new Instituto(listInst.get(indexInst));
         //Incrementa o número de logins
         inst.setNumLogin(inst.getNumLogin() + 1);
@@ -294,6 +293,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
 
     @Override
     public boolean verificaLoginInst(String codNome, String password) {
+        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
         boolean verifica = false;
         for (int i = 0; i < listInst.size(); i++) {
             try {
@@ -313,6 +313,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
 
     @Override
     public boolean verificaCodNomeLogin(String codNome) {
+        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
         boolean verifica = false;
         for (int i = 0; i < listInst.size(); i++) {
             inst = new Instituto(listInst.get(i));
@@ -329,6 +330,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
 
     @Override
     public Pessoa adicionaDadosPessoa(String email, dadosPessoais dadosP, ImageIcon icon) throws RemoteException {
+        listUsers = (ArrayList<Pessoa>) Recursos.readObject(pathUsers);
         user = new Pessoa(getPessoa(email));
         if (icon == null) {
             try {
@@ -345,14 +347,20 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         } catch (IOException ex) {
             Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
         }
-        user.setImagem(byteIcon);
-        user.setDados(dadosP);
-        Recursos.writeObject(listUsers, fichUsers.getAbsolutePath());
+        for (Pessoa pessoa : listUsers) {
+            if (user.getEmail().equals(pessoa.getEmail())) {
+                pessoa.setImagem(byteIcon);
+                pessoa.setDados(dadosP);
+                user = new Pessoa(pessoa);
+            }
+        }
+        Recursos.writeObject(listUsers, pathUsers);
         return user;
     }
 
     @Override
     public Instituto adicionaDadosInst(String codNome, dadosInstitucionais dadosInst, ImageIcon icon) throws RemoteException {
+        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
         inst = new Instituto(getInstituto(codNome));
         if (icon == null) {
             try {
@@ -369,9 +377,14 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         } catch (IOException ex) {
             Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
         }
-        inst.setImagem(byteIcon);
-        inst.setDadosInst(dadosInst);
-        Recursos.writeObject(listInst, fichInst.getAbsolutePath());
+        for (Instituto instituto : listInst) {
+            if (inst.getCodNome().equals(instituto.getCodNome())) {
+                instituto.setImagem(byteIcon);
+                instituto.setDadosInst(dadosInst);
+                inst = new Instituto(instituto);
+            }
+        }
+        Recursos.writeObject(listInst, pathInst);
         return inst;
     }
 
@@ -423,6 +436,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     }
 
     //Função que devolve a lista de todos os certificados criados por uma Pessoa
+    @Override
     public DefaultListModel getCertificadosInst(Instituto inst) throws RemoteException {
         DefaultListModel myCertificados = new DefaultListModel();
         for (Block b : registoCerti.getBc().getChain()) {
@@ -446,13 +460,53 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         }
         return myCertificados;
     }
-    
+
     @Override
-    public RegistoCertificado getBlockchain() throws RemoteException{
-        return (RegistoCertificado) Recursos.readObject(fichRegisto.getAbsolutePath());
+    public RegistoCertificado getBlockchain() throws RemoteException {
+        return (RegistoCertificado) Recursos.readObject(pathBlockchain);
     }
     
+    @Override
+    public MerkleTree getTree(String hash) throws RemoteException{
+        return (MerkleTree) Recursos.readObject(basePath + "/resources/merkleTree/" + hash + ".mk");
+    }
     
+    @Override
+    public String treeToString() {
+        StringBuilder txt = new StringBuilder();
+        txt.append("Registo de Certificados = ")
+            .append(registoCerti.getRegisto().size())
+            .append("\n\n");
+        for (Block b : registoCerti.getBc().getChain()) {
+            try {
+                tree = getTree(b.getCurrentHash());
+            } catch (RemoteException ex) {
+                Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            for (int i = 0; i < registoCerti.getRegisto().size(); i++) {
+                String cert = registoCerti.getRegisto().get(i);
+                List<String> proof = tree.getProof(cert);
+                boolean isProofValid = tree.isProofValid(cert, proof);
+                if (isProofValid) {
+                    Certificado c = (Certificado) Converter.hexToObject((String) registoCerti.getRegisto().get(i));
+                    txt.append(b.getPreviousHash())
+                            .append(" ")
+                            .append(c.toString())
+                            .append(" ")
+                            .append(b.getNonce())
+                            .append(" ")
+                            .append(b.getCurrentHash())
+                            .append("\n");
+                }
+            }
+        }
+        return txt.toString();
+    }
+    
+    @Override
+    public void publish(String msg) throws RemoteException{
+        gui.publish(msg);
+    }
 
     private Pessoa getPessoa(String email) throws RemoteException {
         for (Pessoa pessoa : listUsers) {
@@ -472,3 +526,4 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         return null;
     }
 }
+

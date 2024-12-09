@@ -6,6 +6,7 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.dadosInstitucionais;
+import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
 import java.rmi.Naming;
@@ -440,6 +441,10 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
             txtCodPostal.setText(inst.getDadosInst().getCodPostal());
             txtPais.setText(inst.getDadosInst().getPais());
             txtDescr.setText(inst.getDadosInst().getDescricao());
+            icon = new ImageIcon(inst.getImagem());
+            Image imagem = icon.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_SMOOTH);
+            btnFoto.setBackground(Color.white);
+            btnFoto.setIcon(new ImageIcon(imagem));
         } catch (RemoteException ex) {
             Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
         }

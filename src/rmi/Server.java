@@ -16,11 +16,12 @@ import utils.GuiUtils;
  *
  * @author joaob
  */
-public class Server extends javax.swing.JFrame {
+public class Server extends javax.swing.JFrame implements MessengerInterface{
 
-    int remotePort;
+    public int remotePort;
     String remoteObject;
     String txtLog;
+    String host;
 
     /**
      * Creates new form Server
@@ -126,16 +127,16 @@ public class Server extends javax.swing.JFrame {
                 imgServerListen.setEnabled(true);
                 remotePort = Integer.parseInt(txtPortNumber.getText());
                 remoteObject = txtRemoteObject.getText();
-                RemoteObject rmtObject = new RemoteObject(10010);
+                RemoteObject rmtObject = new RemoteObject(10010, this);
                 //local adress of server
-                String host = InetAddress.getLocalHost().getHostAddress();
+                host = InetAddress.getLocalHost().getHostAddress();
                 //create registry to object
                 LocateRegistry.createRegistry(10010);
                 //create adress of remote object
                 String address = String.format("//%s:%d/%s", host, 10010, remoteObject);
                 //link adress to object
                 Naming.rebind(address, rmtObject);
-                txtLog = "Remote object ready at " + address;
+                txtLog = "Servidor pronto em " + address;
                 GuiUtils.addText(txtServerLog, host, txtLog);
             } catch (Exception ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
@@ -185,4 +186,9 @@ public class Server extends javax.swing.JFrame {
     private javax.swing.JTextField txtRemoteObject;
     private javax.swing.JTextPane txtServerLog;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void publish(String msg) throws RemoteException {
+        GuiUtils.addText(txtServerLog, host, msg);
+    }
 }

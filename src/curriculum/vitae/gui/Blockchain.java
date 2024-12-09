@@ -17,6 +17,7 @@ import java.util.logging.Logger;
  * @author joaob
  */
 public class Blockchain extends java.awt.Dialog {
+    String rmtObject;
     RemoteInterface rmtInterface;
     RegistoCertificado registoCerti;
     /**
@@ -30,14 +31,15 @@ public class Blockchain extends java.awt.Dialog {
         super(parent, modal);
         initComponents();
         setTitle("Blockchain");
+        this.rmtObject = rmtObject;
         try {
-            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+            this.rmtInterface = (RemoteInterface) Naming.lookup(this.rmtObject);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             Logger.getLogger(Blockchain.class.getName()).log(Level.SEVERE, null, ex);
         }
         registoCerti = rmtInterface.getBlockchain();
-        jTextPane1.setText(registoCerti.getBc().toString());
-        txtRegisto.setText(registoCerti.toString());
+        txtBlockchain.setText(registoCerti.getBc().toString());
+        txtRegisto.setText(rmtInterface.treeToString());
     }
 
     /**
@@ -53,7 +55,7 @@ public class Blockchain extends java.awt.Dialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtRegisto = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        txtBlockchain = new javax.swing.JTextPane();
 
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -69,7 +71,7 @@ public class Blockchain extends java.awt.Dialog {
         txtRegisto.setRows(5);
         jScrollPane1.setViewportView(txtRegisto);
 
-        jScrollPane2.setViewportView(jTextPane1);
+        jScrollPane2.setViewportView(txtBlockchain);
 
         javax.swing.GroupLayout panelBlockchainLayout = new javax.swing.GroupLayout(panelBlockchain);
         panelBlockchain.setLayout(panelBlockchainLayout);
@@ -115,9 +117,9 @@ public class Blockchain extends java.awt.Dialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTabbedPane panelBlock;
     private javax.swing.JPanel panelBlockchain;
+    private javax.swing.JTextPane txtBlockchain;
     private javax.swing.JTextArea txtRegisto;
     // End of variables declaration//GEN-END:variables
 }

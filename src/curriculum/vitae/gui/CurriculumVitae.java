@@ -9,8 +9,11 @@ import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.security.Security;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
@@ -146,9 +149,13 @@ public class CurriculumVitae extends javax.swing.JDialog {
     }//GEN-LAST:event_btnAboutUsActionPerformed
 
     private void btnBlockChainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBlockChainActionPerformed
-        // TODO add your handling code here:
-        //Redireciona o utilizador para a página da Blockchains
-        new Blockchain(null, true, rmtObject).setVisible(true);
+        try {
+            // TODO add your handling code here:
+            //Redireciona o utilizador para a página da Blockchains
+            new Blockchain(null, true, rmtObject).setVisible(true);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CurriculumVitae.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnBlockChainActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
