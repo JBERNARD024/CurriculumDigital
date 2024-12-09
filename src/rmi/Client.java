@@ -132,6 +132,7 @@ public class Client extends javax.swing.JFrame {
                 RemoteInterface rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
                 //execute remote method
                 GuiUtils.addText(txtClientLog, host, rmtInterface.getMessage());
+                rmtInterface.registerClient(InetAddress.getLocalHost().getHostAddress());
                 rmtInterface.publish("Ligou-se ao servidor!");
                 new CurriculumVitae(null, rmtObject).setVisible(true);
             } catch (Exception ex) {

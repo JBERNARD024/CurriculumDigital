@@ -22,6 +22,7 @@ public class Server extends javax.swing.JFrame implements MessengerInterface{
     String remoteObject;
     String txtLog;
     String host;
+    RemoteObject rmtObject;
 
     /**
      * Creates new form Server
@@ -127,7 +128,7 @@ public class Server extends javax.swing.JFrame implements MessengerInterface{
                 imgServerListen.setEnabled(true);
                 remotePort = Integer.parseInt(txtPortNumber.getText());
                 remoteObject = txtRemoteObject.getText();
-                RemoteObject rmtObject = new RemoteObject(10010, this);
+                rmtObject = new RemoteObject(10010, this);
                 //local adress of server
                 host = InetAddress.getLocalHost().getHostAddress();
                 //create registry to object
@@ -189,6 +190,6 @@ public class Server extends javax.swing.JFrame implements MessengerInterface{
 
     @Override
     public void publish(String msg) throws RemoteException {
-        GuiUtils.addText(txtServerLog, host, msg);
+        GuiUtils.addText(txtServerLog, rmtObject.getLastClient(), msg);
     }
 }

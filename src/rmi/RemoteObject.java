@@ -68,6 +68,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     MerkleTree tree;
     int indexUser;
     int indexInst;
+    private String lastClient;
 
     public RemoteObject(int port, MessengerInterface gui) throws RemoteException, UnknownHostException {
         super(port);
@@ -99,7 +100,17 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         //retornar uma mensagem
         return host + " ligou-se ao servidor  " + client;
     }
-
+    
+    @Override
+    public String getLastClient() throws RemoteException{
+        return lastClient;
+    }
+    
+    @Override
+    public void registerClient(String host) throws RemoteException{
+        lastClient = host;
+    }
+    
     //################################################## P E S S O A ################################################################
     //Dado o email e a password introduzida pela Pessoa, estabelece a sessão da Pessoa, caso sejam válidos
     /**

@@ -36,6 +36,10 @@ public interface RemoteInterface extends Remote{
     //remote method
     public String getMessage() throws RemoteException;
     
+    public String getLastClient() throws RemoteException;
+    
+    public void registerClient(String host) throws RemoteException;
+    
     /*########## Login da Pessoa ##########*/
     
     public boolean verificaUtilizador(String email) throws RemoteException;
