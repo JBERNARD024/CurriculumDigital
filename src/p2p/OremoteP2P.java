@@ -62,8 +62,8 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     CopyOnWriteArrayList<String> messages;
     P2Plistener listener;
     String host; // nome do servidor
-    ArrayList<Pessoa> listUsers = new ArrayList<>();
-    ArrayList<Instituto> listInst = new ArrayList<>();
+    CopyOnWriteArrayList<Pessoa> listUsers = new CopyOnWriteArrayList<>();
+    CopyOnWriteArrayList<Instituto> listInst = new CopyOnWriteArrayList<>();
     RegistoCertificado registoCerti = new RegistoCertificado();
     String basePath = new File("").getAbsolutePath();
     String pathUsers = basePath + "/resources/pessoas/users.user";
@@ -86,7 +86,15 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         this.listener = listener;
         listener.onStart("Object " + address + " listening");
         Security.addProvider(new BouncyCastleProvider());
-
+    }
+    
+    public boolean isInList(String email){
+        for (Pessoa listUser : listUsers) {
+            if(listUser.getEmail().equals(email)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -261,7 +269,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //################################ LOGIN DE UMA PESSOA ################################
     @Override
     public Pessoa loginUser(String password) throws RemoteException {
-        listUsers = (ArrayList<Pessoa>) Recursos.readObject(pathUsers);
+        listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         user = new Pessoa(listUsers.get(indexUser));
         //Atualiza a data do último login efetuado
         user.setLastLogin(Date.from(Instant.now()));
@@ -280,7 +288,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     @Override
     //Verifica se a password introduzida desencripta a chave privada de uma pessoa
     public boolean verificaCamposUser(String email, String password) {
-        listUsers = (ArrayList<Pessoa>) Recursos.readObject(pathUsers);
+        listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         boolean verifica = false;
         for (int i = 0; i < listUsers.size(); i++) {
             try {
@@ -301,7 +309,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     @Override
     //Verifica se a pessoa está registada no sistema
     public boolean verificaUtilizador(String email) {
-        listUsers = (ArrayList<Pessoa>) Recursos.readObject(pathUsers);
+        listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         boolean verifica = false;
         for (int i = 0; i < listUsers.size(); i++) {
             user = new Pessoa(listUsers.get(i));
@@ -319,9 +327,14 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //################################ REGISTAR UMA PESSOA ################################
     @Override
     //Regista uma pessoa no sistema e guarda as suas chaves assimétricas numa pasta
-    public Pessoa registerUser(String email, String password) {
-        listUsers = (ArrayList<Pessoa>) Recursos.readObject(pathUsers);
+    public Pessoa registerUser(String email, String password) throws RemoteException {
+        listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         user = new Pessoa(email);
+        if (isInList(user.getEmail())){
+            listener.onMessage(user.getEmail() + " Iniciou sessão ");
+            //listener.onMessage(" retornou if ");
+            return user;
+        }
         try {
             //É criada um pasta do utilizador Pessoa
             user.criarPasta();
@@ -335,6 +348,10 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
             Recursos.writeObject(listUsers, pathUsers);
         } catch (Exception ex) {
             Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (IremoteP2P iremoteP2P : network) {
+            iremoteP2P.registerUser(email,password);
+
         }
         //Regista o user
         return user;
@@ -360,7 +377,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     @Override
     //Verifica se o email introduzido no registo, está disponível ou já está em uso
     public boolean verificaEmailRegisto(String email) {
-        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
+        listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
         boolean verifica = false;
         for (int i = 0; i < listUsers.size(); i++) {
             if (listUsers.get(i).getEmail().equals(email)) {
@@ -376,7 +393,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //################################ REGISTAR UMA INSTITUIÇÃO ################################
     @Override
     public Instituto registerInst(String codNome, String password) {
-        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
+        listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
         inst = new Instituto(codNome);
         try {
             //É criada um pasta do utilizador Instituto
@@ -410,7 +427,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     @Override
     public boolean verificaCodNome(String codNome) {
-        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
+        listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
         boolean verifica = false;
         for (int i = 0; i < listInst.size(); i++) {
             if (listInst.get(i).getCodNome().equals(codNome)) {
@@ -426,7 +443,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //################################ LOGIN DE UMA INSTITUIÇÃO ################################
     @Override
     public Instituto loginInst(String password) {
-        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
+        listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
         inst = new Instituto(listInst.get(indexInst));
         //Incrementa o número de logins
         inst.setNumLogin(inst.getNumLogin() + 1);
@@ -443,7 +460,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     @Override
     public boolean verificaLoginInst(String codNome, String password) {
-        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
+        listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
         boolean verifica = false;
         for (int i = 0; i < listInst.size(); i++) {
             try {
@@ -463,7 +480,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     @Override
     public boolean verificaCodNomeLogin(String codNome) {
-        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
+        listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
         boolean verifica = false;
         for (int i = 0; i < listInst.size(); i++) {
             inst = new Instituto(listInst.get(i));
@@ -480,7 +497,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     @Override
     public Pessoa adicionaDadosPessoa(String email, dadosPessoais dadosP, ImageIcon icon) throws RemoteException {
-        listUsers = (ArrayList<Pessoa>) Recursos.readObject(pathUsers);
+        listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         user = new Pessoa(getPessoa(email));
         if (icon == null) {
             try {
@@ -510,7 +527,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     @Override
     public Instituto adicionaDadosInst(String codNome, dadosInstitucionais dadosInst, ImageIcon icon) throws RemoteException {
-        listInst = (ArrayList<Instituto>) Recursos.readObject(pathInst);
+        listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
         inst = new Instituto(getInstituto(codNome));
         if (icon == null) {
             try {
