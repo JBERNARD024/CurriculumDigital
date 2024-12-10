@@ -46,6 +46,11 @@ public interface IremoteP2P extends Remote {
     public List<String> getTransactions() throws RemoteException;
     public void removeTransaction(String data )throws RemoteException;
     public void sinchronizeTransactions(IremoteP2P node) throws RemoteException;
+    
+    //::::::::::: M E S S A G E S  :::::::::::
+    public void addMessage(String msg) throws RemoteException;
+    public List<String> getMessages() throws RemoteException;
+    public void sinchronizeMessages(IremoteP2P node) throws RemoteException;
         
     //::::::::::: C L I E N T E:::::::::::
     public String getLastClient() throws RemoteException;
@@ -110,7 +115,4 @@ public interface IremoteP2P extends Remote {
     
     //Função que retorna a árvore em formato de texto
     public String treeToString() throws RemoteException;
-    
-    //Função que envia uma mensagem para o servidor
-    public void publish(String msg) throws RemoteException;
 }

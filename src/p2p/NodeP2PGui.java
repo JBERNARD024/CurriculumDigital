@@ -253,7 +253,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
             myremoteObject.addNode(node);
             //execute remote method
             myremoteObject.registerClient(InetAddress.getLocalHost().getHostAddress());
-            myremoteObject.publish("Ligou-se à rede!");
+            myremoteObject.addMessage("Ligou-se à rede!");
         } catch (Exception ex) {
             Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -312,133 +312,6 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(NodeP2PGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
@@ -510,7 +383,6 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
             List<String> tr = myremoteObject.getTransactions();
             for (String string : tr) {
                 txt += string + "\n";
-
             }
             txtLstTransdactions.setText(txt);
         } catch (RemoteException ex) {
@@ -520,14 +392,15 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     }
 
     @Override
-    public void publish(String msg) throws RemoteException {
-        for (IremoteP2P iremoteP2P : myremoteObject.getNetwork()) {
-            try {
+    public void onMessage(String msg) throws RemoteException {
+        try {
+            List<String> tr = myremoteObject.getMessages();
+            for (String m : tr) {
                 GuiUtils.addText(txtServerLog, myremoteObject.getLastClient(), msg);
-            } catch (RemoteException e) {
-                System.err.println("Erro ao propagar a mensagem para o nó: " + iremoteP2P.getAdress());
-                e.printStackTrace();
             }
+        } catch (RemoteException ex) {
+            onException(ex, "on transaction");
+            Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

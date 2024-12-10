@@ -57,6 +57,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     String address;
     CopyOnWriteArrayList<IremoteP2P> network;
     CopyOnWriteArraySet<String> transactions;
+    CopyOnWriteArrayList<String> messages;
     P2Plistener listener;
     String host; // nome do servidor
     ArrayList<Pessoa> listUsers = new ArrayList<>();
@@ -78,6 +79,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         this.address = address;
         this.network = new CopyOnWriteArrayList<>();
         transactions = new CopyOnWriteArraySet<>();
+        this.messages = new CopyOnWriteArrayList<>();
         // addNode(this);
         this.listener = listener;
         listener.onStart("Object " + address + " listening");
@@ -125,6 +127,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         }
 
         sinchronizeTransactions(node);
+        sinchronizeMessages(node);
         System.out.println("Rede p2p");
         for (IremoteP2P iremoteP2P : network) {
             System.out.println(iremoteP2P.getAdress());
@@ -206,17 +209,45 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         this.transactions.addAll(node.getTransactions());
         listener.onTransaction(address);
     }
-        
+
     @Override
-    public String getLastClient() throws RemoteException{
+    public void addMessage(String msg) throws RemoteException {
+        if (messages.contains(msg)) {
+            listener.onMessage(msg);
+            return;
+        }
+        messages.add(msg);
+        for (IremoteP2P iremoteP2P : network) {
+            iremoteP2P.addMessage(msg);
+        }
+
+        System.out.println("Messages");
+        for (String m : messages) {
+            System.out.println(m);
+        }
+    }
+
+    @Override
+    public List<String> getMessages() throws RemoteException {
+        return new ArrayList<>(messages);
+    }
+
+    @Override
+    public void sinchronizeMessages(IremoteP2P node) throws RemoteException {
+        this.messages.addAll(node.getMessages());
+        listener.onMessage(address);
+    }
+
+    @Override
+    public String getLastClient() throws RemoteException {
         return lastClient;
     }
-    
+
     @Override
-    public void registerClient(String host) throws RemoteException{
+    public void registerClient(String host) throws RemoteException {
         lastClient = host;
     }
-    
+
     //################################################## P E S S O A ################################################################
     //Dado o email e a password introduzida pela Pessoa, estabelece a sessão da Pessoa, caso sejam válidos
     /**
@@ -582,18 +613,18 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     public RegistoCertificado getBlockchain() throws RemoteException {
         return (RegistoCertificado) Recursos.readObject(pathBlockchain);
     }
-    
+
     @Override
-    public MerkleTree getTree(String hash) throws RemoteException{
+    public MerkleTree getTree(String hash) throws RemoteException {
         return (MerkleTree) Recursos.readObject(basePath + "/resources/merkleTree/" + hash + ".mk");
     }
-    
+
     @Override
     public String treeToString() {
         StringBuilder txt = new StringBuilder();
         txt.append("Registo de Certificados = ")
-            .append(registoCerti.getRegisto().size())
-            .append("\n\n");
+                .append(registoCerti.getRegisto().size())
+                .append("\n\n");
         for (Block b : registoCerti.getBc().getChain()) {
             try {
                 tree = getTree(b.getCurrentHash());
@@ -619,11 +650,6 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         }
         return txt.toString();
     }
-    
-    @Override
-    public void publish(String msg) throws RemoteException{
-        listener.publish(msg);
-    }
 
     private Pessoa getPessoa(String email) throws RemoteException {
         for (Pessoa pessoa : listUsers) {
@@ -643,4 +669,3 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         return null;
     }
 }
-

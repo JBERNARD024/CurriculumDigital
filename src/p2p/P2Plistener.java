@@ -29,5 +29,5 @@ public interface P2Plistener {
     public void onConect(String address);
     public void onTransaction(String transaction);
     public void onException(Exception e, String title);
-    public void publish (String msg) throws RemoteException;
+    public void onMessage (String msg) throws RemoteException;
 }
