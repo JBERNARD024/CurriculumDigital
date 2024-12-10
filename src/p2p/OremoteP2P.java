@@ -269,7 +269,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //################################ LOGIN DE UMA PESSOA ################################
     @Override
     public Pessoa loginUser(String password) throws RemoteException {
-        listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
+        //listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         user = new Pessoa(listUsers.get(indexUser));
         //Atualiza a data do último login efetuado
         user.setLastLogin(Date.from(Instant.now()));
@@ -288,7 +288,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     @Override
     //Verifica se a password introduzida desencripta a chave privada de uma pessoa
     public boolean verificaCamposUser(String email, String password) {
-        listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
+        //listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         boolean verifica = false;
         for (int i = 0; i < listUsers.size(); i++) {
             try {
@@ -309,7 +309,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     @Override
     //Verifica se a pessoa está registada no sistema
     public boolean verificaUtilizador(String email) {
-        listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
+        //listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         boolean verifica = false;
         for (int i = 0; i < listUsers.size(); i++) {
             user = new Pessoa(listUsers.get(i));
@@ -328,7 +328,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     @Override
     //Regista uma pessoa no sistema e guarda as suas chaves assimétricas numa pasta
     public Pessoa registerUser(String email, String password) throws RemoteException {
-        listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
+        //listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         user = new Pessoa(email);
         if (isInList(user.getEmail())){
             listener.onMessage(user.getEmail() + " Iniciou sessão ");
@@ -377,7 +377,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     @Override
     //Verifica se o email introduzido no registo, está disponível ou já está em uso
     public boolean verificaEmailRegisto(String email) {
-        listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
+        //listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         boolean verifica = false;
         for (int i = 0; i < listUsers.size(); i++) {
             if (listUsers.get(i).getEmail().equals(email)) {

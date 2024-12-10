@@ -244,40 +244,47 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btStartClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btStartClientActionPerformed
-        try {
-            imgClientRunning.setEnabled(true);
-            String host = txtServerAdress.getText();
-            int remotePort = Integer.parseInt(txtServerPort.getText());
-            String remoteName = txtServerObjectName.getText();
-            String address = String.format("//%s:%d/%s", host, remotePort, remoteName);
-            IremoteP2P node = (IremoteP2P) RMI.getRemote(address);
-            myremoteObject.addNode(node);
-            //execute remote method
-            myremoteObject.registerClient(InetAddress.getLocalHost().getHostAddress());
-            myremoteObject.addMessage("Ligou-se à rede!");
-            new CurriculumVitae(this, address).setVisible(true);
-        } catch (Exception ex) {
-            Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new Thread(() -> {
+            try {
+                imgClientRunning.setEnabled(true);
+                String host = txtServerAdress.getText();
+                int remotePort = Integer.parseInt(txtServerPort.getText());
+                String remoteName = txtServerObjectName.getText();
+                String address = String.format("//%s:%d/%s", host, remotePort, remoteName);
+                IremoteP2P node = (IremoteP2P) RMI.getRemote(address);
+                myremoteObject.addNode(node);
+                System.out.println("1");
+                //execute remote method
+                myremoteObject.registerClient(InetAddress.getLocalHost().getHostAddress());
+                System.out.println("2");
+                myremoteObject.addMessage("Ligou-se à rede!");
+                System.out.println("3");
+                new CurriculumVitae(this, address).setVisible(true);
+            } catch (Exception ex) {
+                Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }//GEN-LAST:event_btStartClientActionPerformed
 
     private void btStartServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btStartServerActionPerformed
-        try {
-            int port = Integer.parseInt(txtServerListeningPort.getText());
-            String name = txtServerListeningObjectName.getText();
-            //local adress of server
-            String host = InetAddress.getLocalHost().getHostAddress();
-            //create registry to object
-            LocateRegistry.createRegistry(port);
-            //create adress of remote object
-            String address = String.format("//%s:%d/%s", host, port, name);
-            myremoteObject = new OremoteP2P(address, this);
-            //link adress to object
-            Naming.rebind(address, myremoteObject);
-        } catch (Exception ex) {
-            onException(ex, "Starting server");
-            Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new Thread(() -> {
+            try {
+                int port = Integer.parseInt(txtServerListeningPort.getText());
+                String name = txtServerListeningObjectName.getText();
+                //local adress of server
+                String host = InetAddress.getLocalHost().getHostAddress();
+                //create registry to object
+                LocateRegistry.createRegistry(port);
+                //create adress of remote object
+                String address = String.format("//%s:%d/%s", host, port, name);
+                myremoteObject = new OremoteP2P(address, this);
+                //link adress to object
+                Naming.rebind(address, myremoteObject);
+            } catch (Exception ex) {
+                onException(ex, "Starting server");
+                Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }//GEN-LAST:event_btStartServerActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
