@@ -29,6 +29,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.Security;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +41,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import rmi.RemoteObject;
 import utils.Block;
 import utils.Converter;
@@ -83,7 +85,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         // addNode(this);
         this.listener = listener;
         listener.onStart("Object " + address + " listening");
-        System.out.println("Object " + address + " listening");
+        Security.addProvider(new BouncyCastleProvider());
 
     }
 

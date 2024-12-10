@@ -11,6 +11,7 @@ import java.rmi.Naming;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import p2p.IremoteP2P;
 import rmi.RemoteInterface;
 
 /**
@@ -27,7 +28,7 @@ public class Registo extends java.awt.Dialog {
     Pessoa user;
     Instituto instituto;
     String rmtObject;
-    RemoteInterface rmtInterface;
+    IremoteP2P rmtInterface;
 
     /**
      * Creates new form Registo
@@ -42,7 +43,7 @@ public class Registo extends java.awt.Dialog {
         initComponents();
         this.rmtObject = rmtObject;
         try {
-            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
         } catch (Exception ex) {
             Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
         }

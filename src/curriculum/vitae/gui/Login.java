@@ -11,6 +11,7 @@ import java.rmi.Naming;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import p2p.IremoteP2P;
 import rmi.RemoteInterface;
 
 /**
@@ -25,7 +26,7 @@ public class Login extends java.awt.Dialog {
     Pessoa user;
     Instituto instituto;
     String rmtObject;
-    RemoteInterface rmtInterface;
+    IremoteP2P rmtInterface;
 
     /**
      * Creates new form Login2
@@ -39,7 +40,7 @@ public class Login extends java.awt.Dialog {
         this.setTitle("Login");
         this.rmtObject = rmtObject;
         try {
-            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
         } catch (Exception ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -328,7 +329,7 @@ public class Login extends java.awt.Dialog {
         if (rmtInterface.verificaUtilizador(email)) {
             if (rmtInterface.verificaCamposUser(email, password)) {
                 user = new Pessoa(rmtInterface.loginUser(password));
-                rmtInterface.publish(user.getEmail() +  " iniciou sessão");
+                rmtInterface.addMessage(user.getEmail() +  " iniciou sessão");
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
                 //Vai verificar se o utilizador já introduziu os dados pessoais
                 if (user.getDados() == null) {
@@ -342,11 +343,11 @@ public class Login extends java.awt.Dialog {
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
-                rmtInterface.publish("Password incorreta do utilizador " + user.getEmail());
+                rmtInterface.addMessage("Password incorreta do utilizador " + user.getEmail());
             }
         } else {
             JOptionPane.showConfirmDialog(null, "Email não está registado no sistema!!", "Email Inválido", 2);
-            rmtInterface.publish("Introduziu um email que não existe no sistema!!");
+            rmtInterface.addMessage("Introduziu um email que não existe no sistema!!");
         }
     }
 

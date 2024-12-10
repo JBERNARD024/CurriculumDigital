@@ -15,6 +15,7 @@
 //////////////////////////////////////////////////////////////////////////////
 package p2p;
 
+import curriculum.vitae.gui.CurriculumVitae;
 import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -254,6 +255,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
             //execute remote method
             myremoteObject.registerClient(InetAddress.getLocalHost().getHostAddress());
             myremoteObject.addMessage("Ligou-se à rede!");
+            new CurriculumVitae(this, address).setVisible(true);
         } catch (Exception ex) {
             Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
         }

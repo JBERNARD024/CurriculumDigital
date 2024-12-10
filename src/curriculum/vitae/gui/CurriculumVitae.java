@@ -22,16 +22,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  */
 public class CurriculumVitae extends javax.swing.JDialog {
 
-    ArrayList<Pessoa> listUsers = new ArrayList<>();
-    ArrayList<Instituto> listInst = new ArrayList<>();
-    RegistoCertificado registoCerti = new RegistoCertificado();
-    String basePath = new File("").getAbsolutePath();
-    String pathUsers = basePath + "/resources/pessoas/users.user";
-    String pathInst = basePath + "/resources/institutos/institutos.inst";
-    String pathBlockchain = basePath + "/resources/blockchain/blockchain.bc";
-    File fichUsers;
-    File fichInst;
-    File fichRegisto;
     String rmtObject;
 
     /**
