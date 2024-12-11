@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import rmi.RemoteInterface;
+import p2p.IremoteP2P;
 
 /**
  *
@@ -41,7 +41,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
     ImageIcon icon;
     dadosInstitucionais dadosInst;
     Instituto inst;
-    RemoteInterface rmtInterface;
+    IremoteP2P rmtInterface;
 
     /**
      * Creates new form adicionarDadosPessoais
@@ -56,7 +56,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
         this.inst = inst;
         this.rmtObject = rmtObject;
         try {
-            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
         } catch (Exception ex) {
             Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -420,6 +420,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
         dadosInst = new dadosInstitucionais(nome, dataFund, natureza, cidade, tipoEnsino, telefone, sitioWeb, morada, distrito, codPostal, pais, descr);
         try {
             inst = new Instituto(rmtInterface.adicionaDadosInst(inst.getCodNome(), dadosInst, icon));
+            rmtInterface.addMessage(inst.getCodNome()+ " adicionou os seus dados institucionais");
             txtNome.setText(inst.getDadosInst().getNome());
             txtDataFund.setDate(inst.getDadosInst().getDataFundacao());
             if (inst.getDadosInst().getNatureza().equals("Público")) {

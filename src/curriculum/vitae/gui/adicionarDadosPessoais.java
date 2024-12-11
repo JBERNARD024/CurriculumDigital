@@ -9,10 +9,7 @@ import curriculum.vitae.core.dadosPessoais;
 import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.logging.Level;
@@ -20,8 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import rmi.RemoteInterface;
-import utils.Recursos;
+import p2p.IremoteP2P;
 
 /**
  *
@@ -44,7 +40,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     String descr;
     ImageIcon icon;
     dadosPessoais dadosP;
-    RemoteInterface rmtInterface;
+    IremoteP2P rmtInterface;
 
     /**
      * Creates new form adicionarDadosPessoais
@@ -59,7 +55,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         this.user = user;
         this.rmtObject = rmtObject;
         try {
-            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
         } catch (Exception ex) {
             Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -397,7 +393,10 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         //Constrói um objeto com os dados introduzidos pela Pessoa
         dadosP = new dadosPessoais(nome, nacionalidade, dataNasc, sexo, telemovel, linkedin, morada, localidade, codPostal, pais, descr);
         try {
+            System.out.println("Entrou");
             user = new Pessoa(rmtInterface.adicionaDadosPessoa(user.getEmail(), dadosP, icon));
+            System.out.println(user.getEmail());
+            rmtInterface.addMessage(user.getEmail() + " adicionou os seus dados pessoais");
             txtNome.setText(user.getDados().getNome());
             txtData.setDate(user.getDados().getDataNasc());
             if (user.getDados().getSexo().equals("Masculino")) {

@@ -15,6 +15,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import p2p.IremoteP2P;
 
 /**
  *
@@ -28,7 +29,7 @@ public class listaEducacao extends java.awt.Dialog {
     Image imagem;
     DefaultListModel myCertificados;
     int indexEducacao;
-    RemoteInterface rmtInterface;
+    IremoteP2P rmtInterface;
 
     /**
      * Creates new form listaEducacao
@@ -43,7 +44,7 @@ public class listaEducacao extends java.awt.Dialog {
         this.user = user;
         this.rmtObject = rmtObject;
         try {
-            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
         } catch (Exception ex) {
             Logger.getLogger(listaEducacao.class.getName()).log(Level.SEVERE, null, ex);
         }

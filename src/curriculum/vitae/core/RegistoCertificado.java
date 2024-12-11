@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import utils.Block;
 import utils.BlockChain;
 import utils.Converter;
@@ -26,8 +26,8 @@ import utils.Recursos;
 //Esta classe vai guardar a lista de certificados emitidos e a blockchain
 public class RegistoCertificado implements Serializable {
 
-    private ArrayList<String> registo;
-    private ArrayList<String> temp;
+    private CopyOnWriteArrayList<String> registo;
+    private CopyOnWriteArrayList<String> temp;
     private BlockChain bc;
     public static int DIFICULTY = 5;
     private static final int MERKLE_TREE_SIZE = 1;
@@ -35,8 +35,8 @@ public class RegistoCertificado implements Serializable {
 
     //Cria o objeto da classe RegistoCertificado, inicializando o registo de certificados, a blockchain e a lista temporária de certificados
     public RegistoCertificado() {
-        registo = new ArrayList<>();
-        temp = new ArrayList<>();
+        registo = new CopyOnWriteArrayList<>();
+        temp = new CopyOnWriteArrayList<>();
         bc = new BlockChain();
     }
 
@@ -114,12 +114,7 @@ public class RegistoCertificado implements Serializable {
     }
 
     //Devolve todos os certificados emitidos
-    public ArrayList<String> getRegisto() {
+    public List<String> getRegisto() {
         return registo;
-    }
-
-    //Define o registo dos certificados emitidos
-    public void setRegisto(ArrayList<String> registo) {
-        this.registo = registo;
     }
 }

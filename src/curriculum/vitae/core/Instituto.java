@@ -13,6 +13,7 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import utils.SecurityUtils;
@@ -190,5 +191,27 @@ public class Instituto implements Serializable{
     //Define a imagem sobre o formato de array de bytes 
     public void setImagem(byte[] imagem) {
         this.imagem = imagem;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.codNome);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Instituto other = (Instituto) obj;
+        return Objects.equals(this.codNome, other.codNome);
     }
 }

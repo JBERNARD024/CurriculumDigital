@@ -7,6 +7,7 @@ import java.rmi.Naming;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import p2p.IremoteP2P;
 import rmi.RemoteInterface;
 
 /*
@@ -25,7 +26,7 @@ public class perfilInstituto extends java.awt.Dialog {
     ImageIcon icon;
     Image Image;
     String rmtObject;
-    RemoteInterface rmtInterface;
+    IremoteP2P rmtInterface;
     /**
      * Creates new form perfil
      * @param parent
@@ -38,7 +39,7 @@ public class perfilInstituto extends java.awt.Dialog {
         this.inst = inst;
         this.rmtObject = rmtObject;
         try {
-            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
         } catch (Exception ex) {
             Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
         }

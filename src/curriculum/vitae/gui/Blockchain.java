@@ -12,13 +12,14 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import p2p.IremoteP2P;
 /**
  *
  * @author joaob
  */
 public class Blockchain extends java.awt.Dialog {
     String rmtObject;
-    RemoteInterface rmtInterface;
+    IremoteP2P rmtInterface;
     RegistoCertificado registoCerti;
     /**
      * Creates new form Blockchain
@@ -33,7 +34,7 @@ public class Blockchain extends java.awt.Dialog {
         setTitle("Blockchain");
         this.rmtObject = rmtObject;
         try {
-            this.rmtInterface = (RemoteInterface) Naming.lookup(this.rmtObject);
+            this.rmtInterface = (IremoteP2P) Naming.lookup(this.rmtObject);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             Logger.getLogger(Blockchain.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -41,11 +41,6 @@ public interface IremoteP2P extends Remote {
     public String getAdress() throws RemoteException;
     public void addNode(IremoteP2P node) throws RemoteException;
     public List<IremoteP2P> getNetwork() throws  RemoteException;
-    //::::::::::: T R A NS A C T IO N S  :::::::::::
-    public void addTransaction(String data) throws RemoteException;
-    public List<String> getTransactions() throws RemoteException;
-    public void removeTransaction(String data )throws RemoteException;
-    public void sinchronizeTransactions(IremoteP2P node) throws RemoteException;
     
     //::::::::::: M E S S A G E S  :::::::::::
     public void addMessage(String msg) throws RemoteException;
@@ -61,7 +56,7 @@ public interface IremoteP2P extends Remote {
     
     public boolean verificaUtilizador(String email) throws RemoteException;
     
-    public boolean verificaCamposUser(String email, String password) throws RemoteException;
+    public boolean verificaPasswordPessoa(String email, String password) throws RemoteException;
     
     public Pessoa loginUser(String password) throws RemoteException;
     
@@ -85,7 +80,7 @@ public interface IremoteP2P extends Remote {
     
     public Instituto loginInst(String password) throws RemoteException;
     
-    public boolean verificaLoginInst(String codNome, String password) throws RemoteException;
+    public boolean verificaPasswordInst(String codNome, String password) throws RemoteException;
     
     public boolean verificaCodNomeLogin(String codNome) throws RemoteException;
     
@@ -97,6 +92,14 @@ public interface IremoteP2P extends Remote {
     
     //Devolve a lista de todas as Pessoas registadas no sistema
     public ArrayList<Pessoa> getPessoas () throws RemoteException;
+    
+    //::::::::::: C E R T I F I C A D O S  :::::::::::
+    public List<String> getTransactions() throws RemoteException;
+    
+    public void removeTransaction(String data)throws RemoteException;
+    
+    public void sinchronizeCertificados(IremoteP2P node) throws RemoteException;
+    
     
     //Função que adiciona um certificado no sistema
     public void adicionarCertificado(Educacao educacao, String email, String codNome) throws RemoteException;

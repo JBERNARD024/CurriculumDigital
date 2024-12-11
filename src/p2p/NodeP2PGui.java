@@ -70,11 +70,6 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
         imgClientRunning = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         txtNetwork = new javax.swing.JTextPane();
-        jPanel4 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        txtLstTransdactions = new javax.swing.JTextArea();
-        txtTranaction = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -197,47 +192,6 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
 
         jTabbedPane1.addTab("P2pNetwork", jPanel2);
 
-        txtLstTransdactions.setColumns(20);
-        txtLstTransdactions.setRows(5);
-        jScrollPane3.setViewportView(txtLstTransdactions);
-
-        txtTranaction.setText("transaction to network");
-
-        jButton2.setText("Add");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 155, Short.MAX_VALUE))
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(txtTranaction, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtTranaction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
-                .addGap(35, 35, 35)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(182, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("Transaction", jPanel4);
-
         getContentPane().add(jTabbedPane1, java.awt.BorderLayout.PAGE_START);
 
         pack();
@@ -287,15 +241,6 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
         }).start();
     }//GEN-LAST:event_btStartServerActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        try {
-            myremoteObject.addTransaction(txtTranaction.getText());
-        } catch (RemoteException ex) {
-            onException(ex, "transactions");
-            Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -336,18 +281,14 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     private javax.swing.JButton btStartServer;
     private javax.swing.JLabel imgClientRunning;
     private javax.swing.JLabel imgServerRunning;
-    private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel pnServer;
-    private javax.swing.JTextArea txtLstTransdactions;
     private javax.swing.JTextPane txtNetwork;
     private javax.swing.JTextField txtServerAdress;
     private javax.swing.JTextField txtServerListeningObjectName;
@@ -355,7 +296,6 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     private javax.swing.JTextPane txtServerLog;
     private javax.swing.JTextField txtServerObjectName;
     private javax.swing.JTextField txtServerPort;
-    private javax.swing.JTextField txtTranaction;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -393,7 +333,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
             for (String string : tr) {
                 txt += string + "\n";
             }
-            txtLstTransdactions.setText(txt);
+            //txtLstTransdactions.setText(txt);
         } catch (RemoteException ex) {
             onException(ex, "on transaction");
             Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);

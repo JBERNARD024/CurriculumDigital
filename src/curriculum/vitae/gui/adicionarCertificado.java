@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import p2p.IremoteP2P;
 import rmi.RemoteInterface;
 
 /**
@@ -36,7 +37,7 @@ public class adicionarCertificado extends java.awt.Dialog {
     String descr;
     Educacao educacao;
     Instituto inst;
-    RemoteInterface rmtInterface;
+    IremoteP2P rmtInterface;
     ArrayList<Pessoa> listaPessoas = new ArrayList<>();
 
     /**
@@ -52,7 +53,7 @@ public class adicionarCertificado extends java.awt.Dialog {
         this.inst = inst;
         this.rmtObject = rmtObject;
         try {
-            this.rmtInterface = (RemoteInterface) Naming.lookup(rmtObject);
+            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
         } catch (Exception ex) {
             Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
         } 
