@@ -4,23 +4,16 @@
  */
 package curriculum.vitae.gui;
 
-import curriculum.vitae.core.RegistoCertificado;
-import java.net.MalformedURLException;
-import rmi.RemoteInterface;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import p2p.IremoteP2P;
+import p2p.OremoteP2P;
+import utils.BlockChain;
 /**
  *
  * @author joaob
  */
 public class Blockchain extends java.awt.Dialog {
-    String rmtObject;
-    IremoteP2P rmtInterface;
-    RegistoCertificado registoCerti;
+    OremoteP2P rmtObject;
+    BlockChain blockchain;
     /**
      * Creates new form Blockchain
      * @param parent
@@ -28,19 +21,16 @@ public class Blockchain extends java.awt.Dialog {
      * @param rmtObject
      * @throws java.rmi.RemoteException
      */
-    public Blockchain(java.awt.Frame parent, boolean modal, String rmtObject) throws RemoteException {
+    public Blockchain(java.awt.Frame parent, boolean modal, OremoteP2P rmtObject) throws RemoteException {
         super(parent, modal);
         initComponents();
         setTitle("Blockchain");
         this.rmtObject = rmtObject;
-        try {
-            this.rmtInterface = (IremoteP2P) Naming.lookup(this.rmtObject);
-        } catch (NotBoundException | MalformedURLException | RemoteException ex) {
-            Logger.getLogger(Blockchain.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        registoCerti = rmtInterface.getBlockchain();
-        txtBlockchain.setText(registoCerti.getBc().toString());
-        txtRegisto.setText(rmtInterface.treeToString());
+        blockchain = rmtObject.getBlockchain();
+        System.out.println(rmtObject.getBlockchain());
+        txtBlockchain.setText(blockchain.toString());
+        txtRegisto.setText(rmtObject.treeToString());
+        txtRegisto.setText(rmtObject.certificadosToString());
     }
 
     /**

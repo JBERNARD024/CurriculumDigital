@@ -19,6 +19,7 @@
 package p2p;
 
 import java.rmi.RemoteException;
+import utils.BlockChain;
 
 /**
  * Created on 27/11/2024, 19:46:43 
@@ -26,8 +27,21 @@ import java.rmi.RemoteException;
  */
 public interface P2Plistener {
     public void onStart(String message);
+    
     public void onConect(String address);
+    
     public void onTransaction(String transaction);
+    
     public void onException(Exception e, String title);
+    
     public void onMessage (String msg) throws RemoteException;
+    
+    public void onStartMining(String message, int zeros);
+
+    public void onStopMining(String message, int nonce);
+
+    public void onNounceFound(String message, int nonce);
+    
+    public void onBlockchainUpdate(BlockChain b);
+    
 }

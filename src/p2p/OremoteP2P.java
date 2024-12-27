@@ -16,10 +16,8 @@
 package p2p;
 
 import curriculum.vitae.core.Certificado;
-import curriculum.vitae.core.Educacao;
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
-import curriculum.vitae.core.RegistoCertificado;
 import curriculum.vitae.core.dadosInstitucionais;
 import curriculum.vitae.core.dadosPessoais;
 import curriculum.vitae.gui.Login;
@@ -27,22 +25,19 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.security.Security;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import rmi.RemoteObject;
+import miner.Miner;
 import utils.Block;
-import utils.Converter;
+import utils.BlockChain;
 import utils.MerkleTree;
 import utils.RMI;
 import utils.Recursos;
@@ -56,44 +51,49 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     String address;
     CopyOnWriteArrayList<IremoteP2P> network;
-    CopyOnWriteArraySet<String> transactions;
-    CopyOnWriteArrayList<String> temp;
+    CopyOnWriteArrayList<Certificado> certificados;
+    CopyOnWriteArrayList<Certificado> temp;
     CopyOnWriteArrayList<String> messages;
     P2Plistener listener;
-    String host; // nome do servidor
     CopyOnWriteArrayList<Pessoa> listUsers;
     CopyOnWriteArrayList<Instituto> listInst;
-    RegistoCertificado registoCerti = new RegistoCertificado();
+    //objeto da blockchain preparada para cesso concorrente
+    BlockChain blockchain;
+    //objeto mineiro concorrente e distribuido
+    Miner myMiner;
     String basePath = new File("").getAbsolutePath();
-    String pathUsers = basePath + "/resources/pessoas/users.user";
-    String pathInst = basePath + "/resources/institutos/institutos.inst";
-    String pathBlockchain = basePath + "/resources/blockchain/blockchain.bc";
-    String pathCertificados = basePath + "/resources/certificados/certificados.cert";
-    public static int DIFICULTY = 5;
-    public static int MERKLE_TREE_SIZE = 1;
+    String pathUsers = basePath + "\\resources\\pessoas\\users.user";
+    String pathInst = basePath + "\\resources\\institutos\\institutos.inst";
+    String pathBlockchain = basePath + "\\resources\\blockchain\\blockchain.bc";
+    String pathCertificados = basePath + "\\resources\\certificados\\certificados.cert";
     MerkleTree tree;
     Pessoa user;
     Instituto inst;
     int indexUser;
     int indexInst;
-    private String lastClient;
 
-    public OremoteP2P(String address, P2Plistener listener) throws RemoteException {
+    public OremoteP2P(String address, P2Plistener listener) throws RemoteException, Exception {
         super(RMI.getAdressPort(address));
         this.address = address;
         this.network = new CopyOnWriteArrayList<>();
-        transactions = new CopyOnWriteArraySet<>();
+        this.certificados = new CopyOnWriteArrayList<>();
         this.messages = new CopyOnWriteArrayList<>();
-        listUsers = new CopyOnWriteArrayList<>();
-        listInst = new CopyOnWriteArrayList<>();
-        temp = new CopyOnWriteArrayList<>();
-        // addNode(this);
+        this.listUsers = new CopyOnWriteArrayList<>();
+        this.listInst = new CopyOnWriteArrayList<>();
+        this.temp = new CopyOnWriteArrayList<>();
+        this.blockchain = new BlockChain();
+        this.myMiner = new Miner(listener);
+        this.tree = new MerkleTree();
+        Recursos.writeObject(certificados, pathCertificados);
+        //certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
+        blockchain.save(pathBlockchain);
+        try {
+            //blockchain.load(pathBlockchain);
+        } catch (Exception ex) {
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.listener = listener;
         listener.onStart("Object " + address + " listening");
-        Security.addProvider(new BouncyCastleProvider());
-        /*Recursos.writeObject(listUsers, pathUsers);
-        Recursos.writeObject(listInst, pathInst);
-        Recursos.writeObject(transactions, pathCertificados);*/
     }
 
     @Override
@@ -108,6 +108,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
                     return true;
                 }
             } catch (RemoteException ex) {
+                //Remove os nós que não respondem
                 network.remove(i);
             }
         }
@@ -117,30 +118,34 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     @Override
     public void addNode(IremoteP2P node) throws RemoteException {
         //se já tiver o nó 
-        // não faz nada
+        //não faz nada
         if (isInNetwork(node.getAdress())) {
             System.out.println("Já tenho o endereço " + node.getAdress());
             return;
         }
 
-        //adicionar o no
+        listener.onMessage("Network addNode ");
+        //adicionar o nó à rede
         network.add(node);
         listener.onConect(node.getAdress());
         System.out.println("Adicionei o " + node.getAdress());
         node.addNode(this);
 
-        //propagar o no
+        //propagar o nó pela rede
         for (IremoteP2P iremoteP2P : network) {
             iremoteP2P.addNode(node);
-
         }
 
+        //Sincroniza os Certificados
         sinchronizeCertificados(node);
+        //Sincroniza as Mensagens
         sinchronizeMessages(node);
+        //Sincroniza a blockchain
+        synchnonizeBlockchain();
+
         System.out.println("Rede p2p");
         for (IremoteP2P iremoteP2P : network) {
             System.out.println(iremoteP2P.getAdress());
-
         }
     }
 
@@ -177,16 +182,6 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         listener.onMessage(address);
     }
 
-    @Override
-    public String getLastClient() throws RemoteException {
-        return lastClient;
-    }
-
-    @Override
-    public void registerClient(String host) throws RemoteException {
-        lastClient = host;
-    }
-
     //################################################## P E S S O A ################################################################
     //################################ LOGIN DE UMA PESSOA ################################
     @Override
@@ -201,7 +196,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
             //Desencript a chave privada
             user.load(password);
         } catch (Exception ex) {
-            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
         //Retorna a Pessoa que efetuou sessão no sistema
         return user;
@@ -227,13 +222,12 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         boolean verifica = false;
         for (int i = 0; i < listUsers.size(); i++) {
-            user = new Pessoa(listUsers.get(i));
-            if (!user.getEmail().equals(email)) {
-                verifica = false;
-            } else {
+            if (listUsers.get(i).getEmail().equals(email)) {
                 indexUser = i;
                 verifica = true;
                 break;
+            } else {
+                verifica = false;
             }
         }
         return verifica;
@@ -242,12 +236,11 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //################################ REGISTAR UMA PESSOA ################################
     @Override
     //Regista uma pessoa no sistema e guarda as suas chaves assimétricas numa pasta
-    public Pessoa registerUser(String email, String password) throws RemoteException {
-        listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
-        user = new Pessoa(email);
-        if (verificaUtilizador(user.getEmail())) {
-            return user;
+    public void registerUser(String address, String email, String password) throws RemoteException {
+        if (verificaUtilizador(email)) {
+            return;
         }
+        user = new Pessoa(email);
         try {
             //É criada um pasta do utilizador Pessoa
             user.criarPasta();
@@ -260,13 +253,11 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
             //A pessoa é guardada no ficheiro da lista das pessoas
             Recursos.writeObject(listUsers, pathUsers);
         } catch (Exception ex) {
-            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
         for (IremoteP2P iremoteP2P : network) {
-            iremoteP2P.registerUser(email, password);
+            iremoteP2P.registerUser(address, email, password);
         }
-        //Regista o user
-        return user;
     }
 
     @Override
@@ -314,7 +305,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         if (icon == null) {
             try {
                 //Caso não tenha sido adicionado, é atribuída uma imagem por defeito
-                String caminhoImag = basePath + "/resources/pessoas/defaultPessoa.png";
+                String caminhoImag = basePath + "\\resources\\pessoas\\defaultPessoa.png";
                 icon = new ImageIcon(caminhoImag);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -324,7 +315,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         try {
             byteIcon = Recursos.iconToByteArray(icon);
         } catch (IOException ex) {
-            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
         for (Pessoa pessoa : listUsers) {
             if (user.getEmail().equals(pessoa.getEmail())) {
@@ -344,21 +335,30 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     //Devolve a lista de todas as Pessoas registadas no sistema
     @Override
-    public ArrayList<Pessoa> getPessoas() throws RemoteException {
-        return (ArrayList<Pessoa>) Recursos.readObject(pathUsers);
+    public List<Pessoa> getPessoas() throws RemoteException {
+        listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
+        return new ArrayList<>(listUsers);
+    }
+
+    @Override
+    public Pessoa getPessoa(String email) throws RemoteException {
+        listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
+        for (Pessoa pessoa : listUsers) {
+            if (pessoa.getEmail().equals(email)) {
+                return pessoa;
+            }
+        }
+        return null;
     }
 
     //################################################## I N S T I T U T O ################################################################
     //################################ REGISTAR UMA INSTITUTO ################################
     @Override
-    public Instituto registerInst(String codNome, String password) throws RemoteException {
-        listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
-        inst = new Instituto(codNome);
-
-        if (verificaCodNome(inst.getCodNome())) {
-            return inst;
+    public void registerInst(String address, String codNome, String password) throws RemoteException {
+        if (verificaCodNome(codNome)) {
+            return;
         }
-
+        inst = new Instituto(codNome);
         try {
             //É criada um pasta do utilizador Instituto
             inst.criarPasta();
@@ -371,13 +371,12 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
             //O Instituto é guardado no ficheiro da lista de Institutos
             Recursos.writeObject(listInst, pathInst);
         } catch (Exception ex) {
-            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         for (IremoteP2P iremoteP2P : network) {
-            iremoteP2P.registerInst(codNome, password);
+            iremoteP2P.registerInst(address, codNome, password);
         }
-        return inst;
     }
 
     @Override
@@ -399,6 +398,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         boolean verifica = false;
         for (int i = 0; i < listInst.size(); i++) {
             if (listInst.get(i).getCodNome().equals(codNome)) {
+                indexInst = i;
                 verifica = true;
                 break;
             } else {
@@ -421,7 +421,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
             //Desencript a chave privada
             inst.load(password);
         } catch (Exception ex) {
-            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
         return inst;
     }
@@ -435,23 +435,6 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
             verifica = inst.load(password);
         } catch (Exception ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return verifica;
-    }
-
-    @Override
-    public boolean verificaCodNomeLogin(String codNome) {
-        listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
-        boolean verifica = false;
-        for (int i = 0; i < listInst.size(); i++) {
-            inst = new Instituto(listInst.get(i));
-            if (!inst.getCodNome().equals(codNome)) {
-                verifica = false;
-            } else {
-                indexInst = i;
-                verifica = true;
-                break;
-            }
         }
         return verifica;
     }
@@ -470,7 +453,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         if (icon == null) {
             try {
                 //Caso não tenha sido adicionado, é atribuída uma imagem por defeito
-                String caminhoImag = basePath + "/resources/institutos/defaultInstituto.png";
+                String caminhoImag = basePath + "\\resources\\institutos\\defaultInstituto.png";
                 icon = new ImageIcon(caminhoImag);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -480,7 +463,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         try {
             byteIcon = Recursos.iconToByteArray(icon);
         } catch (IOException ex) {
-            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
         for (Instituto instituto : listInst) {
             if (inst.getCodNome().equals(instituto.getCodNome())) {
@@ -495,78 +478,68 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         for (IremoteP2P iremoteP2P : network) {
             iremoteP2P.adicionaDadosInst(codNome, dadosInst, icon);
         }
-        
+
         return inst;
+    }
+
+    @Override
+    public Instituto getInstituto(String codNome) throws RemoteException {
+        listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
+        for (Instituto instituto : listInst) {
+            if (instituto.getCodNome().equals(codNome)) {
+                return instituto;
+            }
+        }
+        return null;
     }
 
     //####################################### C E R T I F I C A D O ####################################################
     @Override
-    public void adicionarCertificado(Educacao educacao, String email, String codNome) throws RemoteException {
-        try {
-            user = new Pessoa(getPessoa(email));
-            user.loadPublic();
-            inst = new Instituto(getInstituto(codNome));
-            inst.loadPublic();
-            Certificado c = new Certificado(inst, user, educacao);
-            if (transactions.contains(c.toText())) {
-                listener.onTransaction("Certificado repetido " + c.toString());
-                System.out.println("Certificado repetido " + c.toString());
-                return;
-            }
+    public void adicionarCertificado(Certificado c) throws RemoteException {
+        if (certificados.contains(c)) {
+            listener.onTransaction("Certificado repetido " + c.toString());
+            return;
+        }
 
-            transactions.add(c.toText());
-            Recursos.writeObject(transactions, pathCertificados);
-            for (IremoteP2P iremoteP2P : network) {
-                iremoteP2P.adicionarCertificado(educacao, email, codNome);
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+        if (!certificados.contains(c)) {
+            temp.add(c);
+            certificados.add(c);
+        }
+        Recursos.writeObject(certificados, pathCertificados);
+
+        for (IremoteP2P iremoteP2P : network) {
+            iremoteP2P.adicionarCertificado(c);
         }
     }
 
     @Override
     public void sinchronizeCertificados(IremoteP2P node) throws RemoteException {
-//         if( isListEqual(node.getTransactions()))
-//             return;
-//         //juntar as transações no set
-//         transactions.addAll(node.getTransactions());
-//         node.sinchronizeCertificados(this);
-//         
-//         for (IremoteP2P iremoteP2P : network) {
-//             iremoteP2P.sinchronizeCertificados(node);        
-//         }
-//         
-//          System.out.println("Transactions");
-//        for (String t : transactions) {
-//            System.out.println(t);
-//        }
-        this.transactions.addAll(node.getTransactions());
+        this.certificados.addAll(node.getCertificados());
         listener.onTransaction(address);
     }
 
     @Override
-    public List<String> getTransactions() throws RemoteException {
-        return new ArrayList<>(transactions);
+    public List<Certificado> getCertificados() throws RemoteException {
+        return new ArrayList<>(certificados);
     }
 
     @Override
-    public void removeTransaction(String data) throws RemoteException {
-        if (!transactions.contains(data)) {
-            System.out.println("Transaçao Não existe " + data);
-            return;
-        }
-        transactions.remove(data);
+    public void removeCertficados(List<Certificado> myCertificados) throws RemoteException {
+        //remover as transações da lista atural
+        certificados.removeAll(myCertificados);
+        listener.onTransaction("remove " + myCertificados.size() + "transactions");
+        //propagar as remoções
         for (IremoteP2P iremoteP2P : network) {
-            iremoteP2P.removeTransaction(data);
-        }
-        System.out.println("Transactions");
-        for (String t : transactions) {
-            System.out.println(t);
+            //se houver algum elemento em comum nas transações remotas
+            if (iremoteP2P.getCertificados().retainAll(certificados)) {
+                //remover as transaçoies
+                iremoteP2P.removeCertficados(myCertificados);
+            }
         }
     }
 
     public boolean isListEqual(List<String> other) {
-        for (String t : transactions) {
+        for (Certificado t : certificados) {
             if (!other.contains(t)) {
                 return false;
             }
@@ -577,19 +550,24 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //Função que devolve a lista de todos os certificados atribuídos a uma Pessoa
     @Override
     public DefaultListModel getCertificadosPessoa(Pessoa user) throws RemoteException {
+        try {
+            blockchain.load(pathBlockchain);
+        } catch (Exception ex) {
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
+        }
         DefaultListModel myCertificados = new DefaultListModel();
-        for (Block b : registoCerti.getBc().getChain()) {
+        for (Block b : blockchain.getChain()) {
             //Carrega o ficheiro da merkle cujo root é igual aos dados do bloco
-            tree = (MerkleTree) Recursos.readObject(basePath + "/resources/merkleTree/" + b.getCurrentHash() + ".mk");
+            tree = (MerkleTree) Recursos.readObject(basePath + "\\resources\\merkleTree\\" + b.getMerkleRoot() + ".mkt");
             //Iteração da lista dos certificados emitidos
-            for (int i = 0; i < registoCerti.getRegisto().size(); i++) {
-                String cert = registoCerti.getRegisto().get(i);
+            for (int i = 0; i < certificados.size(); i++) {
+                Certificado cert = certificados.get(i);
                 List<String> proof = tree.getProof(cert);
                 boolean isProofValid = tree.isProofValid(cert, proof);
                 //Vai verificar se o certificado presente na lista pertence à árvore de merkle, através da prova
                 if (isProofValid) {
                     //Se pertencer à árvore, vamos verificar se o certificado pertence à Pessoa com sessão inciada
-                    Certificado c = (Certificado) Converter.hexToObject(registoCerti.getRegisto().get(i));
+                    Certificado c = certificados.get(i);
                     if (c.getGraduado().getEmail().equals(user.getEmail())) {
                         //Se foi associada à Pessoa com sessão iniciada, é adicionado à lista dos seus certificados
                         myCertificados.addElement(c);
@@ -603,19 +581,24 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //Função que devolve a lista de todos os certificados criados por uma Pessoa
     @Override
     public DefaultListModel getCertificadosInst(Instituto inst) throws RemoteException {
+        try {
+            blockchain.load(pathBlockchain);
+        } catch (Exception ex) {
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
+        }
         DefaultListModel myCertificados = new DefaultListModel();
-        for (Block b : registoCerti.getBc().getChain()) {
+        for (Block b : blockchain.getChain()) {
             //Carrega o ficheiro da merkle cujo root é igual aos dados do bloco
-            tree = (MerkleTree) Recursos.readObject(basePath + "/resources/merkleTree/" + b.getCurrentHash() + ".mk");
+            tree = (MerkleTree) Recursos.readObject(basePath + "\\resources\\merkleTree\\" + b.getMerkleRoot() + ".mkt");
             //Iteração da lista dos certificados emitidos
-            for (int i = 0; i < registoCerti.getRegisto().size(); i++) {
-                String cert = registoCerti.getRegisto().get(i);
+            for (int i = 0; i < certificados.size(); i++) {
+                Certificado cert = certificados.get(i);
                 List<String> proof = tree.getProof(cert);
-                boolean isProofValid = tree.isProofValid(cert, proof);
+                boolean isProofValid = MerkleTree.isProofValid(cert, proof);
                 //Vai verificar se o certificado presente na lista pertence à árvore de merkle, através da prova
                 if (isProofValid) {
                     //Se pertencer à árvore, vamos verificar se o certificado foi emitido pelo Instituto com sessão inciada
-                    Certificado c = (Certificado) Converter.hexToObject(registoCerti.getRegisto().get(i));
+                    Certificado c = certificados.get(i);
                     if (c.getInstituto().getCodNome().equals(inst.getCodNome())) {
                         //Se foi o Instituto o emissor, é adicionado à lista dos seus certificados
                         myCertificados.addElement(c);
@@ -627,33 +610,38 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
-    public RegistoCertificado getBlockchain() throws RemoteException {
-        return (RegistoCertificado) Recursos.readObject(pathBlockchain);
-    }
-
-    @Override
     public MerkleTree getTree(String hash) throws RemoteException {
-        return (MerkleTree) Recursos.readObject(basePath + "/resources/merkleTree/" + hash + ".mk");
+        try {
+            tree.loadFromFile(basePath + "\\resources\\merkleTree\\" + hash + ".mkt");
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return tree;
     }
 
     @Override
-    public String treeToString() {
+    public String treeToString() throws RemoteException {
+        try {
+            blockchain.load(pathBlockchain);
+        } catch (Exception ex) {
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
+        }
         StringBuilder txt = new StringBuilder();
         txt.append("Registo de Certificados = ")
-                .append(registoCerti.getRegisto().size())
+                .append(certificados.size())
                 .append("\n\n");
-        for (Block b : registoCerti.getBc().getChain()) {
+        for (Block b : blockchain.getChain()) {
             try {
-                tree = getTree(b.getCurrentHash());
+                tree = getTree(b.getMerkleRoot());
             } catch (RemoteException ex) {
-                Logger.getLogger(RemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
             }
-            for (int i = 0; i < registoCerti.getRegisto().size(); i++) {
-                String cert = registoCerti.getRegisto().get(i);
+            for (int i = 0; i < certificados.size(); i++) {
+                Certificado cert = certificados.get(i);
                 List<String> proof = tree.getProof(cert);
                 boolean isProofValid = tree.isProofValid(cert, proof);
                 if (isProofValid) {
-                    Certificado c = (Certificado) Converter.hexToObject((String) registoCerti.getRegisto().get(i));
+                    Certificado c = certificados.get(i);
                     txt.append(b.getPreviousHash())
                             .append(" ")
                             .append(c.toString())
@@ -668,21 +656,186 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         return txt.toString();
     }
 
-    private Pessoa getPessoa(String email) throws RemoteException {
-        for (Pessoa pessoa : listUsers) {
-            if (pessoa.getEmail().equals(email)) {
-                return pessoa;
+    /*Esta função vai apresentar a lista de todos os certificados, que já foram validados pela blockchain.
+    De forma a confirmar, queos certificados estão válidos, juntamente com os dados do certificado,
+    é apresentado também o Hash fdo bloco anterior, o nonce e o hash do bloco de que faz parte*/
+    @Override
+    public String certificadosToString() throws RemoteException {
+        try {
+            blockchain.load(pathBlockchain);
+        } catch (Exception ex) {
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        StringBuilder txt = new StringBuilder();
+        txt.append("Registo de Certificados = ")
+                .append(certificados.size())
+                .append("\n\n");
+        for (Block b : blockchain.getChain()) {
+            try {
+                MerkleTree.loadFromFile(basePath + "\\resources\\merkleTree\\" + b.getMerkleRoot()+ ".mkt");
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            for (int i = 0; i < certificados.size(); i++) {
+                Certificado cert = certificados.get(i);
+                List<String> proof = tree.getProof(cert);
+                boolean isProofValid = tree.isProofValid(cert, proof);
+                if (isProofValid) {
+                    Certificado c = certificados.get(i);
+                    txt.append(b.getPreviousHash())
+                            .append(" ")
+                            .append(c.toString())
+                            .append(" ")
+                            .append(b.getNonce())
+                            .append(" ")
+                            .append(b.getCurrentHash())
+                            .append("\n");
+                }
             }
         }
-        return null;
+        return txt.toString();
     }
 
-    private Instituto getInstituto(String codNome) throws RemoteException {
-        for (Instituto instituto : listInst) {
-            if (instituto.getCodNome().equals(codNome)) {
-                return instituto;
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //:::::::::::::::::      M I N E R   :::::::::::::::::::::::::::::::::::::::
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    ////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void startMining(String msg, int zeros) throws RemoteException {
+        try {
+            //colocar a mineiro a minar
+            myMiner.startMining(msg, zeros);
+            listener.onStartMining(msg, zeros);
+            //mandar minar a rede
+            for (IremoteP2P iremoteP2P : network) {
+                //se o nodo nao estiver a minar
+                if (!iremoteP2P.isMining()) {
+                    listener.onStartMining(iremoteP2P.getAdress() + " mining", zeros);
+                    //iniciar a mineracao no nodo
+                    iremoteP2P.startMining(msg, zeros);
+                }
+            }
+        } catch (Exception ex) {
+            listener.onException(ex, "startMining");
+        }
+
+    }
+
+    @Override
+    public void stopMining(int nonce) throws RemoteException {
+        //parar o mineiro e distribuir o nonce
+        myMiner.stopMining(nonce);
+        //mandar parar a rede
+        for (IremoteP2P iremoteP2P : network) {
+            //se o nodo estiver a minar   
+            if (iremoteP2P.isMining()) {
+                //parar a mineração no nodo 
+                iremoteP2P.stopMining(nonce);
             }
         }
-        return null;
+    }
+
+    @Override
+    public int mine(String msg, int zeros) throws RemoteException {
+        try {
+            //começar a minar a mensagem
+            startMining(msg, zeros);
+            //esperar que o nonce seja calculado
+            return myMiner.waitToNonce();
+        } catch (InterruptedException ex) {
+            listener.onException(ex, "Mine");
+            return -1;
+        }
+
+    }
+
+    @Override
+    public boolean isMining() throws RemoteException {
+        return myMiner.isMining();
+    }
+
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //::::::::::::::::: B L O C K C H A I N :::::::::::::::::::::::::::::::::::::::
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void addBlock(Block b) throws RemoteException {
+        try {
+            //se não for válido
+            if (!b.isValid()) {
+                throw new RemoteException("invalid block");
+            }
+            //se encaixar adicionar o bloco
+            if (blockchain.getLastBlockHash().equals(b.getPreviousHash())) {
+                blockchain.add(b);
+                //guardar a blockchain
+                blockchain.save(pathBlockchain);
+                listener.onBlockchainUpdate(blockchain);
+                myMiner = new Miner(listener);
+            }
+            //propagar o bloco pela rede
+            for (IremoteP2P iremoteP2P : network) {
+                //se encaixar na blockcahin dos nodos remotos
+                if (!iremoteP2P.getBlockchainLastHash().equals(b.getPreviousHash())
+                        || //ou o tamanho da remota for menor
+                        iremoteP2P.getBlockchainSize() < blockchain.getSize()) {
+                    //adicionar o bloco ao nodo remoto
+                    iremoteP2P.addBlock(b);
+                }
+            }
+            //se não encaixou)
+            if (!blockchain.getLastBlockHash().equals(b.getCurrentHash())) {
+                //sincronizar a blockchain
+                synchnonizeBlockchain();
+            }
+        } catch (Exception ex) {
+            listener.onException(ex, "Add bloco " + b);
+        }
+    }
+
+    @Override
+    public int getBlockchainSize() throws RemoteException {
+        return blockchain.getSize();
+    }
+
+    @Override
+    public String getBlockchainLastHash() throws RemoteException {
+        return blockchain.getLastBlockHash();
+    }
+
+    @Override
+    public BlockChain getBlockchain() throws RemoteException {
+        return blockchain;
+    }
+
+    @Override
+    public void synchnonizeBlockchain() throws RemoteException {
+        //para todos os nodos da rede
+        for (IremoteP2P iremoteP2P : network) {
+            //se a blockchain for maior
+            if (iremoteP2P.getBlockchainSize() > blockchain.getSize()) {
+                BlockChain remote = iremoteP2P.getBlockchain();
+                //e a blockchain for válida
+                if (remote.isValid()) {
+                    //atualizar toda a blockchain
+                    blockchain = remote;
+                    //deveria sincronizar apenas os blocos que faltam
+                    listener.onBlockchainUpdate(getBlockchain());
+                }
+            }
+        }
+    }
+
+    @Override
+    public ArrayList<Object> getBlockchainTransactions() throws RemoteException {
+        ArrayList<Object> allTransactions = new ArrayList<>();
+        for (Block b : blockchain.getChain()) {
+            try {
+                allTransactions.addAll(b.certificados());
+            } catch (Exception ex) {
+                Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return allTransactions;
     }
 }

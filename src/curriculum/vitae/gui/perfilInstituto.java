@@ -3,12 +3,9 @@ package curriculum.vitae.gui;
 import curriculum.vitae.core.Instituto;
 import java.awt.Color;
 import java.awt.Image;
-import java.rmi.Naming;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import p2p.IremoteP2P;
-import rmi.RemoteInterface;
+import p2p.OremoteP2P;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -25,7 +22,7 @@ public class perfilInstituto extends java.awt.Dialog {
     Instituto inst;
     ImageIcon icon;
     Image Image;
-    String rmtObject;
+    OremoteP2P rmtObject;
     IremoteP2P rmtInterface;
     /**
      * Creates new form perfil
@@ -34,15 +31,15 @@ public class perfilInstituto extends java.awt.Dialog {
      * @param inst
      * @param rmtObject
      */
-    public perfilInstituto(java.awt.Frame parent, boolean modal, Instituto inst, String rmtObject) {
+    public perfilInstituto(java.awt.Frame parent, boolean modal, Instituto inst, OremoteP2P rmtObject) {
         super(parent, modal);
         this.inst = inst;
         this.rmtObject = rmtObject;
-        try {
+        /*try {
             this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
         } catch (Exception ex) {
             Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         initComponents();
         this.setTitle("Perfil Instituto");
         txtNomeInst.setText(inst.getDadosInst().getNome());

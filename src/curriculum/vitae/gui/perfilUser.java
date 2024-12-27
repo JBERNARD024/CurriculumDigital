@@ -4,6 +4,7 @@ import curriculum.vitae.core.Pessoa;
 import java.awt.Color;
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import p2p.OremoteP2P;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -20,7 +21,7 @@ public class perfilUser extends java.awt.Dialog {
     Pessoa user;
     ImageIcon icon;
     Image Image;
-    String rmtObject;
+    OremoteP2P rmtObject;
     /**
      * Creates new form perfil
      * @param parent
@@ -28,7 +29,7 @@ public class perfilUser extends java.awt.Dialog {
      * @param user
      * @param rmtObject
      */
-    public perfilUser(java.awt.Frame parent, boolean modal, Pessoa user, String rmtObject) {
+    public perfilUser(java.awt.Frame parent, boolean modal, Pessoa user, OremoteP2P rmtObject) {
         super(parent, modal);
         initComponents();
         this.setTitle("Perfil Utilizador");

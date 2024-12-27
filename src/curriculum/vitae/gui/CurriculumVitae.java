@@ -4,17 +4,13 @@
  */
 package curriculum.vitae.gui;
 
-import curriculum.vitae.core.RegistoCertificado;
-import curriculum.vitae.core.Instituto;
-import curriculum.vitae.core.Pessoa;
-import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.security.Security;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import p2p.OremoteP2P;
 
 /**
  *
@@ -22,20 +18,20 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  */
 public class CurriculumVitae extends javax.swing.JDialog {
 
-    String rmtObject;
+    OremoteP2P myremoteObject;
 
     /**
      * Creates new form PaginaInicial
      *
      * @param parent
-     * @param rmtObject
+     * @param myremoteObject
      * @throws java.lang.ClassNotFoundException
      * @throws java.io.IOException
      */
-    public CurriculumVitae(java.awt.Frame parent, String rmtObject) throws ClassNotFoundException, IOException, Exception {
+    public CurriculumVitae(java.awt.Frame parent, OremoteP2P myremoteObject) throws ClassNotFoundException, IOException, Exception {
         super(parent, true);
         initComponents();
-        this.rmtObject = rmtObject;
+        this.myremoteObject = myremoteObject;
         //Adiciona o Bouncy Castle à lista providers de segurança
         Security.addProvider(new BouncyCastleProvider());
     }
@@ -129,7 +125,7 @@ public class CurriculumVitae extends javax.swing.JDialog {
     private void btnCriarCurriculumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarCurriculumActionPerformed
         // TODO add your handling code here:
         //Redireciona o utilizador para a página de Login
-        new Login(null, true, rmtObject).setVisible(true);
+        new Login(null, true, myremoteObject).setVisible(true);
     }//GEN-LAST:event_btnCriarCurriculumActionPerformed
 
     private void btnAboutUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAboutUsActionPerformed
@@ -140,9 +136,8 @@ public class CurriculumVitae extends javax.swing.JDialog {
 
     private void btnBlockChainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBlockChainActionPerformed
         try {
-            // TODO add your handling code here:
             //Redireciona o utilizador para a página da Blockchains
-            new Blockchain(null, true, rmtObject).setVisible(true);
+            new Blockchain(null, true, myremoteObject).setVisible(true);
         } catch (RemoteException ex) {
             Logger.getLogger(CurriculumVitae.class.getName()).log(Level.SEVERE, null, ex);
         }

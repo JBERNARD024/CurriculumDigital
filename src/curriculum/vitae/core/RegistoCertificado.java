@@ -96,7 +96,7 @@ public class RegistoCertificado implements Serializable {
         temp.add(c.toText());
         if (temp.size() == MERKLE_TREE_SIZE) {
             tree = new MerkleTree(temp);
-            bc.add(tree.getRoot(), DIFICULTY);
+            //bc.add(tree.getRoot(), DIFICULTY);
             tree.saveToFile(basePath + "/resources/merkleTree/" + bc.getLastBlockHash() + ".mk");
             temp.clear();
             tree = new MerkleTree();

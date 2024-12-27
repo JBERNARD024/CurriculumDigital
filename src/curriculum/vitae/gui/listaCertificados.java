@@ -8,14 +8,14 @@ import curriculum.vitae.core.Certificado;
 import curriculum.vitae.core.Instituto;
 import java.awt.Color;
 import java.awt.Image;
-import java.rmi.Naming;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import p2p.IremoteP2P;
-import rmi.RemoteInterface;
+import p2p.OremoteP2P;
 
 /**
  *
@@ -23,7 +23,7 @@ import rmi.RemoteInterface;
  */
 public class listaCertificados extends java.awt.Dialog {
 
-    String rmtObject;
+    OremoteP2P rmtObject;
     Instituto inst;
     ImageIcon icon;
     Image imagem;
@@ -39,15 +39,15 @@ public class listaCertificados extends java.awt.Dialog {
      * @param inst
      * @param rmtObject
      */
-    public listaCertificados(java.awt.Frame parent, boolean modal, Instituto inst, String rmtObject) {
+    public listaCertificados(java.awt.Frame parent, boolean modal, Instituto inst, OremoteP2P rmtObject) {
         super(parent, modal);
         this.inst = inst;
         this.rmtObject = rmtObject;
-        try {
+        /*try {
             this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
         } catch (Exception ex) {
             Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         initComponents();
         this.setTitle("Lista de Certficados");
         //inst = new Instituto(cv.listInst.get(index));
@@ -494,7 +494,7 @@ public class listaCertificados extends java.awt.Dialog {
     private void getCertificados() {
         new Thread(() -> {
             try {
-                myCertificados = rmtInterface.getCertificadosInst(inst);
+                myCertificados = rmtObject.getCertificadosInst(inst);
                 certificadosList.setModel(myCertificados);
                 certificadosList.setSelectedIndex(indexEducacao);
             } catch (RemoteException ex) {

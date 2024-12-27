@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import p2p.IremoteP2P;
+import p2p.OremoteP2P;
 
 /**
  *
@@ -23,7 +24,7 @@ public class Login extends java.awt.Dialog {
     String codNome;
     Pessoa user;
     Instituto instituto;
-    String rmtObject;
+    OremoteP2P rmtObject;
     IremoteP2P rmtInterface;
 
     /**
@@ -33,15 +34,10 @@ public class Login extends java.awt.Dialog {
      * @param modal
      * @param rmtObject
      */
-    public Login(java.awt.Frame parent, boolean modal, String rmtObject) {
+    public Login(java.awt.Frame parent, boolean modal, OremoteP2P rmtObject) {
         super(parent, modal);
         this.setTitle("Login");
         this.rmtObject = rmtObject;
-        try {
-            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
-        } catch (Exception ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
         initComponents();
     }
 
@@ -324,10 +320,10 @@ public class Login extends java.awt.Dialog {
     private void loginPessoa() throws Exception {
         email = txtEmailUser.getText().trim();
         password = new String(txtPasswordUser.getPassword());
-        if (rmtInterface.verificaUtilizador(email)) {
-            if (rmtInterface.verificaPasswordPessoa(email, password)) {
-                user = new Pessoa(rmtInterface.loginUser(password));
-                rmtInterface.addMessage(user.getEmail() +  " iniciou sessão");
+        if (rmtObject.verificaUtilizador(email)) {
+            if (rmtObject.verificaPasswordPessoa(email, password)) {
+                user = new Pessoa(rmtObject.loginUser(password));
+                rmtObject.addMessage(user.getEmail() + " iniciou sessão");
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
                 //Vai verificar se o utilizador já introduziu os dados pessoais
                 if (user.getDados() == null) {
@@ -341,11 +337,11 @@ public class Login extends java.awt.Dialog {
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Introduza a password correta!!", "Password Incorreta", 1);
-                rmtInterface.addMessage("Password incorreta do utilizador " + user.getEmail());
+                rmtObject.addMessage("Password incorreta do utilizador " + user.getEmail());
             }
         } else {
             JOptionPane.showConfirmDialog(null, "Email não está registado no sistema!!", "Email Inválido", 2);
-            rmtInterface.addMessage("Introduziu um email que não existe no sistema!!");
+            rmtObject.addMessage("Introduziu um email que não existe no sistema!!");
         }
     }
 
@@ -354,12 +350,12 @@ public class Login extends java.awt.Dialog {
         codNome = txtCodNomeInst.getText().trim();
         password = new String(txtPasswordInst.getPassword());
         //Verifica se o código nome está registado no sistema
-        if (rmtInterface.verificaCodNomeLogin(codNome)) {
+        if (rmtObject.verificaCodNome(codNome)) {
             //Caso esteja, vai verificar se a password introduzida é válida
-            if (rmtInterface.verificaPasswordInst(codNome, password)) {
+            if (rmtObject.verificaPasswordInst(codNome, password)) {
                 //Sendo a password válida, vai desencriptar a chave privada, enquanto estiver com a sessão ativa
-                instituto = new Instituto(rmtInterface.loginInst(password));
-                rmtInterface.addMessage(instituto.getCodNome() +  " iniciou sessão");
+                instituto = new Instituto(rmtObject.loginInst(password));
+                rmtObject.addMessage(instituto.getCodNome() + " iniciou sessão");
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
                 //Verifica se os dados Institucionais, já foram definidos
                 if (instituto.getDadosInst() == null) {
@@ -377,7 +373,7 @@ public class Login extends java.awt.Dialog {
             }
         } else {
             JOptionPane.showConfirmDialog(null, "Código Nome não está registado no sistema!!", "Código Nome Inválido", 2);
-            rmtInterface.addMessage("Introduziu um código de instituto que não existe no sistema!!");
+            rmtObject.addMessage("Introduziu um código de instituto que não existe no sistema!!");
         }
     }
 }

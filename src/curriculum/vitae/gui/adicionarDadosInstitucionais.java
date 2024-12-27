@@ -18,6 +18,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import p2p.IremoteP2P;
+import p2p.OremoteP2P;
 
 /**
  *
@@ -25,7 +26,7 @@ import p2p.IremoteP2P;
  */
 public class adicionarDadosInstitucionais extends java.awt.Dialog {
 
-    String rmtObject;
+    OremoteP2P rmtObject;
     String nome;
     Date dataFund;
     String natureza;
@@ -42,7 +43,6 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
     dadosInstitucionais dadosInst;
     Instituto inst;
     IremoteP2P rmtInterface;
-
     /**
      * Creates new form adicionarDadosPessoais
      *
@@ -51,15 +51,15 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
      * @param inst
      * @param rmtObject
      */
-    public adicionarDadosInstitucionais(java.awt.Frame parent, boolean modal, Instituto inst, String rmtObject) {
+    public adicionarDadosInstitucionais(java.awt.Frame parent, boolean modal, Instituto inst, OremoteP2P rmtObject) {
         super(parent, modal);
         this.inst = inst;
         this.rmtObject = rmtObject;
-        try {
+        /*try {
             this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
         } catch (Exception ex) {
             Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         initComponents();
         this.setTitle("Adicionar Dados Institucionais");
         txtCodNome.setText(inst.getCodNome());
@@ -419,8 +419,8 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
         //Cria um objeto com os dados introduzidos pelo utilizador Instituto
         dadosInst = new dadosInstitucionais(nome, dataFund, natureza, cidade, tipoEnsino, telefone, sitioWeb, morada, distrito, codPostal, pais, descr);
         try {
-            inst = new Instituto(rmtInterface.adicionaDadosInst(inst.getCodNome(), dadosInst, icon));
-            rmtInterface.addMessage(inst.getCodNome()+ " adicionou os seus dados institucionais");
+            inst = new Instituto(rmtObject.adicionaDadosInst(inst.getCodNome(), dadosInst, icon));
+            rmtObject.addMessage(inst.getCodNome()+ " adicionou os seus dados institucionais");
             txtNome.setText(inst.getDadosInst().getNome());
             txtDataFund.setDate(inst.getDadosInst().getDataFundacao());
             if (inst.getDadosInst().getNatureza().equals("Público")) {

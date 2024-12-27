@@ -18,6 +18,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import p2p.IremoteP2P;
+import p2p.OremoteP2P;
 
 /**
  *
@@ -26,7 +27,7 @@ import p2p.IremoteP2P;
 public class adicionarDadosPessoais extends java.awt.Dialog {
 
     Pessoa user;
-    String rmtObject;
+    OremoteP2P rmtObject;
     String nome;
     String nacionalidade;
     String sexo;
@@ -41,7 +42,6 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
     ImageIcon icon;
     dadosPessoais dadosP;
     IremoteP2P rmtInterface;
-
     /**
      * Creates new form adicionarDadosPessoais
      *
@@ -50,15 +50,15 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
      * @param user
      * @param rmtObject
      */
-    public adicionarDadosPessoais(java.awt.Frame parent, boolean modal, Pessoa user, String rmtObject) {
+    public adicionarDadosPessoais(java.awt.Frame parent, boolean modal, Pessoa user, OremoteP2P rmtObject) {
         super(parent, modal);
         this.user = user;
         this.rmtObject = rmtObject;
-        try {
+        /*try {
             this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
         } catch (Exception ex) {
             Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         initComponents();
         this.setTitle("Adicionar Dados Pessoais");
         txtEmail.setText(user.getEmail());
@@ -393,10 +393,9 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         //Constrói um objeto com os dados introduzidos pela Pessoa
         dadosP = new dadosPessoais(nome, nacionalidade, dataNasc, sexo, telemovel, linkedin, morada, localidade, codPostal, pais, descr);
         try {
-            System.out.println("Entrou");
-            user = new Pessoa(rmtInterface.adicionaDadosPessoa(user.getEmail(), dadosP, icon));
+            user = new Pessoa(rmtObject.adicionaDadosPessoa(user.getEmail(), dadosP, icon));
             System.out.println(user.getEmail());
-            rmtInterface.addMessage(user.getEmail() + " adicionou os seus dados pessoais");
+            rmtObject.addMessage(user.getEmail()+ " adicionou os seus dados pessoais");
             txtNome.setText(user.getDados().getNome());
             txtData.setDate(user.getDados().getDataNasc());
             if (user.getDados().getSexo().equals("Masculino")) {

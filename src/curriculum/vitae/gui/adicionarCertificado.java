@@ -4,18 +4,20 @@
  */
 package curriculum.vitae.gui;
 
+import curriculum.vitae.core.Certificado;
 import curriculum.vitae.core.Educacao;
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
 import java.awt.event.ActionEvent;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import p2p.IremoteP2P;
-import rmi.RemoteInterface;
+import p2p.NodeP2PGui;
+import p2p.OremoteP2P;
+import utils.Block;
 
 /**
  *
@@ -23,7 +25,7 @@ import rmi.RemoteInterface;
  */
 public class adicionarCertificado extends java.awt.Dialog {
 
-    String rmtObject;
+    OremoteP2P rmtObject;
     int indexUser;
     String qualificacao;
     String areaEstudo;
@@ -37,8 +39,8 @@ public class adicionarCertificado extends java.awt.Dialog {
     String descr;
     Educacao educacao;
     Instituto inst;
-    IremoteP2P rmtInterface;
     ArrayList<Pessoa> listaPessoas = new ArrayList<>();
+    public static int MERKLE_TREE_SIZE = 1;
 
     /**
      * Creates new form adicionarEducacao
@@ -48,19 +50,14 @@ public class adicionarCertificado extends java.awt.Dialog {
      * @param inst
      * @param rmtObject
      */
-    public adicionarCertificado(java.awt.Frame parent, boolean modal, Instituto inst, String rmtObject) {
+    public adicionarCertificado(java.awt.Frame parent, boolean modal, Instituto inst, OremoteP2P rmtObject) {
         super(parent, modal);
         this.inst = inst;
         this.rmtObject = rmtObject;
-        try {
-            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
-        } catch (Exception ex) {
-            Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
-        } 
         initComponents();
         this.setTitle("Adicionar Certficado");
         try {
-            listaPessoas = new ArrayList<>(rmtInterface.getPessoas());
+            listaPessoas = new ArrayList<>(rmtObject.getPessoas());
         } catch (RemoteException ex) {
             Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -351,6 +348,7 @@ public class adicionarCertificado extends java.awt.Dialog {
             try {
                 indexUser = txtUtilizadores.getSelectedIndex();
                 Pessoa user = new Pessoa(listaPessoas.get(indexUser));
+                String email = user.getEmail();
                 qualificacao = (String) txtQualificacao.getSelectedItem();
                 areaEstudo = txtAreaEstudo.getText();
                 instituicao = txtInstituicao.getText();
@@ -363,11 +361,39 @@ public class adicionarCertificado extends java.awt.Dialog {
                 descr = txtDescr.getText();
                 //Cria um objeto educação com base nas informações introduzidas pelo Instituto
                 educacao = new Educacao(qualificacao, areaEstudo, instituicao, mediaFinal, nivelQEQ, cidade, pais, dataInic, dataFim, descr);
+                user = new Pessoa(rmtObject.getPessoa(email));
                 //Identificar o utilizador e o instituto que vão fazer parte do certificado
-                rmtInterface.adicionarCertificado(educacao, user.getEmail(), inst.getCodNome());
+                Certificado c = new Certificado(inst, user, educacao);
+                rmtObject.addMessage("Certificado " + c.toString() + " adicionado");
+                //Adicionar o certificado à lista de certificados
+                rmtObject.adicionarCertificado(c);
+                new Thread(() -> {
+                    try {
+                        //fazer um bloco
+                        List<Certificado> blockTransactions = rmtObject.getCertificados();
+                        if (blockTransactions.size() < 0) {
+                            return;
+                        }
+                        Block b = new Block(rmtObject.getBlockchainLastHash(), blockTransactions);
+                        //remover as transacoes
+                        rmtObject.removeCertficados(blockTransactions);
+                        //minar o bloco
+                        int nonce = rmtObject.mine(b.getMinerData(), 3);
+                        //atualizar o nonce
+                        b.setNonce(nonce, 3);
+                        //adiconar o bloco
+                        rmtObject.addBlock(b);
+                    } catch (Exception ex) {
+                        //onException(ex, "Start ming");
+                        Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }).start();
             } catch (RemoteException ex) {
                 Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }).start();
+        }
+        ).start();
     }
 }

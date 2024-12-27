@@ -61,7 +61,8 @@ public class Pessoa implements Serializable{
     public void criarPasta(){
         String basePath = new File("").getAbsolutePath();
         //Definir o caminho da pasta
-        String caminho = basePath + "/resources/pessoas/" + email + "/";
+        String caminho = basePath + "\\resources\\pessoas\\" + email + "\\";
+        System.out.println(caminho);
         File diretoria = new File(caminho);
         //Verificar se a pasta já existe, caso contrário criar a pasta
         if (!diretoria.exists()) {
@@ -79,7 +80,7 @@ public class Pessoa implements Serializable{
     //Guarda o par de chaves assimétrico na pasta, encriptando a chave privada com a password
     public void save(String password) throws Exception {
         String basePath = new File("").getAbsolutePath();
-        String caminho = basePath + "/resources/pessoas/" + email + "/";
+        String caminho = basePath + "\\resources\\pessoas\\" + email + "\\";
         //Encriptar a chave privada
         byte[] secret = SecurityUtils.encrypt(privKey.getEncoded(), password);
         Files.write(Path.of(caminho + email + ".priv"), secret);
@@ -91,7 +92,7 @@ public class Pessoa implements Serializable{
     public boolean load(String password) throws Exception {
         try {
             String basePath = new File("").getAbsolutePath();
-            String caminho = basePath + "/resources/pessoas/" + email + "/";
+            String caminho = basePath + "\\resources\\pessoas\\" + email + "\\";
             //Desencriptar a chave privada
             byte[] privData = Files.readAllBytes(Path.of(caminho + email + ".priv"));
             privData = SecurityUtils.decrypt(privData, password);
@@ -109,7 +110,7 @@ public class Pessoa implements Serializable{
     //Obtêm a chave pública, presente na pasta atribuída a uma Pessoa
     public void loadPublic() throws Exception {
         String basePath = new File("").getAbsolutePath();
-        String caminho = basePath + "/resources/pessoas/" + email + "/";
+        String caminho = basePath + "\\resources\\pessoas\\" + email + "\\";
         //Ler a chave pública
         byte[] pubData = Files.readAllBytes(Path.of(caminho + email + ".pub"));
         this.pubKey = SecurityUtils.getPublicKey(pubData);
