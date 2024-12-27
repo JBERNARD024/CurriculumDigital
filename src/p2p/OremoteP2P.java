@@ -84,11 +84,11 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         this.blockchain = new BlockChain();
         this.myMiner = new Miner(listener);
         this.tree = new MerkleTree();
-        Recursos.writeObject(certificados, pathCertificados);
-        //certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
-        blockchain.save(pathBlockchain);
+        //Recursos.writeObject(certificados, pathCertificados);
+        certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
+        //blockchain.save(pathBlockchain);
         try {
-            //blockchain.load(pathBlockchain);
+            blockchain.load(pathBlockchain);
         } catch (Exception ex) {
             Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -551,7 +551,8 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     @Override
     public DefaultListModel getCertificadosPessoa(Pessoa user) throws RemoteException {
         try {
-            blockchain.load(pathBlockchain);
+            certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
+            blockchain = new BlockChain(pathBlockchain);
         } catch (Exception ex) {
             Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -582,7 +583,8 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     @Override
     public DefaultListModel getCertificadosInst(Instituto inst) throws RemoteException {
         try {
-            blockchain.load(pathBlockchain);
+            certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
+            blockchain = new BlockChain(pathBlockchain);
         } catch (Exception ex) {
             Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -672,7 +674,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
                 .append("\n\n");
         for (Block b : blockchain.getChain()) {
             try {
-                MerkleTree.loadFromFile(basePath + "\\resources\\merkleTree\\" + b.getMerkleRoot()+ ".mkt");
+                MerkleTree.loadFromFile(basePath + "\\resources\\merkleTree\\" + b.getMerkleRoot() + ".mkt");
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -805,6 +807,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     @Override
     public BlockChain getBlockchain() throws RemoteException {
+        //blockchain = new BlockChain(pathBlockchain);
         return blockchain;
     }
 

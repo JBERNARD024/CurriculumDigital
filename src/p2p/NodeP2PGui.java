@@ -298,7 +298,6 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
             if (index < 0 || index >= bc.getSize()) {
                 return;
             }
-
             Block selected = bc.get(index);
             txtBlockHeader.setText(selected.getHeaderString());
             txtBlockHeader.setCaretPosition(0);
@@ -345,6 +344,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
                 myremoteObject = new OremoteP2P(address, this);
                 //link adress to object
                 Naming.rebind(address, myremoteObject);
+                onBlockchainUpdate(myremoteObject.getBlockchain());
             } catch (Exception ex) {
                 onException(ex, "Starting server");
                 Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
