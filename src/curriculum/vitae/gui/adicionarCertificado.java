@@ -27,6 +27,7 @@ public class adicionarCertificado extends java.awt.Dialog {
 
     OremoteP2P rmtObject;
     int indexUser;
+    String nomePessoa;
     String qualificacao;
     String areaEstudo;
     String instituicao;
@@ -38,6 +39,7 @@ public class adicionarCertificado extends java.awt.Dialog {
     Date dataFim;
     String descr;
     Educacao educacao;
+    Pessoa user;
     Instituto inst;
     ArrayList<Pessoa> listaPessoas = new ArrayList<>();
     public static int MERKLE_TREE_SIZE = 1;
@@ -346,8 +348,15 @@ public class adicionarCertificado extends java.awt.Dialog {
     private void adicionarCertificado() {
         new Thread(() -> {
             try {
-                indexUser = txtUtilizadores.getSelectedIndex();
-                Pessoa user = new Pessoa(listaPessoas.get(indexUser));
+                nomePessoa = (String) txtUtilizadores.getSelectedItem();
+                for (int i = 0; i < listaPessoas.size(); i++) {
+                     user = new Pessoa(listaPessoas.get(i));
+                    if(listaPessoas.get(i).getDados() != null){
+                        if(nomePessoa.equals(user.getDados().getNome())){
+                            break;
+                        }
+                    }
+                }
                 String email = user.getEmail();
                 qualificacao = (String) txtQualificacao.getSelectedItem();
                 areaEstudo = txtAreaEstudo.getText();
