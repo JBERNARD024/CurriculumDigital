@@ -385,7 +385,7 @@ public class adicionarCertificado extends java.awt.Dialog {
                         }
                         Block b = new Block(rmtObject.getBlockchainLastHash(), blockCertificados);
                         //remover as transacoes
-                        rmtObject.removeCertficados(blockCertificados);
+                        rmtObject.removeCertficados(rmtObject.getCertificados());
                         //minar o bloco
                         int nonce = rmtObject.mine(b.getMinerData(), 3);
                         //atualizar o nonce
