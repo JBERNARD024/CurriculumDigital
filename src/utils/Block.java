@@ -45,7 +45,6 @@ public class Block implements Serializable, Comparable<Block> {
         this.previousHash = previousHash;
         MerkleTree mkt = new MerkleTree(certificados);
         this.merkleRoot = mkt.getRoot();
-        mkt.saveToFile(new File("").getAbsolutePath() + "\\resources\\merkleTree\\" + merkleRoot + ".mkt");
     }
 
     public void setNonce(int nonce, int zeros) throws Exception {

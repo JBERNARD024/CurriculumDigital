@@ -787,6 +787,8 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
                 blockchain.save(pathBlockchain);
                 listener.onBlockchainUpdate(blockchain);
                 temp = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathTemp);
+                MerkleTree mkt = new MerkleTree(temp);
+                mkt.saveToFile(new File("").getAbsolutePath() + "\\resources\\merkleTree\\" + mkt.getRoot() + ".mkt");
                 temp.clear();
                 Recursos.writeObject(temp, pathTemp);
             }
