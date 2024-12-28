@@ -370,13 +370,13 @@ public class adicionarCertificado extends java.awt.Dialog {
                 new Thread(() -> {
                     try {
                         //fazer um bloco
-                        List<Certificado> blockTransactions = rmtObject.getCertificados();
-                        if (blockTransactions.size() < 0) {
+                        List<Certificado> blockCertificados = rmtObject.getTemp();
+                        if (blockCertificados.size() < 0) {
                             return;
                         }
-                        Block b = new Block(rmtObject.getBlockchainLastHash(), blockTransactions);
+                        Block b = new Block(rmtObject.getBlockchainLastHash(), blockCertificados);
                         //remover as transacoes
-                        rmtObject.removeCertficados(blockTransactions);
+                        rmtObject.removeCertficados(blockCertificados);
                         //minar o bloco
                         int nonce = rmtObject.mine(b.getMinerData(), 3);
                         //atualizar o nonce

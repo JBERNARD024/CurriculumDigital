@@ -93,6 +93,8 @@ public interface IremoteP2P extends Remote {
     //::::::::::: C E R T I F I C A D O S  :::::::::::
     public List<Certificado> getCertificados() throws RemoteException;
     
+    public List<Certificado> getTemp() throws RemoteException;
+    
     public void removeCertficados(List<Certificado> certificados) throws RemoteException;
 
     public void sinchronizeCertificados(IremoteP2P node) throws RemoteException;

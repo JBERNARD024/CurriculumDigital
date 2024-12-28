@@ -25,7 +25,10 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import p2p.P2Plistener;
 
@@ -60,7 +63,7 @@ public class Miner {
         }
         this.message = message;
         //configurar os atributos    
-        int numCores = Runtime.getRuntime().availableProcessors();
+        int numCores = 2; //Runtime.getRuntime().availableProcessors();
         threads = new MinerThread[numCores];
         //inicializar o globalNonce
         globalNonce = new AtomicInteger();
@@ -281,5 +284,4 @@ public class Miner {
         //:::::::::::::::::::::::::::  Copyright(c) M@nso  2021  :::::::::::::::::::
         ///////////////////////////////////////////////////////////////////////////
     }
-
 }

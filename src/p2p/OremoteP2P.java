@@ -66,6 +66,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     String pathInst = basePath + "\\resources\\institutos\\institutos.inst";
     String pathBlockchain = basePath + "\\resources\\blockchain\\blockchain.bc";
     String pathCertificados = basePath + "\\resources\\certificados\\certificados.cert";
+    String pathTemp = basePath + "\\resources\\certificados\\temp.cert";
     MerkleTree tree;
     Pessoa user;
     Instituto inst;
@@ -496,6 +497,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //####################################### C E R T I F I C A D O ####################################################
     @Override
     public void adicionarCertificado(Certificado c) throws RemoteException {
+        certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
         if (certificados.contains(c)) {
             listener.onTransaction("Certificado repetido " + c.toString());
             return;
@@ -506,6 +508,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
             certificados.add(c);
         }
         Recursos.writeObject(certificados, pathCertificados);
+        Recursos.writeObject(temp, pathTemp);
 
         for (IremoteP2P iremoteP2P : network) {
             iremoteP2P.adicionarCertificado(c);
@@ -520,7 +523,14 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     @Override
     public List<Certificado> getCertificados() throws RemoteException {
+        certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
         return new ArrayList<>(certificados);
+    }
+
+    @Override
+    public List<Certificado> getTemp() throws RemoteException {
+        temp = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathTemp);
+        return new ArrayList<>(temp);
     }
 
     @Override
@@ -773,7 +783,9 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
                 //guardar a blockchain
                 blockchain.save(pathBlockchain);
                 listener.onBlockchainUpdate(blockchain);
-                myMiner = new Miner(listener);
+                temp = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathTemp);
+                temp.clear();
+                Recursos.writeObject(temp, pathTemp);
             }
             //propagar o bloco pela rede
             for (IremoteP2P iremoteP2P : network) {

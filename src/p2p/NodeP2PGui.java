@@ -81,6 +81,17 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
         imgClientRunning = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtNetwork = new javax.swing.JTextPane();
+        pnCertificado = new javax.swing.JPanel();
+        jPanel12 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        txtListTransdactions = new javax.swing.JTextArea();
+        jPanel10 = new javax.swing.JPanel();
+        jPanel11 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        txtLogMining = new javax.swing.JTextArea();
+        jPanel13 = new javax.swing.JPanel();
+        lblMining = new javax.swing.JLabel();
+        lblWinner = new javax.swing.JLabel();
         pnBlockchain = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
@@ -112,7 +123,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
         txtExceptionLog.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtExceptionLog.setText("Network node");
         txtExceptionLog.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jPanel15.add(txtExceptionLog, new org.netbeans.lib.awtextra.AbsoluteConstraints(84, 0, 205, -1));
+        jPanel15.add(txtExceptionLog, new org.netbeans.lib.awtextra.AbsoluteConstraints(79, 0, 210, -1));
 
         txtTimeLog.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtTimeLog.setText("00:00:00.000");
@@ -233,6 +244,49 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
         );
 
         pnMain.addTab("P2pNetwork", new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/p2p_32.png")), pnP2PNetwork); // NOI18N
+
+        pnCertificado.setLayout(new java.awt.BorderLayout());
+
+        jPanel12.setLayout(new java.awt.BorderLayout());
+
+        txtListTransdactions.setEditable(false);
+        txtListTransdactions.setColumns(20);
+        txtListTransdactions.setRows(5);
+        txtListTransdactions.setBorder(javax.swing.BorderFactory.createTitledBorder("List of Transactions"));
+        jScrollPane4.setViewportView(txtListTransdactions);
+
+        jPanel12.add(jScrollPane4, java.awt.BorderLayout.CENTER);
+
+        jPanel10.setLayout(new java.awt.BorderLayout());
+
+        jPanel11.setLayout(new java.awt.BorderLayout());
+
+        txtLogMining.setEditable(false);
+        txtLogMining.setColumns(20);
+        txtLogMining.setRows(5);
+        txtLogMining.setBorder(javax.swing.BorderFactory.createTitledBorder("Miner Log"));
+        jScrollPane5.setViewportView(txtLogMining);
+
+        jPanel11.add(jScrollPane5, java.awt.BorderLayout.CENTER);
+
+        jPanel13.setLayout(new java.awt.BorderLayout());
+
+        lblMining.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/working.gif"))); // NOI18N
+        lblMining.setText("mining");
+        jPanel13.add(lblMining, java.awt.BorderLayout.CENTER);
+
+        lblWinner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/winner.gif"))); // NOI18N
+        jPanel13.add(lblWinner, java.awt.BorderLayout.EAST);
+
+        jPanel11.add(jPanel13, java.awt.BorderLayout.SOUTH);
+
+        jPanel10.add(jPanel11, java.awt.BorderLayout.CENTER);
+
+        jPanel12.add(jPanel10, java.awt.BorderLayout.WEST);
+
+        pnCertificado.add(jPanel12, java.awt.BorderLayout.CENTER);
+
+        pnMain.addTab("Certificado", new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/transaction_32.png")), pnCertificado); // NOI18N
 
         pnBlockchain.setLayout(new java.awt.BorderLayout());
 
@@ -391,6 +445,10 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     private javax.swing.JLabel imgClientRunning;
     private javax.swing.JLabel imgServerRunning;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
+    private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -399,17 +457,24 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JLabel lblMining;
+    private javax.swing.JLabel lblWinner;
     private javax.swing.JList<String> lstBlcockchain;
     private javax.swing.JPanel pnBlockchain;
+    private javax.swing.JPanel pnCertificado;
     private javax.swing.JTabbedPane pnMain;
     private javax.swing.JPanel pnP2PNetwork;
     private javax.swing.JPanel pnServer;
     private javax.swing.JTextArea txtBlockCertificados;
     private javax.swing.JTextArea txtBlockHeader;
     private javax.swing.JLabel txtExceptionLog;
+    private javax.swing.JTextArea txtListTransdactions;
+    private javax.swing.JTextArea txtLogMining;
     private javax.swing.JTextPane txtNetwork;
     private javax.swing.JTextField txtServerAdress;
     private javax.swing.JTextField txtServerListeningObjectName;
@@ -488,26 +553,26 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
 
     @Override
     public void onStartMining(String message, int zeros) {
-        /*SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             pnMain.setSelectedComponent(pnCertificado);
             lblMining.setVisible(true);
             lblWinner.setVisible(false);
             txtLogMining.setText("[START]" + message + "[" + zeros + "]\n");
             lblMining.setText("mining " + zeros + " zeros");
             repaint();
-        });*/
+        });
     }
 
     @Override
     public void onStopMining(String message, int nonce) {
-        /*SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             txtLogMining.setText("[STOP]" + message + "[" + nonce + "]\n" + txtLogMining.getText());
             lblMining.setVisible(false);
             pnMain.setSelectedComponent(pnCertificado);
             txtLogMining.setText("Nounce Found [" + nonce + "]\n" + txtLogMining.getText());
             System.out.println(" NONCE " + nonce + "\t" + message);
             repaint();
-        });*/
+        });
     }
 
     @Override
@@ -517,7 +582,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
         } catch (RemoteException ex) {
             Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
         }
-        /*SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() -> {
             txtLogMining.setText("Nounce Found [" + nonce + "]\n" + txtLogMining.getText());
             lblMining.setVisible(false);
             lblWinner.setText(message);
@@ -526,7 +591,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
             txtTitleLog.setText(Miner.getHash(myremoteObject.myMiner.getMessage(), myremoteObject.myMiner.getNonce()));
             repaint();
             System.out.println(" NONCE " + nonce + "\t" + message);
-        });*/
+        });
     }
 
     @Override
