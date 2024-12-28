@@ -4,20 +4,12 @@
  */
 package curriculum.vitae.gui;
 
-import curriculum.vitae.core.Instituto;
-import curriculum.vitae.core.Pessoa;
-import java.io.File;
-import java.security.Provider;
-import java.security.Security;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.rmi.Naming;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import utils.Recursos;
+import p2p.IremoteP2P;
+import p2p.OremoteP2P;
 
 /**
  *
@@ -25,14 +17,12 @@ import utils.Recursos;
  */
 public class Registo extends java.awt.Dialog {
 
-    CurriculumVitae cv;
     String email;
     String password;
     String confPassword;
     String codNome;
-    Pessoa user;
-    Instituto instituto;
-    String rmtObject;
+    IremoteP2P rmtInterface;
+    OremoteP2P rmtObject;
 
     /**
      * Creates new form Registo
@@ -41,13 +31,16 @@ public class Registo extends java.awt.Dialog {
      * @param modal
      * @param rmtObject
      */
-    public Registo(java.awt.Frame parent, boolean modal, String rmtObject) {
+    public Registo(java.awt.Frame parent, boolean modal, OremoteP2P rmtObject) {
         super(parent, modal);
         this.setTitle("Registo");
         initComponents();
         this.rmtObject = rmtObject;
-        Security.addProvider(new BouncyCastleProvider());
-        loadProviders();
+        /*try {
+            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
+        } catch (Exception ex) {
+            Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
     }
 
     /**
@@ -290,38 +283,34 @@ public class Registo extends java.awt.Dialog {
     }//GEN-LAST:event_closeDialog
 
     private void btnLoginInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginInstActionPerformed
-        // TODO add your handling code here:
         dispose();
         new Login(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnLoginInstActionPerformed
 
     private void btnRegistoInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoInstActionPerformed
-        try {
-            // TODO add your handling code here:
-            adicionarInstituto();
-        } catch (Exception ex) {
-            Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new Thread(() -> {
+            try {
+                adicionarInstituto();
+            } catch (Exception ex) {
+                Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }//GEN-LAST:event_btnRegistoInstActionPerformed
 
     private void btnLoginUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginUserActionPerformed
-        // TODO add your handling code here:
         dispose();
         new Login(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnLoginUserActionPerformed
 
     private void btnRegistoUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistoUserActionPerformed
-        try {
-            // TODO add your handling code here:
-            adicionarUtilizador();
-        } catch (Exception ex) {
-            Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        new Thread(() -> {
+            try {
+                adicionarPessoa();
+            } catch (Exception ex) {
+                Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
     }//GEN-LAST:event_btnRegistoUserActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLoginInst;
@@ -349,130 +338,59 @@ public class Registo extends java.awt.Dialog {
     private javax.swing.JPasswordField txtPasswordUser;
     // End of variables declaration//GEN-END:variables
 
-    //Função que adiciona um Pessoa à Lista de Pessoas (ArrayList)
-    private void adicionarUtilizador() throws Exception {
+    //Função que regista uma Pessoa no sistema
+    private void adicionarPessoa() throws Exception {
         email = txtEmailUser.getText().trim();
         password = new String(txtPasswordUser.getPassword());
         confPassword = new String(txtConfPasswordSuer.getPassword());
         //Faz a validação dos campos
-        if (verificaCamposUser() == true && verificaEmail(email) == false) {
-            //Estando a validação correta, o utilizador Pessoa é adicionado à lista de Pessoas
-            user = new Pessoa(email);
-            //É criada um pasta do utilizador Pessoa
-            user.criarPasta();
-            //O par de chaves asssimétricas é criado
-            user.generateKeys();
-            //O par de chaves assimétricas é guardado na pasta da Pessoa e a chave privada é encriptada com a password
-            user.save(password);
-            //A pessoa é adicionada ao sistema
-            cv.listUsers.add(user);
-            //A lista das pessoas é guardado num ficheiro
-            //Recursos.writeObject(cv.listUsers, fichUsers.getAbsolutePath());
-            dispose();
-            new Login(null, true, rmtObject).setVisible(true);
+        switch (rmtObject.verificaRegistoUser(email, password, confPassword)) {
+            case 1:
+                JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
+                break;
+            case 2:
+                JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
+                break;
+            case 3:
+                JOptionPane.showConfirmDialog(null, "Email inválido!!", "Email Incorreto", 2);
+                break;
+            case 4:
+                if (rmtObject.verificaEmailRegisto(email) == false) {
+                    //Estando a validação correta, o utilizador Pessoa é adicionado à lista de Pessoas
+                    rmtObject.registerUser(rmtObject.getAdress(), email, password);
+                    rmtObject.addMessage(email + " registou-se no sistema!");
+                    dispose();
+                    new Login(null, true, rmtObject).setVisible(true);
+                } else {
+                    JOptionPane.showConfirmDialog(null, "Email já está a ser utilizado!!", "Email Indisponível", 2);
+                }
+                break;
         }
     }
-    
-    //Função que adiciona uma Instituição à Lista de Instituições (ArrayList)
+
+    //Função que regista um Instituto no sistema
     private void adicionarInstituto() throws Exception {
         codNome = txtCodNomeInst.getText().trim();
         password = new String(txtPasswordInst.getPassword());
         confPassword = new String(txtConfPasswordInst.getPassword());
         //Faz a validação dos campos
-        if (verificaCamposInst()== true && verificaCodNome(codNome) == false) {
-             //Estando a validação correta, o utilizador Instituto é adicionado à lista de Institutos
-            instituto = new Instituto(codNome);
-            //É criada um pasta do utilizador Instituto
-            instituto.criarPasta();
-            //O par de chaves asssimétricas é criado
-            instituto.generateKeys();
-            //O par de chaves assimétricas é guardado na pasta da Instituto e a chave privada é encriptada com a password
-            instituto.save(password);
-            //O Instituto é adicionado ao sistema
-            cv.listInst.add(instituto);
-            //A lista de Institutos é guardado num ficheiro
-            //Recursos.writeObject(cv.listInst, fichInst.getAbsolutePath());
-            dispose();
-            new Login(null, true, rmtObject).setVisible(true);
-        }
-    }
-
-    //Função que verifica os campos da interface do utilizador
-    private boolean verificaCamposUser() {
-        if (email.equals("") || password.equals("") || confPassword.equals("")) {
-            JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
-            return false;
-        } else if (!password.equals(confPassword)) {
-            JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
-            return false;
-        } else if (!email.contains("@")) {
-            JOptionPane.showConfirmDialog(null, "Email inválido!!", "Email Incorreto", 2);
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
-    //Função que verifica os campos da interface da instituição
-    private boolean verificaCamposInst() {
-        if (codNome.equals("") || password.equals("") || confPassword.equals("")) {
-            JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
-            return false;
-        } else if (!password.equals(confPassword)) {
-            JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
-
-    //Função que verifica se um email de um novo utilizador, é válido
-    private boolean verificaEmail(String email) {
-        boolean verifica = false;
-        for (int i = 0; i < cv.listUsers.size(); i++) {
-            if (cv.listUsers.get(i).getEmail().equals(email)) {
-                verifica = true;
-                JOptionPane.showConfirmDialog(null, "Email já está a ser utilizado!!", "Email Indisponível", 2);
+        switch (rmtObject.verificaRegistoInst(codNome, password, confPassword)) {
+            case 1:
+                JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
                 break;
-            } else {
-                verifica = false;
-            }
-        }
-        return verifica;
-    }
-    
-    //Função que verifica se um código de uma nova instituição, é válido
-    private boolean verificaCodNome(String codNome) {
-        boolean verifica = false;
-        for (int i = 0; i < cv.listInst.size(); i++) {
-            if (cv.listInst.get(i).getCodNome().equals(codNome)) {
-                verifica = true;
-                JOptionPane.showConfirmDialog(null, "Este código já está a ser utilizado!!", "Código Indisponível", 2);
+            case 2:
+                JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
                 break;
-            } else {
-                verifica = false;
-            }
-        }
-        return verifica;
-    }
-
-    //Função que carrega todos os providers existentes no sistema
-    public static void loadProviders() {
-        Provider providers[] = Security.getProviders();
-        //todos os fornecedores do segurança
-        for (Provider provider : providers) {
-            StringBuilder txt = new StringBuilder();
-            List<String> lst = new ArrayList<>();
-            //serviços fornecidos
-            Set<Provider.Service> services = provider.getServices();
-            for (Provider.Service service : services) {
-                lst.add(String.format("%-20s %s\n", service.getType(), service.getAlgorithm()));
-            }
-            Collections.sort(lst);
-            for (String service : lst) {
-                txt.append(service);
-            }
+            case 3:
+                if (rmtObject.verificaCodNome(codNome) == false) {
+                    //Estando a validação correta, o utilizador Pessoa é adicionado à lista de Pessoas
+                    rmtObject.registerInst(rmtObject.getAdress(), codNome, password);
+                    rmtObject.addMessage(codNome + " registou-se no sistema!");
+                    dispose();
+                    new Login(null, true, rmtObject).setVisible(true);
+                } else {
+                    JOptionPane.showConfirmDialog(null, "Este código já está a ser utilizado!!", "Código Indisponível", 2);
+                }
         }
     }
 }

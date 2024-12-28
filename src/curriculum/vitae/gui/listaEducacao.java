@@ -5,24 +5,17 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Certificado;
-import curriculum.vitae.core.Educacao;
 import curriculum.vitae.core.Pessoa;
 import java.awt.Color;
 import java.awt.Image;
-import java.lang.reflect.Array;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.IOException;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import utils.Block;
-import utils.Converter;
-import utils.MerkleTree;
-import utils.Recursos;
-import utils.SecurityUtils;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import p2p.IremoteP2P;
+import p2p.OremoteP2P;
 
 /**
  *
@@ -30,35 +23,39 @@ import utils.SecurityUtils;
  */
 public class listaEducacao extends java.awt.Dialog {
 
-    String rmtObject;
-    int index;
+    OremoteP2P rmtObject;
     Pessoa user;
     ImageIcon icon;
     Image imagem;
     DefaultListModel myCertificados;
     int indexEducacao;
-    MerkleTree tree;
+    IremoteP2P rmtInterface;
 
     /**
      * Creates new form listaEducacao
+     *
      * @param parent
      * @param modal
-     * @param index
+     * @param user
      * @param rmtObject
      */
-    public listaEducacao(java.awt.Frame parent, boolean modal, int index, String rmtObject) {
+    public listaEducacao(java.awt.Frame parent, boolean modal, Pessoa user, OremoteP2P rmtObject) {
         super(parent, modal);
-        this.index = index;
+        this.user = user;
         this.rmtObject = rmtObject;
+        /*try {
+            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
+        } catch (Exception ex) {
+            Logger.getLogger(listaEducacao.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
         initComponents();
         this.setTitle("Lista de Educação");
-        //user = new Pessoa(cv.listUsers.get(index));
         icon = new ImageIcon(user.getImagem());
         //Define a imagem na tela da Pessoa com sessão iniciada
         imagem = icon.getImage().getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(), Image.SCALE_SMOOTH);
         lblFoto.setBackground(Color.white);
         lblFoto.setIcon(new ImageIcon(imagem));
-        myCertificados = new DefaultListModel<>();
+        myCertificados = new DefaultListModel<>(); //RMI DEVOLVE UM ARRAY COM OS CERTIFICADOS QUE TIVERS
         indexEducacao = 0;
     }
 
@@ -123,11 +120,6 @@ public class listaEducacao extends java.awt.Dialog {
         jLabel3.setText("Área de Estudo");
 
         txtAreaEstudo.setEditable(false);
-        txtAreaEstudo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtAreaEstudoActionPerformed(evt);
-            }
-        });
 
         jLabel4.setText("Instituição");
 
@@ -385,7 +377,7 @@ public class listaEducacao extends java.awt.Dialog {
     private void btnDadosPessoaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDadosPessoaisActionPerformed
         // TODO add your handling code here:
         dispose();
-        //new perfilUser(null, true, index, rmtObject).setVisible(true);
+        new perfilUser(null, true, user, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnDadosPessoaisActionPerformed
 
     private void certificadosListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_certificadosListValueChanged
@@ -406,24 +398,19 @@ public class listaEducacao extends java.awt.Dialog {
             txtDataInic.setDate(c.getExperiencia().getDataInic());
             txtDataFim.setDate(c.getExperiencia().getDataFim());
             txtDescr.setText(c.getExperiencia().getDescr());
-            if(c.isValid()){
+            if (c.isValid()) {
                 txtAssinatura.setText("Válida");
-            }else{
+            } else {
                 txtAssinatura.setText("Inválida");
             }
         }
     }//GEN-LAST:event_certificadosListValueChanged
 
-    private void txtAreaEstudoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAreaEstudoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtAreaEstudoActionPerformed
-
     private void btnObterCertificadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObterCertificadosActionPerformed
-        //getCertificados();
+        getCertificados();
     }//GEN-LAST:event_btnObterCertificadosActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        // TODO add your handling code here:
         dispose();
         new Login(null, true, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
@@ -466,37 +453,15 @@ public class listaEducacao extends java.awt.Dialog {
     // End of variables declaration//GEN-END:variables
 
     //Função que vai verificar quais os certificados que foram atribuídos à Pessoa
-    /*private void getCertificados() {
+    private void getCertificados() {
         new Thread(() -> {
-            
-        try {
-            // TODO add your handling code here:
-            //Iteração dos blocos da Blockchain
-            for (Block b : cv.registoCerti.getBc().getChain()) {
-                //Carrega o ficheiro da merkle cujo root é igual aos dados do bloco
-                tree = (MerkleTree) Recursos.readObject(cv.basePath + "/resources/merkleTree/" + b.getCurrentHash() + ".mk");
-                //Iteração da lista dos certificados emitidos
-                for (int i = 0; i < cv.registoCerti.getRegisto().size(); i++) {
-                    String cert = cv.registoCerti.getRegisto().get(i);
-                    List<String> proof = tree.getProof(cert);
-                    boolean isProofValid = tree.isProofValid(cert, proof);
-                    //Vai verificar se o certificado presente na lista pertence à árvore de merkle, através da prova
-                    if(isProofValid){
-                         //Se pertencer à árvore, vamos verificar se o certificado pertence à Pessoa com sessão inciada
-                        Certificado c = (Certificado) Converter.hexToObject(cv.registoCerti.getRegisto().get(i));
-                        if(c.getGraduado().getEmail().equals(user.getEmail())){
-                            //Se foi associada à Pessoa com sessão iniciada, é adicionado à lista dos seus certificados
-                            myCertificados.addElement(c);
-                        }
-                    }
-                }
+            try {
+                myCertificados = rmtObject.getCertificadosPessoa(user);
+                certificadosList.setModel(myCertificados);
+                certificadosList.setSelectedIndex(indexEducacao);
+            } catch (RemoteException ex) {
+                Logger.getLogger(listaEducacao.class.getName()).log(Level.SEVERE, null, ex);
             }
-            certificadosList.setModel(myCertificados);
-            certificadosList.setSelectedIndex(indexEducacao);
-        } catch (Exception ex) {
-            Logger.getLogger(listaEducacao.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            
         }).start();
-    }*/
+    }
 }

@@ -1,14 +1,11 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Instituto;
-import curriculum.vitae.core.Pessoa;
-import curriculum.vitae.core.dadosPessoais;
 import java.awt.Color;
 import java.awt.Image;
-import java.io.File;
-import java.util.Arrays;
-import java.util.Date;
 import javax.swing.ImageIcon;
+import p2p.IremoteP2P;
+import p2p.OremoteP2P;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -25,21 +22,26 @@ public class perfilInstituto extends java.awt.Dialog {
     Instituto inst;
     ImageIcon icon;
     Image Image;
-    int index;
-    String rmtObject;
+    OremoteP2P rmtObject;
+    IremoteP2P rmtInterface;
     /**
      * Creates new form perfil
      * @param parent
      * @param modal
-     * @param index
+     * @param inst
      * @param rmtObject
      */
-    public perfilInstituto(java.awt.Frame parent, boolean modal, int index, String rmtObject) {
+    public perfilInstituto(java.awt.Frame parent, boolean modal, Instituto inst, OremoteP2P rmtObject) {
         super(parent, modal);
-        this.index = index;
+        this.inst = inst;
+        this.rmtObject = rmtObject;
+        /*try {
+            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
+        } catch (Exception ex) {
+            Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
         initComponents();
         this.setTitle("Perfil Instituto");
-        //inst = new Instituto(cv.listInst.get(index));
         txtNomeInst.setText(inst.getDadosInst().getNome());
         txtNatureza.setText(inst.getDadosInst().getNatureza());
         txtDataFund.setDate(inst.getDadosInst().getDataFundacao());
@@ -373,13 +375,13 @@ public class perfilInstituto extends java.awt.Dialog {
     private void btnAdicionarCurriculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarCurriculoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new adicionarCertificado(null, true, index, rmtObject).setVisible(true);
+        new adicionarCertificado(null, true, inst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnAdicionarCurriculoActionPerformed
 
     private void btnVerCertificadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerCertificadosActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaCertificados(null, true, index, rmtObject).setVisible(true);
+        new listaCertificados(null, true, inst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnVerCertificadosActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed

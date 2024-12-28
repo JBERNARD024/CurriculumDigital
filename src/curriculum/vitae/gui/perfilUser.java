@@ -1,13 +1,10 @@
 package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Pessoa;
-import curriculum.vitae.core.dadosPessoais;
 import java.awt.Color;
 import java.awt.Image;
-import java.io.File;
-import java.util.Arrays;
-import java.util.Date;
 import javax.swing.ImageIcon;
+import p2p.OremoteP2P;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -24,8 +21,7 @@ public class perfilUser extends java.awt.Dialog {
     Pessoa user;
     ImageIcon icon;
     Image Image;
-    int index;
-    String rmtObject;
+    OremoteP2P rmtObject;
     /**
      * Creates new form perfil
      * @param parent
@@ -33,7 +29,7 @@ public class perfilUser extends java.awt.Dialog {
      * @param user
      * @param rmtObject
      */
-    public perfilUser(java.awt.Frame parent, boolean modal, Pessoa user, String rmtObject) {
+    public perfilUser(java.awt.Frame parent, boolean modal, Pessoa user, OremoteP2P rmtObject) {
         super(parent, modal);
         initComponents();
         this.setTitle("Perfil Utilizador");
@@ -66,8 +62,6 @@ public class perfilUser extends java.awt.Dialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnEduc = new javax.swing.JButton();
@@ -99,9 +93,6 @@ public class perfilUser extends java.awt.Dialog {
         jLabel14 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtDescr = new javax.swing.JTextArea();
-
-        jCheckBoxMenuItem1.setSelected(true);
-        jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
 
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -346,7 +337,7 @@ public class perfilUser extends java.awt.Dialog {
     private void btnEducActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaEducacao(null, true, index, rmtObject).setVisible(true);
+        new listaEducacao(null, true, user, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnEducActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -358,8 +349,6 @@ public class perfilUser extends java.awt.Dialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEduc;
     private javax.swing.JButton btnLogout;
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

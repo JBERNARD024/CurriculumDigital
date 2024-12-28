@@ -8,19 +8,16 @@ import curriculum.vitae.core.Certificado;
 import curriculum.vitae.core.Educacao;
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
-import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import utils.Recursos;
+import p2p.NodeP2PGui;
+import p2p.OremoteP2P;
+import utils.Block;
 
 /**
  *
@@ -28,14 +25,13 @@ import utils.Recursos;
  */
 public class adicionarCertificado extends java.awt.Dialog {
 
-    String rmtObject;
-    int indexInst;
+    OremoteP2P rmtObject;
     int indexUser;
+    String nomePessoa;
     String qualificacao;
     String areaEstudo;
     String instituicao;
     int mediaFinal;
-    String sitioWeb;
     String nivelQEQ;
     String cidade;
     String pais;
@@ -43,40 +39,44 @@ public class adicionarCertificado extends java.awt.Dialog {
     Date dataFim;
     String descr;
     Educacao educacao;
+    Pessoa user;
     Instituto inst;
+    ArrayList<Pessoa> listaPessoas = new ArrayList<>();
+    public static int MERKLE_TREE_SIZE = 1;
 
     /**
      * Creates new form adicionarEducacao
      *
      * @param parent
      * @param modal
-     * @param indexInst
+     * @param inst
+     * @param rmtObject
      */
-    public adicionarCertificado(java.awt.Frame parent, boolean modal, int indexInst, String rmtObject) {
+    public adicionarCertificado(java.awt.Frame parent, boolean modal, Instituto inst, OremoteP2P rmtObject) {
         super(parent, modal);
-        this.indexInst = indexInst;
+        this.inst = inst;
         this.rmtObject = rmtObject;
         initComponents();
         this.setTitle("Adicionar Certficado");
+        try {
+            listaPessoas = new ArrayList<>(rmtObject.getPessoas());
+        } catch (RemoteException ex) {
+            Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        /*
         //Verifica se as pessoas existentes no sistema, têm dados pessoais preenchidos e caso tenham, são adicionados à lista de seleção de pessoas
-        for (Pessoa user : cv.listUsers) {
+        for (Pessoa user : listaPessoas) {
             if (user.getDados() != null) {
                 txtUtilizadores.addItem(user.getDados().getNome());
             }
         }
-        inst = new Instituto(cv.listInst.get(indexInst));
         txtInstituicao.setText(inst.getDadosInst().getNome());
         txtCidade.setText(inst.getDadosInst().getCidade());
         txtPais.setText(inst.getDadosInst().getPais());
-        txtQualificacao.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int selectedIndex = txtQualificacao.getSelectedIndex();
-                txtQEQ.setSelectedIndex(selectedIndex);
-            }
-        });*/
+        txtQualificacao.addActionListener((ActionEvent e) -> {
+            int selectedIndex = txtQualificacao.getSelectedIndex();
+            txtQEQ.setSelectedIndex(selectedIndex);
+        });
     }
 
     /**
@@ -303,14 +303,14 @@ public class adicionarCertificado extends java.awt.Dialog {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
-        //adicionarCertificado();
+        adicionarCertificado();
         btnGuardar.setEnabled(false);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEducacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducacaoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new listaCertificados(null, true, indexInst, rmtObject).setVisible(true);
+        new listaCertificados(null, true, inst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnEducacaoActionPerformed
 
 
@@ -345,10 +345,19 @@ public class adicionarCertificado extends java.awt.Dialog {
 
     //Função que adiciona um certificado
     //O uso da Thread, é para prevenir que a interface seja bloqueada quando um novo bloco é gerado.
-    /*private void adicionarCertificado() {
+    private void adicionarCertificado() {
         new Thread(() -> {
             try {
-                indexUser = txtUtilizadores.getSelectedIndex();
+                nomePessoa = (String) txtUtilizadores.getSelectedItem();
+                for (int i = 0; i < listaPessoas.size(); i++) {
+                     user = new Pessoa(listaPessoas.get(i));
+                    if(listaPessoas.get(i).getDados() != null){
+                        if(nomePessoa.equals(user.getDados().getNome())){
+                            break;
+                        }
+                    }
+                }
+                String email = user.getEmail();
                 qualificacao = (String) txtQualificacao.getSelectedItem();
                 areaEstudo = txtAreaEstudo.getText();
                 instituicao = txtInstituicao.getText();
@@ -361,22 +370,39 @@ public class adicionarCertificado extends java.awt.Dialog {
                 descr = txtDescr.getText();
                 //Cria um objeto educação com base nas informações introduzidas pelo Instituto
                 educacao = new Educacao(qualificacao, areaEstudo, instituicao, mediaFinal, nivelQEQ, cidade, pais, dataInic, dataFim, descr);
+                user = new Pessoa(rmtObject.getPessoa(email));
                 //Identificar o utilizador e o instituto que vão fazer parte do certificado
-                Pessoa user = new Pessoa(cv.listUsers.get(indexUser));
-                //Carrega a chave pública da Pessoa
-                user.loadPublic();
-                Instituto inst = new Instituto(cv.listInst.get(indexInst));
-                //Carrega a chave pública do Instituto
-                inst.loadPublic();
-                //Adicionar a pessoa e o instituto ao certificado
                 Certificado c = new Certificado(inst, user, educacao);
-                //Adiciona o certificado à lista de certificados
-                cv.registoCerti.add(c);
-                //Atualiza o ficheiro da lista de certificados e da blockchain
-                Recursos.writeObject(cv.registoCerti, cv.pathBlockchain);
+                rmtObject.addMessage("Certificado " + c.toString() + " adicionado");
+                //Adicionar o certificado à lista de certificados
+                rmtObject.adicionarCertificado(c);
+                new Thread(() -> {
+                    try {
+                        //fazer um bloco
+                        List<Certificado> blockCertificados = rmtObject.getTemp();
+                        if (blockCertificados.size() < 0) {
+                            return;
+                        }
+                        Block b = new Block(rmtObject.getBlockchainLastHash(), blockCertificados);
+                        //remover as transacoes
+                        rmtObject.removeCertficados(rmtObject.getCertificados());
+                        //minar o bloco
+                        int nonce = rmtObject.mine(b.getMinerData(), 3);
+                        //atualizar o nonce
+                        b.setNonce(nonce, 3);
+                        //adiconar o bloco
+                        rmtObject.addBlock(b);
+                    } catch (Exception ex) {
+                        //onException(ex, "Start ming");
+                        Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }).start();
+            } catch (RemoteException ex) {
+                Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {
                 Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }).start();
-    }*/
+        }
+        ).start();
+    }
 }

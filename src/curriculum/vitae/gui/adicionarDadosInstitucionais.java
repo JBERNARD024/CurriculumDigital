@@ -4,18 +4,21 @@
  */
 package curriculum.vitae.gui;
 
+import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.dadosInstitucionais;
-import curriculum.vitae.core.dadosPessoais;
+import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
-import java.io.IOException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import utils.Recursos;
+import p2p.IremoteP2P;
+import p2p.OremoteP2P;
 
 /**
  *
@@ -23,12 +26,11 @@ import utils.Recursos;
  */
 public class adicionarDadosInstitucionais extends java.awt.Dialog {
 
-    String rmtObject;
+    OremoteP2P rmtObject;
     String nome;
     Date dataFund;
     String natureza;
     String cidade;
-    String codInst;
     String tipoEnsino;
     String telefone;
     String sitioWeb;
@@ -38,26 +40,29 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
     String pais;
     String descr;
     ImageIcon icon;
-    byte[] byteIcon;
-    File f;
     dadosInstitucionais dadosInst;
-    int index;
-
+    Instituto inst;
+    IremoteP2P rmtInterface;
     /**
      * Creates new form adicionarDadosPessoais
      *
      * @param parent
      * @param modal
-     * @param index
+     * @param inst
+     * @param rmtObject
      */
-    public adicionarDadosInstitucionais(java.awt.Frame parent, boolean modal, int index, String rmtObject) {
+    public adicionarDadosInstitucionais(java.awt.Frame parent, boolean modal, Instituto inst, OremoteP2P rmtObject) {
         super(parent, modal);
-        this.index = index;
+        this.inst = inst;
         this.rmtObject = rmtObject;
+        /*try {
+            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
+        } catch (Exception ex) {
+            Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
         initComponents();
-        //f = new File(cv.pathInst);
         this.setTitle("Adicionar Dados Institucionais");
-        //txtCodNome.setText(cv.listInst.get(index).getCodNome());
+        txtCodNome.setText(inst.getCodNome());
     }
 
     /**
@@ -331,19 +336,21 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
     }//GEN-LAST:event_closeDialog
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        //adicionarDadosInstitucionais();
+        new Thread(() -> {
+            adicionarDadosInstitucionais();
+        }).start();
         btnGuardar.setEnabled(false);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProximoActionPerformed
         // TODO add your handling code here:
         dispose();
-        new perfilInstituto(null, true, index, rmtObject).setVisible(true);
+        new perfilInstituto(null, true, inst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnProximoActionPerformed
 
     private void btnFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotoActionPerformed
         //Escolhe uma imagem do sistema me que está correr a aplicação
-        /*JFileChooser escolheFoto = new JFileChooser(cv.basePath + "/resources/institutos");
+        JFileChooser escolheFoto = new JFileChooser();
         if (escolheFoto.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             try {
                 File fich = escolheFoto.getSelectedFile();
@@ -356,12 +363,8 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
             }
         } else {
             JOptionPane.showMessageDialog(null, "Ficheiro não Encontrado");
-        }*/
+        }
     }//GEN-LAST:event_btnFotoActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFoto;
@@ -400,7 +403,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
     // End of variables declaration//GEN-END:variables
 
     //Função que vai adicionar um Instituto ao sistema
-    /*private void adicionarDadosInstitucionais() {
+    private void adicionarDadosInstitucionais() {
         nome = txtNome.getText().trim();
         dataFund = txtDataFund.getDate();
         natureza = txtNatureza.getSelectedItem().toString();
@@ -415,29 +418,51 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
         descr = txtDescr.getText();
         //Cria um objeto com os dados introduzidos pelo utilizador Instituto
         dadosInst = new dadosInstitucionais(nome, dataFund, natureza, cidade, tipoEnsino, telefone, sitioWeb, morada, distrito, codPostal, pais, descr);
-        if (icon == null) {
-            try {
-                //Caso não tenha sido adicionado uma imagem, é atribuída uma imagem por defeito
-                String caminhoImag = cv.basePath + "/resources/institutos/defaultInstituto.png";
-                icon = new ImageIcon(caminhoImag);
-                //A imagem é ajustada à largura e comprimento do botão
-                Image imagem = icon.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_SMOOTH);
-                btnFoto.setIcon(new ImageIcon(imagem));
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            inst = new Instituto(rmtObject.adicionaDadosInst(inst.getCodNome(), dadosInst, icon));
+            rmtObject.addMessage(inst.getCodNome()+ " adicionou os seus dados institucionais");
+            txtNome.setText(inst.getDadosInst().getNome());
+            txtDataFund.setDate(inst.getDadosInst().getDataFundacao());
+            if (inst.getDadosInst().getNatureza().equals("Público")) {
+                txtNatureza.setSelectedIndex(0);
+            } else {
+                txtNatureza.setSelectedIndex(1);
             }
+            txtCidade.setText(inst.getDadosInst().getCidade());
+            if (inst.getDadosInst().getTipoEnsino().equals("Universitário")) {
+                txtEnsino.setSelectedIndex(0);
+            } else {
+                txtEnsino.setSelectedIndex(1);
+            }
+
+            txtTelefone.setText(inst.getDadosInst().getTelefone());
+            txtWeb.setText(inst.getDadosInst().getSitioWeb());
+            txtMorada.setText(inst.getDadosInst().getSitioWeb());
+            txtDistrito.setText(inst.getDadosInst().getDistrito());
+            txtCodPostal.setText(inst.getDadosInst().getCodPostal());
+            txtPais.setText(inst.getDadosInst().getPais());
+            txtDescr.setText(inst.getDadosInst().getDescricao());
+            icon = new ImageIcon(inst.getImagem());
+            Image imagem = icon.getImage().getScaledInstance(btnFoto.getWidth(), btnFoto.getHeight(), Image.SCALE_SMOOTH);
+            btnFoto.setBackground(Color.white);
+            btnFoto.setIcon(new ImageIcon(imagem));
+        } catch (RemoteException ex) {
+            Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        try {
-            byteIcon = Recursos.iconToByteArray(icon);
-        } catch (IOException ex) {
-            Logger.getLogger(adicionarDadosInstitucionais.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //A imagem é definida e atribuída ao Instituto
-        cv.listInst.get(index).setImagem(byteIcon);
-        //Os dados institucionais são definidos
-        cv.listInst.get(index).setDadosInst(dadosInst);
-        //A lista de Institutos é atualizada e guardada no ficheiro
-        Recursos.writeObject(cv.listInst, f.getAbsolutePath());
-    }*/
+        txtNome.setEditable(false);
+        txtDataFund.setEnabled(false);
+        txtNatureza.setEditable(false);
+        txtCidade.setEditable(false);
+        txtNatureza.setEditable(false);
+        txtEnsino.setEditable(false);
+        txtTelefone.setEditable(false);
+        txtWeb.setEditable(false);
+        txtMorada.setEditable(false);
+        txtDistrito.setEditable(false);
+        txtCodPostal.setEditable(false);
+        txtPais.setEditable(false);
+        txtDescr.setEditable(false);
+        btnFoto.setEnabled(false);
+    }
 }

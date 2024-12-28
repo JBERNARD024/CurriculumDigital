@@ -13,6 +13,7 @@ import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import utils.SecurityUtils;
@@ -68,7 +69,7 @@ public class Instituto implements Serializable{
     public void criarPasta() {
         //Definir o caminho da pasta
         String basePath = new File("").getAbsolutePath();
-        String caminho = basePath + "/resources/institutos/" + codNome + "/";
+        String caminho = basePath + "\\resources\\institutos\\" + codNome + "\\";
         File diretoria = new File(caminho);
         //Verificar se a pasta já existe, caso contrário criar a pasta
         if (!diretoria.exists()) {
@@ -86,7 +87,7 @@ public class Instituto implements Serializable{
     //Função que guarda as chaves criadas na pasta do Instituto
     public void save(String password) throws Exception {
         String basePath = new File("").getAbsolutePath();
-        String caminho = basePath + "/resources/institutos/" + codNome + "/";
+        String caminho = basePath + "\\resources\\institutos\\" + codNome + "\\";
         //Encriptar a chave privada
         byte[] secret = SecurityUtils.encrypt(privKey.getEncoded(), password);
         Files.write(Path.of(caminho + codNome + ".priv"), secret);
@@ -98,7 +99,7 @@ public class Instituto implements Serializable{
     public boolean load(String password) throws Exception {
         try {
             String basePath = new File("").getAbsolutePath();
-            String caminho = basePath + "/resources/institutos/" + codNome + "/";
+            String caminho = basePath + "\\resources\\institutos\\" + codNome + "\\";
             //Desencriptar a chave privada
             byte[] privData = Files.readAllBytes(Path.of(caminho + codNome + ".priv"));
             privData = SecurityUtils.decrypt(privData, password);
@@ -116,7 +117,7 @@ public class Instituto implements Serializable{
     //Função que vai carregar a chave pública do Instituto
     public void loadPublic() throws Exception {
         String basePath = new File("").getAbsolutePath();
-        String caminho = basePath + "/resources/institutos/" + codNome + "/";
+        String caminho = basePath + "\\resources\\institutos\\" + codNome + "\\";
         //Ler a chave pública
         byte[] pubData = Files.readAllBytes(Path.of(caminho + codNome + ".pub"));
         this.pubKey = SecurityUtils.getPublicKey(pubData);
@@ -190,5 +191,27 @@ public class Instituto implements Serializable{
     //Define a imagem sobre o formato de array de bytes 
     public void setImagem(byte[] imagem) {
         this.imagem = imagem;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.codNome);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Instituto other = (Instituto) obj;
+        return Objects.equals(this.codNome, other.codNome);
     }
 }

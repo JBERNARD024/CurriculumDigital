@@ -20,8 +20,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Created on 19/09/2023, 21:22:39
@@ -83,6 +86,50 @@ public class Converter {
         } catch (Exception ex) {
             Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
             return "ERROR hexToObject";
+        }
+    }
+    
+     // Transforma um objeto em uma string compactada com GZIP (em Base64)
+    public static String objectToGzipString(Object obj) throws IOException {
+        // Passo 1: Serializar o objeto em bytes
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(obj); // Serializa o objeto
+        }
+        byte[] serializedData = bos.toByteArray();
+
+        // Passo 2: Compactar os bytes usando GZIP
+        ByteArrayOutputStream compressedBos = new ByteArrayOutputStream();
+        try (GZIPOutputStream gzipOut = new GZIPOutputStream(compressedBos)) {
+            gzipOut.write(serializedData); // Compacta os dados serializados
+        }
+        byte[] compressedData = compressedBos.toByteArray();
+
+        // Passo 3: Converter os bytes compactados em uma string Base64
+        return Base64.getEncoder().encodeToString(compressedData);
+    }
+
+    // Transforma uma string compactada com GZIP (em Base64) de volta em um objeto
+    public static Object gzipStringToObject(String gzipString) throws IOException, ClassNotFoundException {
+        // Passo 1: Converter a string Base64 de volta para bytes compactados
+        byte[] compressedData = Base64.getDecoder().decode(gzipString);
+
+        // Passo 2: Descompactar os dados GZIP
+        ByteArrayInputStream bis = new ByteArrayInputStream(compressedData);
+        ByteArrayOutputStream decompressedBos = new ByteArrayOutputStream();
+        try (GZIPInputStream gzipIn = new GZIPInputStream(bis)) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = gzipIn.read(buffer)) > 0) {
+                decompressedBos.write(buffer, 0, len); // Descompacta os dados
+            }
+        }
+        byte[] decompressedData = decompressedBos.toByteArray();
+
+        // Passo 3: Desserializar os bytes descompactados de volta para o objeto
+        ByteArrayInputStream deserializationBis = new ByteArrayInputStream(decompressedData);
+        try (ObjectInputStream ois = new ObjectInputStream(deserializationBis)) {
+            return ois.readObject(); // Lê o objeto deserializado
         }
     }
 }

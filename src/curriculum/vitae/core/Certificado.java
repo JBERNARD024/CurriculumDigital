@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Base64;
+import java.util.Objects;
 import utils.Converter;
 import utils.SecurityUtils;
 
@@ -143,4 +144,28 @@ public class Certificado implements Serializable {
                 .append(graduado.getDados().getNome());
         return txt.toString();
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 71 * hash + Objects.hashCode(this.assinatura);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Certificado other = (Certificado) obj;
+        return Objects.equals(this.assinatura, other.assinatura);
+    }
+
+      
 }

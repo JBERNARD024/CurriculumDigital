@@ -4,23 +4,33 @@
  */
 package curriculum.vitae.gui;
 
+import java.rmi.RemoteException;
+import p2p.OremoteP2P;
+import utils.BlockChain;
 /**
  *
  * @author joaob
  */
 public class Blockchain extends java.awt.Dialog {
-
+    OremoteP2P rmtObject;
+    BlockChain blockchain;
     /**
      * Creates new form Blockchain
-     * @param cv
+     * @param parent
      * @param modal
+     * @param rmtObject
+     * @throws java.rmi.RemoteException
      */
-    public Blockchain(java.awt.Frame parent, boolean modal) {
+    public Blockchain(java.awt.Frame parent, boolean modal, OremoteP2P rmtObject) throws RemoteException {
         super(parent, modal);
         initComponents();
         setTitle("Blockchain");
-        /*jTextPane1.setText(cv.registoCerti.getBc().toString());
-        txtRegisto.setText(cv.registoCerti.toString());*/
+        this.rmtObject = rmtObject;
+        blockchain = rmtObject.getBlockchain();
+        System.out.println(rmtObject.getBlockchain());
+        txtBlockchain.setText(blockchain.toString());
+        txtRegisto.setText(rmtObject.treeToString());
+        txtRegisto.setText(rmtObject.certificadosToString());
     }
 
     /**
@@ -36,7 +46,7 @@ public class Blockchain extends java.awt.Dialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtRegisto = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        txtBlockchain = new javax.swing.JTextPane();
 
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -52,7 +62,7 @@ public class Blockchain extends java.awt.Dialog {
         txtRegisto.setRows(5);
         jScrollPane1.setViewportView(txtRegisto);
 
-        jScrollPane2.setViewportView(jTextPane1);
+        jScrollPane2.setViewportView(txtBlockchain);
 
         javax.swing.GroupLayout panelBlockchainLayout = new javax.swing.GroupLayout(panelBlockchain);
         panelBlockchain.setLayout(panelBlockchainLayout);
@@ -98,9 +108,9 @@ public class Blockchain extends java.awt.Dialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTabbedPane panelBlock;
     private javax.swing.JPanel panelBlockchain;
+    private javax.swing.JTextPane txtBlockchain;
     private javax.swing.JTextArea txtRegisto;
     // End of variables declaration//GEN-END:variables
 }

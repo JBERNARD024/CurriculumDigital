@@ -6,18 +6,16 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Certificado;
 import curriculum.vitae.core.Instituto;
-import curriculum.vitae.core.Pessoa;
 import java.awt.Color;
 import java.awt.Image;
-import java.util.List;
+import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
-import utils.Block;
-import utils.Converter;
-import utils.MerkleTree;
-import utils.Recursos;
+import p2p.IremoteP2P;
+import p2p.OremoteP2P;
 
 /**
  *
@@ -25,27 +23,31 @@ import utils.Recursos;
  */
 public class listaCertificados extends java.awt.Dialog {
 
-    String rmtObject;
-    int index;
+    OremoteP2P rmtObject;
     Instituto inst;
     ImageIcon icon;
     Image imagem;
     DefaultListModel myCertificados;
     int indexEducacao;
-    MerkleTree tree;
+    IremoteP2P rmtInterface;
 
     /**
      * Creates new form listaEducacao
      *
      * @param parent
      * @param modal
-     * @param index
+     * @param inst
      * @param rmtObject
      */
-    public listaCertificados(java.awt.Frame parent, boolean modal, int index, String rmtObject) {
+    public listaCertificados(java.awt.Frame parent, boolean modal, Instituto inst, OremoteP2P rmtObject) {
         super(parent, modal);
-        this.index = index;
+        this.inst = inst;
         this.rmtObject = rmtObject;
+        /*try {
+            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
+        } catch (Exception ex) {
+            Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
         initComponents();
         this.setTitle("Lista de Certficados");
         //inst = new Instituto(cv.listInst.get(index));
@@ -399,7 +401,7 @@ public class listaCertificados extends java.awt.Dialog {
     private void btnDadosPessoaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDadosPessoaisActionPerformed
         // TODO add your handling code here:
         dispose();
-        new perfilInstituto(null, true, index, rmtObject).setVisible(true);
+        new perfilInstituto(null, true, inst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnDadosPessoaisActionPerformed
 
     private void certificadosListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_certificadosListValueChanged
@@ -433,7 +435,7 @@ public class listaCertificados extends java.awt.Dialog {
     }//GEN-LAST:event_txtAreaEstudoActionPerformed
 
     private void btnObterCertificadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObterCertificadosActionPerformed
-        //getCertificados();
+        getCertificados();
     }//GEN-LAST:event_btnObterCertificadosActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -447,7 +449,7 @@ public class listaCertificados extends java.awt.Dialog {
         // TODO add your handling code here:
         dispose();
         //Redireciona o Instituto para a página para adicionar um certificado
-        new adicionarCertificado(null, true, index, rmtObject).setVisible(true);
+        new adicionarCertificado(null, true, inst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnAdicionarCurriculoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -489,37 +491,15 @@ public class listaCertificados extends java.awt.Dialog {
     // End of variables declaration//GEN-END:variables
 
 //Função que percorrer a blockchain e procurar os certificados que possuam a chave pública do Instituto associada aos Certificados
-    /*private void getCertificados() {
-        
+    private void getCertificados() {
         new Thread(() -> {
             try {
-                // TODO add your handling code here:
-                //Iteração dos blocos da Blockchain
-                for (Block b : cv.registoCerti.getBc().getChain()) {
-                    //Carrega o ficheiro da merkle cujo root é igual aos dados do bloco
-                    tree = (MerkleTree) Recursos.readObject(cv.basePath + "/resources/merkleTree/" + b.getCurrentHash() + ".mk");
-                    //Iteração da lista dos certificados emitidos
-                    for (int i = 0; i < cv.registoCerti.getRegisto().size(); i++) {
-                        String cert = cv.registoCerti.getRegisto().get(i);
-                        List<String> proof = tree.getProof(cert);
-                        boolean isProofValid = tree.isProofValid(cert, proof);
-                        //Vai verificar se o certificado presente na lista pertence à árvore de merkle, através da prova
-                        if (isProofValid) {
-                            //Se pertencer à árvore, vamos verificar se o certificado foi emitido pelo Instituto com sessão inciada
-                            Certificado c = (Certificado) Converter.hexToObject(cv.registoCerti.getRegisto().get(i));
-                            if (c.getInstituto().getCodNome().equals(inst.getCodNome())) {
-                                //Se foi o Instituto o emissor, é adicionado à lista dos seus certificados
-                                myCertificados.addElement(c);
-                            }
-                        }
-                    }
-                }
+                myCertificados = rmtObject.getCertificadosInst(inst);
                 certificadosList.setModel(myCertificados);
                 certificadosList.setSelectedIndex(indexEducacao);
-            } catch (Exception ex) {
+            } catch (RemoteException ex) {
                 Logger.getLogger(listaEducacao.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
         }).start();
-    }*/
+    }
 }
