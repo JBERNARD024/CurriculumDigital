@@ -88,12 +88,13 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         this.myMiner = new Miner(listener);
         this.tree = new MerkleTree();
         Security.addProvider(new BouncyCastleProvider());
-        //Recursos.writeObject(certificados, pathCertificados);
-        //Recursos.writeObject(temp, pathTemp);
-        //Recursos.writeObject(listUsers, pathUsers);
-        //Recursos.writeObject(listInst, pathInst);
+//        Recursos.writeObject(certificados, pathCertificados);
+//        Recursos.writeObject(temp, pathTemp);
+//        Recursos.writeObject(listUsers, pathUsers);
+//        Recursos.writeObject(listInst, pathInst);
         certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
-        //blockchain.save(pathBlockchain);
+        temp = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathTemp);
+//        blockchain.save(pathBlockchain);
         try {
             blockchain.load(pathBlockchain);
         } catch (Exception ex) {
