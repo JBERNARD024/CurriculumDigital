@@ -42,7 +42,7 @@ public class adicionarCertificado extends java.awt.Dialog {
     Pessoa user;
     Instituto inst;
     ArrayList<Pessoa> listaPessoas = new ArrayList<>();
-    public static int MERKLE_TREE_SIZE = 1;
+    public static int MERKLE_TREE_SIZE = 2;
 
     /**
      * Creates new form adicionarEducacao

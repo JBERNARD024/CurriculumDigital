@@ -524,7 +524,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
         try {
             onMessage(transaction);
             String txt = "";
-            List<Certificado> tr = myremoteObject.getCertificados();
+            List<Certificado> tr = myremoteObject.getTemp();
             for (Certificado certificado : tr) {
                 txt += certificado.toString() + "\n";
             }
