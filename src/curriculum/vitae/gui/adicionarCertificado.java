@@ -350,9 +350,9 @@ public class adicionarCertificado extends java.awt.Dialog {
             try {
                 nomePessoa = (String) txtUtilizadores.getSelectedItem();
                 for (int i = 0; i < listaPessoas.size(); i++) {
-                     user = new Pessoa(listaPessoas.get(i));
-                    if(listaPessoas.get(i).getDados() != null){
-                        if(nomePessoa.equals(user.getDados().getNome())){
+                    user = new Pessoa(listaPessoas.get(i));
+                    if (listaPessoas.get(i).getDados() != null) {
+                        if (nomePessoa.equals(user.getDados().getNome())) {
                             break;
                         }
                     }
@@ -376,27 +376,29 @@ public class adicionarCertificado extends java.awt.Dialog {
                 rmtObject.addMessage("Certificado " + c.toString() + " adicionado");
                 //Adicionar o certificado à lista de certificados
                 rmtObject.adicionarCertificado(c);
-                new Thread(() -> {
-                    try {
-                        //fazer um bloco
-                        List<Certificado> blockCertificados = rmtObject.getTemp();
-                        if (blockCertificados.size() < 0) {
-                            return;
+                if (MERKLE_TREE_SIZE == rmtObject.getTemp().size()) {
+                    new Thread(() -> {
+                        try {
+                            //fazer um bloco
+                            List<Certificado> blockCertificados = rmtObject.getTemp();
+                            if (blockCertificados.size() < 0) {
+                                return;
+                            }
+                            Block b = new Block(rmtObject.getBlockchainLastHash(), blockCertificados);
+                            //remover as transacoes
+                            rmtObject.removeCertficados(rmtObject.getCertificados());
+                            //minar o bloco
+                            int nonce = rmtObject.mine(b.getMinerData(), 3);
+                            //atualizar o nonce
+                            b.setNonce(nonce, 3);
+                            //adiconar o bloco
+                            rmtObject.addBlock(b);
+                        } catch (Exception ex) {
+                            //onException(ex, "Start ming");
+                            Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        Block b = new Block(rmtObject.getBlockchainLastHash(), blockCertificados);
-                        //remover as transacoes
-                        rmtObject.removeCertficados(rmtObject.getCertificados());
-                        //minar o bloco
-                        int nonce = rmtObject.mine(b.getMinerData(), 3);
-                        //atualizar o nonce
-                        b.setNonce(nonce, 3);
-                        //adiconar o bloco
-                        rmtObject.addBlock(b);
-                    } catch (Exception ex) {
-                        //onException(ex, "Start ming");
-                        Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }).start();
+                    }).start();
+                }
             } catch (RemoteException ex) {
                 Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {

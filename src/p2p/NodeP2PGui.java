@@ -84,7 +84,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
         pnCertificado = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        txtListTransdactions = new javax.swing.JTextArea();
+        txtListCertificados = new javax.swing.JTextArea();
         jPanel10 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -249,11 +249,11 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
 
         jPanel12.setLayout(new java.awt.BorderLayout());
 
-        txtListTransdactions.setEditable(false);
-        txtListTransdactions.setColumns(20);
-        txtListTransdactions.setRows(5);
-        txtListTransdactions.setBorder(javax.swing.BorderFactory.createTitledBorder("List of Transactions"));
-        jScrollPane4.setViewportView(txtListTransdactions);
+        txtListCertificados.setEditable(false);
+        txtListCertificados.setColumns(20);
+        txtListCertificados.setRows(5);
+        txtListCertificados.setBorder(javax.swing.BorderFactory.createTitledBorder("List of Transactions"));
+        jScrollPane4.setViewportView(txtListCertificados);
 
         jPanel12.add(jScrollPane4, java.awt.BorderLayout.CENTER);
 
@@ -473,7 +473,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     private javax.swing.JTextArea txtBlockCertificados;
     private javax.swing.JTextArea txtBlockHeader;
     private javax.swing.JLabel txtExceptionLog;
-    private javax.swing.JTextArea txtListTransdactions;
+    private javax.swing.JTextArea txtListCertificados;
     private javax.swing.JTextArea txtLogMining;
     private javax.swing.JTextPane txtNetwork;
     private javax.swing.JTextField txtServerAdress;
@@ -528,8 +528,8 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
             for (Certificado certificado : tr) {
                 txt += certificado.toString() + "\n";
             }
-            //txtListCertificados.setText(txt);
-            pnMain.setSelectedComponent(pnBlockchain);
+            txtListCertificados.setText(txt);
+            pnMain.setSelectedComponent(pnCertificado);
         } catch (RemoteException ex) {
             onException(ex, "on transaction");
             Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);

@@ -89,6 +89,9 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         this.tree = new MerkleTree();
         Security.addProvider(new BouncyCastleProvider());
         //Recursos.writeObject(certificados, pathCertificados);
+        //Recursos.writeObject(temp, pathTemp);
+        //Recursos.writeObject(listUsers, pathUsers);
+        //Recursos.writeObject(listInst, pathInst);
         certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
         //blockchain.save(pathBlockchain);
         try {
@@ -509,10 +512,10 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         if (!certificados.contains(c)) {
             temp.add(c);
             certificados.add(c);
+            Recursos.writeObject(certificados, pathCertificados);
+            Recursos.writeObject(temp, pathTemp);
             listener.onTransaction(c.toString());
         }
-        Recursos.writeObject(certificados, pathCertificados);
-        Recursos.writeObject(temp, pathTemp);
 
         for (IremoteP2P iremoteP2P : network) {
             iremoteP2P.adicionarCertificado(c);
