@@ -348,6 +348,7 @@ public class adicionarCertificado extends java.awt.Dialog {
     private void adicionarCertificado() {
         new Thread(() -> {
             try {
+                System.out.println("Iniciando adição de certificado...");
                 nomePessoa = (String) txtUtilizadores.getSelectedItem();
                 for (int i = 0; i < listaPessoas.size(); i++) {
                     user = new Pessoa(listaPessoas.get(i));
@@ -368,43 +369,39 @@ public class adicionarCertificado extends java.awt.Dialog {
                 dataInic = txtDataInic.getDate();
                 dataFim = txtDataFim.getDate();
                 descr = txtDescr.getText();
-                //Cria um objeto educação com base nas informações introduzidas pelo Instituto
+
                 educacao = new Educacao(qualificacao, areaEstudo, instituicao, mediaFinal, nivelQEQ, cidade, pais, dataInic, dataFim, descr);
                 user = new Pessoa(rmtObject.getPessoa(email));
-                //Identificar o utilizador e o instituto que vão fazer parte do certificado
+
                 Certificado c = new Certificado(inst, user, educacao);
                 rmtObject.addMessage("Certificado " + c.toString() + " adicionado");
-                //Adicionar o certificado à lista de certificados
                 rmtObject.adicionarCertificado(c);
-                if (MERKLE_TREE_SIZE == rmtObject.getTemp().size()) {
-                    new Thread(() -> {
-                        try {
-                            //fazer um bloco
-                            List<Certificado> blockCertificados = rmtObject.getTemp();
-                            if (blockCertificados.size() < 0) {
-                                return;
-                            }
-                            Block b = new Block(rmtObject.getBlockchainLastHash(), blockCertificados);
-                            //remover as transacoes
-                            rmtObject.removeCertficados(rmtObject.getCertificados());
-                            //minar o bloco
-                            int nonce = rmtObject.mine(b.getMinerData(), 3);
-                            //atualizar o nonce
-                            b.setNonce(nonce, 3);
-                            //adiconar o bloco
-                            rmtObject.addBlock(b);
-                        } catch (Exception ex) {
-                            //onException(ex, "Start ming");
-                            Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }).start();
+
+                System.out.println("Verificando MERKLE_TREE_SIZE...");
+                while (MERKLE_TREE_SIZE != rmtObject.getTemp().size()) {
+                    Thread.sleep(100); // Aguarda até que a condição seja atendida
                 }
-            } catch (RemoteException ex) {
-                Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
+
+                System.out.println("Iniciando criação de bloco...");
+                List<Certificado> blockCertificados = rmtObject.getTemp();
+                if (blockCertificados.isEmpty()) {
+                    System.out.println("Nenhum certificado para adicionar ao bloco.");
+                    return;
+                }
+                Block b = new Block(rmtObject.getBlockchainLastHash(), blockCertificados);
+                rmtObject.removeCertficados(rmtObject.getCertificados());
+
+                System.out.println("Minerando bloco...");
+                int nonce = rmtObject.mine(b.getMinerData(), 3);
+                b.setNonce(nonce, 3);
+
+                System.out.println("Adicionando bloco...");
+                rmtObject.addBlock(b);
+                System.out.println("Bloco adicionado com sucesso!");
             } catch (Exception ex) {
+                ex.printStackTrace();
                 Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        ).start();
+        }).start();
     }
 }
