@@ -74,6 +74,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     Instituto inst;
     int indexUser;
     int indexInst;
+    public static int MERKLE_TREE_SIZE = 2;
 
     public OremoteP2P(String address, P2Plistener listener) throws RemoteException, Exception {
         super(RMI.getAdressPort(address));
@@ -516,10 +517,39 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
             Recursos.writeObject(certificados, pathCertificados);
             Recursos.writeObject(temp, pathTemp);
             listener.onTransaction(c.toString());
+            if (certificados.size() == MERKLE_TREE_SIZE) {
+                criaBloco();
+            }
         }
 
         for (IremoteP2P iremoteP2P : network) {
             iremoteP2P.adicionarCertificado(c);
+        }
+    }
+
+    public void criaBloco() throws RemoteException {
+        if (MERKLE_TREE_SIZE == getTemp().size()) {
+            new Thread(() -> {
+                try {
+                    //fazer um bloco
+                    List<Certificado> blockCertificados = getTemp();
+                    if (blockCertificados.size() < 0) {
+                        return;
+                    }
+                    Block b = new Block(getBlockchainLastHash(), blockCertificados);
+                    //remover as transacoes
+                    removeCertficados(getCertificados());
+                    //minar o bloco
+                    int nonce = mine(b.getMinerData(), 3);
+                    //atualizar o nonce
+                    b.setNonce(nonce, 3);
+                    //adiconar o bloco
+                    addBlock(b);
+                } catch (Exception ex) {
+                    //onException(ex, "Start ming");
+                    Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }).start();
         }
     }
 

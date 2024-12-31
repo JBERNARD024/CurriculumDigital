@@ -12,12 +12,9 @@ import java.awt.event.ActionEvent;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import p2p.NodeP2PGui;
 import p2p.OremoteP2P;
-import utils.Block;
 
 /**
  *
@@ -42,7 +39,6 @@ public class adicionarCertificado extends java.awt.Dialog {
     Pessoa user;
     Instituto inst;
     ArrayList<Pessoa> listaPessoas = new ArrayList<>();
-    public static int MERKLE_TREE_SIZE = 2;
 
     /**
      * Creates new form adicionarEducacao
@@ -348,7 +344,6 @@ public class adicionarCertificado extends java.awt.Dialog {
     private void adicionarCertificado() {
         new Thread(() -> {
             try {
-                System.out.println("Iniciando adição de certificado...");
                 nomePessoa = (String) txtUtilizadores.getSelectedItem();
                 for (int i = 0; i < listaPessoas.size(); i++) {
                     user = new Pessoa(listaPessoas.get(i));
@@ -369,39 +364,20 @@ public class adicionarCertificado extends java.awt.Dialog {
                 dataInic = txtDataInic.getDate();
                 dataFim = txtDataFim.getDate();
                 descr = txtDescr.getText();
-
+                //Cria um objeto educação com base nas informações introduzidas pelo Instituto
                 educacao = new Educacao(qualificacao, areaEstudo, instituicao, mediaFinal, nivelQEQ, cidade, pais, dataInic, dataFim, descr);
                 user = new Pessoa(rmtObject.getPessoa(email));
-
+                //Identificar o utilizador e o instituto que vão fazer parte do certificado
                 Certificado c = new Certificado(inst, user, educacao);
                 rmtObject.addMessage("Certificado " + c.toString() + " adicionado");
+                //Adicionar o certificado à lista de certificados
                 rmtObject.adicionarCertificado(c);
-
-                System.out.println("Verificando MERKLE_TREE_SIZE...");
-                while (MERKLE_TREE_SIZE != rmtObject.getTemp().size()) {
-                    Thread.sleep(100); // Aguarda até que a condição seja atendida
-                }
-
-                System.out.println("Iniciando criação de bloco...");
-                List<Certificado> blockCertificados = rmtObject.getTemp();
-                if (blockCertificados.isEmpty()) {
-                    System.out.println("Nenhum certificado para adicionar ao bloco.");
-                    return;
-                }
-                Block b = new Block(rmtObject.getBlockchainLastHash(), blockCertificados);
-                rmtObject.removeCertficados(rmtObject.getCertificados());
-
-                System.out.println("Minerando bloco...");
-                int nonce = rmtObject.mine(b.getMinerData(), 3);
-                b.setNonce(nonce, 3);
-
-                System.out.println("Adicionando bloco...");
-                rmtObject.addBlock(b);
-                System.out.println("Bloco adicionado com sucesso!");
+            } catch (RemoteException ex) {
+                Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {
-                ex.printStackTrace();
                 Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }).start();
+        }
+        ).start();
     }
 }
