@@ -42,7 +42,7 @@ public class adicionarCertificado extends java.awt.Dialog {
     Pessoa user;
     Instituto inst;
     ArrayList<Pessoa> listaPessoas = new ArrayList<>();
-    public static int MERKLE_TREE_SIZE = 1;
+    public static int MERKLE_TREE_SIZE = 2;
 
     /**
      * Creates new form adicionarEducacao
@@ -383,15 +383,18 @@ public class adicionarCertificado extends java.awt.Dialog {
                         if (blockCertificados.size() < 0) {
                             return;
                         }
-                        Block b = new Block(rmtObject.getBlockchainLastHash(), blockCertificados);
-                        //remover as transacoes
-                        rmtObject.removeCertficados(rmtObject.getCertificados());
-                        //minar o bloco
-                        int nonce = rmtObject.mine(b.getMinerData(), 3);
-                        //atualizar o nonce
-                        b.setNonce(nonce, 3);
-                        //adiconar o bloco
-                        rmtObject.addBlock(b);
+                        if(blockCertificados.size() == MERKLE_TREE_SIZE){
+                            Block b = new Block(rmtObject.getBlockchainLastHash(), blockCertificados);
+                            //remover as transacoes
+                            rmtObject.removeCertficados(rmtObject.getCertificados());
+                            //minar o bloco
+                            int nonce = rmtObject.mine(b.getMinerData(), 3);
+                            //atualizar o nonce
+                            b.setNonce(nonce, 3);
+                            //adiconar o bloco
+                            rmtObject.addBlock(b); 
+                        }
+                        
                     } catch (Exception ex) {
                         //onException(ex, "Start ming");
                         Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);
