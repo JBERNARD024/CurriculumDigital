@@ -346,6 +346,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lstBlcockchainValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstBlcockchainValueChanged
+        //Atualiza os dados de um certificado, de um dado bloco
         try {
             BlockChain bc = myremoteObject.getBlockchain();
             int index = bc.getSize() - lstBlcockchain.getSelectedIndex() - 1;
@@ -366,6 +367,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     }//GEN-LAST:event_lstBlcockchainValueChanged
 
     private void btStartClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btStartClientActionPerformed
+        //Inicia a ligação à rede P2P
         new Thread(() -> {
             try {
                 imgClientRunning.setEnabled(true);
@@ -385,6 +387,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     }//GEN-LAST:event_btStartClientActionPerformed
 
     private void btStartServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btStartServerActionPerformed
+        //Inicia o servidor
         new Thread(() -> {
             try {
                 int port = Integer.parseInt(txtServerListeningPort.getText());
@@ -487,6 +490,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     // End of variables declaration//GEN-END:variables
 
     @Override
+    //Publica uma mensagem ao iniciar o servidor
     public void onStart(String message) {
         setTitle(message);
         imgServerRunning.setEnabled(true);
@@ -497,15 +501,16 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     static DateTimeFormatter hfmt = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
     @Override
+    //Executada quando encontra um erro
     public void onException(Exception e, String title) {
         txtTimeLog.setText(LocalTime.now().format(hfmt));
         txtExceptionLog.setForeground(new java.awt.Color(255, 0, 0));
         txtExceptionLog.setText(e.getMessage());
         txtTitleLog.setText(title);
-        //JOptionPane.showMessageDialog(this, e.getMessage(), title, JOptionPane.WARNING_MESSAGE);
     }
 
     @Override
+    //Inicia a ligação à rede
     public void onConect(String address) {
         try {
             List<IremoteP2P> net = myremoteObject.getNetwork();
@@ -520,6 +525,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     }
 
     @Override
+    //Atualiza a lista de certificados, quando executada
     public void onTransaction(String transaction) {
         try {
             onMessage(transaction);
@@ -537,6 +543,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     }
 
     @Override
+    //Adiciona uma nova mensagem à lista de mensagens na interface gráfica
     public void onMessage(String title) throws RemoteException {
         new Thread(() -> {
             try {
@@ -552,6 +559,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     }
 
     @Override
+    //Atualiza a interface gráfica, quando o Miner inicia
     public void onStartMining(String message, int zeros) {
         SwingUtilities.invokeLater(() -> {
             pnMain.setSelectedComponent(pnCertificado);
@@ -564,6 +572,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     }
 
     @Override
+    //Atualiza a interface gráfica, quando o Miner para
     public void onStopMining(String message, int nonce) {
         SwingUtilities.invokeLater(() -> {
             txtLogMining.setText("[STOP]" + message + "[" + nonce + "]\n" + txtLogMining.getText());
@@ -576,6 +585,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     }
 
     @Override
+    //Atualiza a interface gráfica, quando o nonce é encontrado
     public void onNounceFound(String message, int nonce) {
         try {
             myremoteObject.stopMining(nonce);
@@ -595,6 +605,7 @@ public class NodeP2PGui extends javax.swing.JFrame implements P2Plistener {
     }
 
     @Override
+    //Atualiza a interface gráfica, quando existe uma alteração na blockchain
     public void onBlockchainUpdate(BlockChain b) {
         SwingUtilities.invokeLater(() -> {
             DefaultListModel model = new DefaultListModel();

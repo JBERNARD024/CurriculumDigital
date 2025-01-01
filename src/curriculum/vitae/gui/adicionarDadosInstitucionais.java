@@ -63,6 +63,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
         initComponents();
         this.setTitle("Adicionar Dados Institucionais");
         txtCodNome.setText(inst.getCodNome());
+        btnProximo.setEnabled(false);
     }
 
     /**
@@ -340,6 +341,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
             adicionarDadosInstitucionais();
         }).start();
         btnGuardar.setEnabled(false);
+        btnProximo.setEnabled(true);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProximoActionPerformed
@@ -450,6 +452,7 @@ public class adicionarDadosInstitucionais extends java.awt.Dialog {
             Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        //Bloqueia a edição dos campos
         txtNome.setEditable(false);
         txtDataFund.setEnabled(false);
         txtNatureza.setEditable(false);

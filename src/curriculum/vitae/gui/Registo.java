@@ -36,11 +36,6 @@ public class Registo extends java.awt.Dialog {
         this.setTitle("Registo");
         initComponents();
         this.rmtObject = rmtObject;
-        /*try {
-            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
-        } catch (Exception ex) {
-            Logger.getLogger(Registo.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
     }
 
     /**

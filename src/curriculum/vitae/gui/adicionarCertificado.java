@@ -302,13 +302,11 @@ public class adicionarCertificado extends java.awt.Dialog {
     }//GEN-LAST:event_closeDialog
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
         adicionarCertificado();
         btnGuardar.setEnabled(false);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEducacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEducacaoActionPerformed
-        // TODO add your handling code here:
         dispose();
         new listaCertificados(null, true, inst, rmtObject).setVisible(true);
     }//GEN-LAST:event_btnEducacaoActionPerformed
@@ -374,7 +372,7 @@ public class adicionarCertificado extends java.awt.Dialog {
                 //Identificar o utilizador e o instituto que vão fazer parte do certificado
                 Certificado c = new Certificado(inst, user, educacao);
                 rmtObject.addMessage("Certificado " + c.toString() + " adicionado");
-                //Adicionar o certificado à lista de certificados
+                //Adiciona o certificado à lista de certificados
                 rmtObject.adicionarCertificado(c);
                 new Thread(() -> {
                     try {
@@ -383,9 +381,11 @@ public class adicionarCertificado extends java.awt.Dialog {
                         if (blockCertificados.size() < 0) {
                             return;
                         }
+                        //Se o valor da lista temporária for igual à MERKLE_TREE_SIZE
                         if(blockCertificados.size() == MERKLE_TREE_SIZE){
+                            //É criado um novo bloco
                             Block b = new Block(rmtObject.getBlockchainLastHash(), blockCertificados);
-                            //remover as transacoes
+                            //remover os certificados
                             rmtObject.removeCertficados(rmtObject.getCertificados());
                             //minar o bloco
                             int nonce = rmtObject.mine(b.getMinerData(), 3);

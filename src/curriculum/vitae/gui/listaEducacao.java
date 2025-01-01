@@ -43,11 +43,6 @@ public class listaEducacao extends java.awt.Dialog {
         super(parent, modal);
         this.user = user;
         this.rmtObject = rmtObject;
-        /*try {
-            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
-        } catch (Exception ex) {
-            Logger.getLogger(listaEducacao.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
         initComponents();
         this.setTitle("Lista de Educação");
         icon = new ImageIcon(user.getImagem());

@@ -74,7 +74,7 @@
           <Font name="Segoe UI" size="24" style="1"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="Curriculum Digital 2.0"/>
+        <Property name="text" type="java.lang.String" value="Curriculum Digital 3.0"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
@@ -104,11 +104,10 @@
               <Font name="Segoe UI" size="14" style="0"/>
             </Property>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="Este software foi feito no &#xe2;mbito&#xa;do trabalho pr&#xe1;tico de &#xa;Computa&#xe7;&#xe3;o Distribu&#xed;da do Curso de Licenciatura&#xa;em Engenharia inform&#xe1;tica do&#xa;Instituto Polit&#xe9;cnico de Tomar&#xa;&#xa;(c) Jo&#xe3;o Vieira 2024&#xa;(c) Henrique Nascimento 2024&#xa;"/>
+            <Property name="text" type="java.lang.String" value="Este software foi feito no &#xe2;mbito&#xa;do trabalho pr&#xe1;tico de &#xa;Computa&#xe7;&#xe3;o Distribu&#xed;da do Curso de Licenciatura&#xa;em Engenharia inform&#xe1;tica do&#xa;Instituto Polit&#xe9;cnico de Tomar&#xa;&#xa;(c) Jo&#xe3;o Vieira 2025&#xa;(c) Henrique Nascimento 2025&#xa;"/>
             <Property name="alignmentX" type="float" value="0.0"/>
             <Property name="alignmentY" type="float" value="0.0"/>
             <Property name="autoscrolls" type="boolean" value="false"/>
-            <Property name="caretPosition" type="int" value="0"/>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
               <Color id="Text Cursor"/>
             </Property>

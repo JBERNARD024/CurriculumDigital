@@ -26,22 +26,31 @@ import utils.BlockChain;
  * @author manso - computer
  */
 public interface P2Plistener {
+    //Publica uma mensagem ao iniciar o servidor
     public void onStart(String message);
     
+    //Inicia a ligação à rede
     public void onConect(String address);
     
+    //Atualiza a lista de certificados, quando executada
     public void onTransaction(String transaction);
     
+    //Executada quando encontra um erro
     public void onException(Exception e, String title);
     
+    //Adiciona uma nova mensagem à lista de mensagens na interface gráfica
     public void onMessage (String msg) throws RemoteException;
     
+    //Atualiza a interface gráfica, quando o Miner inicia
     public void onStartMining(String message, int zeros);
 
+    //Atualiza a interface gráfica, quando o Miner para
     public void onStopMining(String message, int nonce);
 
+    //Atualiza a interface gráfica, quando o nonce é encontrado
     public void onNounceFound(String message, int nonce);
     
+    //Atualiza a interface gráfica, quando existe uma alteração na blockchain
     public void onBlockchainUpdate(BlockChain b);
     
 }

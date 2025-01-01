@@ -42,7 +42,7 @@ public class aboutUs extends java.awt.Dialog {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Curriculum Digital 2.0");
+        jLabel1.setText("Curriculum Digital 3.0");
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/curriculum/vitae/images/foto_Henrique.jpg"))); // NOI18N
         jLabel2.setText("jLabel2");
@@ -54,11 +54,10 @@ public class aboutUs extends java.awt.Dialog {
         jTextArea1.setColumns(20);
         jTextArea1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTextArea1.setRows(5);
-        jTextArea1.setText("Este software foi feito no âmbito\ndo trabalho prático de \nComputação Distribuída do Curso de Licenciatura\nem Engenharia informática do\nInstituto Politécnico de Tomar\n\n(c) João Vieira 2024\n(c) Henrique Nascimento 2024\n");
+        jTextArea1.setText("Este software foi feito no âmbito\ndo trabalho prático de \nComputação Distribuída do Curso de Licenciatura\nem Engenharia informática do\nInstituto Politécnico de Tomar\n\n(c) João Vieira 2025\n(c) Henrique Nascimento 2025\n");
         jTextArea1.setAlignmentX(0.0F);
         jTextArea1.setAlignmentY(0.0F);
         jTextArea1.setAutoscrolls(false);
-        jTextArea1.setCaretPosition(0);
         jTextArea1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         jScrollPane1.setViewportView(jTextArea1);
 

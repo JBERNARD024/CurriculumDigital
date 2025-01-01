@@ -43,11 +43,6 @@ public class listaCertificados extends java.awt.Dialog {
         super(parent, modal);
         this.inst = inst;
         this.rmtObject = rmtObject;
-        /*try {
-            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
-        } catch (Exception ex) {
-            Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
         initComponents();
         this.setTitle("Lista de Certficados");
         //inst = new Instituto(cv.listInst.get(index));

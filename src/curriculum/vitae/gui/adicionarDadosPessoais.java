@@ -54,14 +54,10 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
         super(parent, modal);
         this.user = user;
         this.rmtObject = rmtObject;
-        /*try {
-            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
-        } catch (Exception ex) {
-            Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
         initComponents();
         this.setTitle("Adicionar Dados Pessoais");
         txtEmail.setText(user.getEmail());
+        btnVerPerfil.setEnabled(false);
     }
 
     /**
@@ -316,6 +312,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
             adicionarDadosPessoais();
         }).start();
         btnGuardar.setEnabled(false);
+        btnVerPerfil.setEnabled(true);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVerPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerPerfilActionPerformed
@@ -419,6 +416,7 @@ public class adicionarDadosPessoais extends java.awt.Dialog {
             Logger.getLogger(adicionarDadosPessoais.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        //Bloqueia a edição dos campos
         txtNome.setEnabled(false);
         txtData.setEnabled(false);
         txtSexo.setEnabled(false);

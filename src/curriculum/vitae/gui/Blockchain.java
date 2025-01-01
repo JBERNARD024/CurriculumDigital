@@ -27,7 +27,6 @@ public class Blockchain extends java.awt.Dialog {
         setTitle("Blockchain");
         this.rmtObject = rmtObject;
         blockchain = rmtObject.getBlockchain();
-        System.out.println(rmtObject.getBlockchain());
         txtBlockchain.setText(blockchain.toString());
         txtRegisto.setText(rmtObject.treeToString());
         txtRegisto.setText(rmtObject.certificadosToString());

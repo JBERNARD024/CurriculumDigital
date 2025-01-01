@@ -35,11 +35,6 @@ public class perfilInstituto extends java.awt.Dialog {
         super(parent, modal);
         this.inst = inst;
         this.rmtObject = rmtObject;
-        /*try {
-            this.rmtInterface = (IremoteP2P) Naming.lookup(rmtObject);
-        } catch (Exception ex) {
-            Logger.getLogger(adicionarCertificado.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
         initComponents();
         this.setTitle("Perfil Instituto");
         txtNomeInst.setText(inst.getDadosInst().getNome());

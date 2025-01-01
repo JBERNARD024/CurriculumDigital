@@ -88,9 +88,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         this.myMiner = new Miner(listener);
         this.tree = new MerkleTree();
         Security.addProvider(new BouncyCastleProvider());
-        //Recursos.writeObject(certificados, pathCertificados);
         certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
-        //blockchain.save(pathBlockchain);
         try {
             blockchain.load(pathBlockchain);
         } catch (Exception ex) {
@@ -101,10 +99,12 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Devolve o endereço de IP de um nó da rede
     public String getAdress() throws RemoteException {
         return address;
     }
 
+    //Verifica se o endereço de IP, já está na rede
     private boolean isInNetwork(String adress) {
         for (int i = network.size() - 1; i >= 0; i--) {
             try {
@@ -120,6 +120,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Adiciona um novo nó à rede
     public void addNode(IremoteP2P node) throws RemoteException {
         //se já tiver o nó 
         //não faz nada
@@ -154,11 +155,13 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Retorna a lista de todos os nós da rede
     public List<IremoteP2P> getNetwork() throws RemoteException {
         return new ArrayList<>(network);
     }
 
     @Override
+    //Adiciona uma nova mensagem
     public void addMessage(String msg) throws RemoteException {
         if (messages.contains(msg)) {
             listener.onMessage(msg);
@@ -176,11 +179,13 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Retorna a lista de todas as mensagens
     public List<String> getMessages() throws RemoteException {
         return new ArrayList<>(messages);
     }
 
     @Override
+    //Sincronia as mensagens entre todos os nós
     public void sinchronizeMessages(IremoteP2P node) throws RemoteException {
         this.messages.addAll(node.getMessages());
         listener.onMessage(address);
@@ -189,6 +194,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //################################################## P E S S O A ################################################################
     //################################ LOGIN DE UMA PESSOA ################################
     @Override
+    //Efetua o login de uma Pessoa no sistema
     public Pessoa loginUser(String password) throws RemoteException {
         listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         user = new Pessoa(listUsers.get(indexUser));
@@ -321,6 +327,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         } catch (IOException ex) {
             Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
+        //Vai procurar a Pessoa na lista de Pessoas e definir os dados introduzidos
         for (Pessoa pessoa : listUsers) {
             if (user.getEmail().equals(pessoa.getEmail())) {
                 pessoa.setImagem(byteIcon);
@@ -329,8 +336,10 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
             }
         }
 
+        //Guarda as alterações realizadas na Pessoa na lista de Pessoas
         Recursos.writeObject(listUsers, pathUsers);
 
+        //Propaga os dados definidos pelos nós da rede
         for (IremoteP2P iremoteP2P : network) {
             iremoteP2P.adicionaDadosPessoa(email, dadosP, icon);
         }
@@ -344,6 +353,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         return new ArrayList<>(listUsers);
     }
 
+    //Devolve uma Pessoa específica dado o seu email
     @Override
     public Pessoa getPessoa(String email) throws RemoteException {
         listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
@@ -358,6 +368,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //################################################## I N S T I T U T O ################################################################
     //################################ REGISTAR UMA INSTITUTO ################################
     @Override
+    //Regista um Instituto no sistema e guarda o seu par de chaves num pasta
     public void registerInst(String address, String codNome, String password) throws RemoteException {
         if (verificaCodNome(codNome)) {
             return;
@@ -378,13 +389,15 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
             Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        //Propaga o Instituto criado e os dados pela rede
         for (IremoteP2P iremoteP2P : network) {
             iremoteP2P.registerInst(address, codNome, password);
         }
     }
 
     @Override
-    public int verificaRegistoInst(String codNome, String password, String confPassword) {
+    //Verifica se os dados introduzidos correspondem aos requisitos definidos no sistema, relativamente ao Instituto
+    public  int verificaRegistoInst(String codNome, String password, String confPassword){
         if (codNome.equals("") || password.equals("") || confPassword.equals("")) {
             JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
             return 1;
@@ -397,6 +410,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Verifica se o código nome do Instituto no sistema existe no sistema
     public boolean verificaCodNome(String codNome) {
         listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
         boolean verifica = false;
@@ -414,6 +428,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     //################################ LOGIN DE UMA INSTITUIÇÃO ################################
     @Override
+    //Realiza o login de Instituto no sistema, num dado nó da rede
     public Instituto loginInst(String password) {
         listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
         inst = new Instituto(listInst.get(indexInst));
@@ -431,6 +446,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Realiza o login de Instituto no sistema, num dado nó da rede
     public boolean verificaPasswordInst(String codNome, String password) {
         listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
         boolean verifica = false;
@@ -469,6 +485,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         } catch (IOException ex) {
             Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
+        //Procura na lista de Institutos e aplica as alterações num dado instituto
         for (Instituto instituto : listInst) {
             if (inst.getCodNome().equals(instituto.getCodNome())) {
                 instituto.setImagem(byteIcon);
@@ -477,8 +494,10 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
             }
         }
 
+        //Guarda as alterações efetuadas no ficheiro da lista de Institutos
         Recursos.writeObject(listInst, pathInst);
 
+        //Propaga as alterações realizadas pelos nós da rede
         for (IremoteP2P iremoteP2P : network) {
             iremoteP2P.adicionaDadosInst(codNome, dadosInst, icon);
         }
@@ -487,6 +506,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Retorna um Instituto, dado o seu nome de código
     public Instituto getInstituto(String codNome) throws RemoteException {
         listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
         for (Instituto instituto : listInst) {
@@ -499,44 +519,53 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     //####################################### C E R T I F I C A D O ####################################################
     @Override
+    //Adiciona um certificado no sistema e propaga-o pelos nós da rede
     public void adicionarCertificado(Certificado c) throws RemoteException {
         certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
+        //Verifica se o certificado existe na sistema
         if (certificados.contains(c)) {
             listener.onTransaction("Certificado repetido " + c.toString());
             return;
         }
 
+        //Senão não existir o certficado no sistema, é adicionado à lista de certificados e à lista temporária
         if (!certificados.contains(c)) {
             temp.add(c);
             certificados.add(c);
         }
+        //As alterações às listas são guardadas nos respetivos ficheiros
         Recursos.writeObject(certificados, pathCertificados);
         Recursos.writeObject(temp, pathTemp);
 
+        //Propaga o nó pela rede
         for (IremoteP2P iremoteP2P : network) {
             iremoteP2P.adicionarCertificado(c);
         }
     }
 
     @Override
+    //Sincroniza os certificados num nó da rede
     public void sinchronizeCertificados(IremoteP2P node) throws RemoteException {
         this.certificados.addAll(node.getCertificados());
         listener.onTransaction(address);
     }
 
     @Override
+    //Devolve a lista de certificados
     public List<Certificado> getCertificados() throws RemoteException {
         certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
         return new ArrayList<>(certificados);
     }
 
     @Override
+    //Devolve a lista temporária de certificados
     public List<Certificado> getTemp() throws RemoteException {
         temp = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathTemp);
         return new ArrayList<>(temp);
     }
 
     @Override
+    //Remove os certificados num nó
     public void removeCertficados(List<Certificado> myCertificados) throws RemoteException {
         //remover as transações da lista atural
         certificados.removeAll(myCertificados);
@@ -549,15 +578,6 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
                 iremoteP2P.removeCertficados(myCertificados);
             }
         }
-    }
-
-    public boolean isListEqual(List<String> other) {
-        for (Certificado t : certificados) {
-            if (!other.contains(t)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     //Função que devolve a lista de todos os certificados atribuídos a uma Pessoa
@@ -592,7 +612,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         return myCertificados;
     }
 
-    //Função que devolve a lista de todos os certificados criados por uma Pessoa
+    //Função que devolve a lista de todos os certificados criados por um Instituto
     @Override
     public DefaultListModel getCertificadosInst(Instituto inst) throws RemoteException {
         try {
@@ -625,6 +645,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Cria uma nova merkleTree a partir de um ficheiro, com um dado merkleRoot
     public MerkleTree getTree(String hash) throws RemoteException {
         try {
             tree.loadFromFile(basePath + "\\resources\\merkleTree\\" + hash + ".mkt");
@@ -635,6 +656,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Escreve a merkleTree em formato de texto
     public String treeToString() throws RemoteException {
         try {
             blockchain.load(pathBlockchain);
@@ -672,8 +694,8 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     /*Esta função vai apresentar a lista de todos os certificados, que já foram validados pela blockchain.
-    De forma a confirmar, queos certificados estão válidos, juntamente com os dados do certificado,
-    é apresentado também o Hash fdo bloco anterior, o nonce e o hash do bloco de que faz parte*/
+    De forma a confirmar, que os certificados estão válidos, juntamente com os dados do certificado,
+    é apresentado também o Hash do bloco anterior, o nonce e o hash do bloco de que faz parte*/
     @Override
     public String certificadosToString() throws RemoteException {
         try {
@@ -716,6 +738,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     ////////////////////////////////////////////////////////////////////////////
     @Override
+    //Inicia o Miner para começar a minar um bloco, dado uma mensagem e respetiva dificuldade
     public void startMining(String msg, int zeros) throws RemoteException {
         try {
             //colocar a mineiro a minar
@@ -737,6 +760,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Acaba a atividade do Miner, quando é encontrado o nonce na rede
     public void stopMining(int nonce) throws RemoteException {
         //parar o mineiro e distribuir o nonce
         myMiner.stopMining(nonce);
@@ -751,6 +775,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Inicia a mineração da mensagem
     public int mine(String msg, int zeros) throws RemoteException {
         try {
             //começar a minar a mensagem
@@ -765,6 +790,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Retorna se o Miner está ou não a minar
     public boolean isMining() throws RemoteException {
         return myMiner.isMining();
     }
@@ -774,6 +800,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //////////////////////////////////////////////////////////////////////////////
     @Override
+    //Função que vai adicionar um bloco à blockchain
     public void addBlock(Block b) throws RemoteException {
         try {
             //se não for válido
@@ -785,11 +812,16 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
                 blockchain.add(b);
                 //guardar a blockchain
                 blockchain.save(pathBlockchain);
+                
                 temp = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathTemp);
                 MerkleTree mkt = new MerkleTree(temp);
+                //Guarda a merkleTree num ficheiro
                 mkt.saveToFile(new File("").getAbsolutePath() + "\\resources\\merkleTree\\" + mkt.getRoot() + ".mkt");
+                //Limpa a lista temporária de certificados
                 temp.clear();
+                //Atualiza a blockchain na rede
                 listener.onBlockchainUpdate(blockchain);
+                //Guarda a lista temporária
                 Recursos.writeObject(temp, pathTemp);
             }
             //propagar o bloco pela rede
@@ -813,22 +845,25 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Retorna o tamanho da blockchain
     public int getBlockchainSize() throws RemoteException {
         return blockchain.getSize();
     }
 
     @Override
+    //Retorna, em formato de texto, o hash do último bloco
     public String getBlockchainLastHash() throws RemoteException {
         return blockchain.getLastBlockHash();
     }
 
     @Override
+    //Retorna a blockchain do sistema
     public BlockChain getBlockchain() throws RemoteException {
-        //blockchain = new BlockChain(pathBlockchain);
         return blockchain;
     }
 
     @Override
+    //Sincroniza a blockchain pelos nós da rede
     public void synchnonizeBlockchain() throws RemoteException {
         //para todos os nodos da rede
         for (IremoteP2P iremoteP2P : network) {
@@ -847,6 +882,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     @Override
+    //Devolve a lista de transações que estão associadas a um bloco
     public ArrayList<Object> getBlockchainTransactions() throws RemoteException {
         ArrayList<Object> allTransactions = new ArrayList<>();
         for (Block b : blockchain.getChain()) {
