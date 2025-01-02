@@ -694,8 +694,8 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     }
 
     /*Esta função vai apresentar a lista de todos os certificados, que já foram validados pela blockchain.
-    De forma a confirmar, que os certificados estão válidos, juntamente com os dados do certificado,
-    é apresentado também o Hash do bloco anterior, o nonce e o hash do bloco de que faz parte*/
+    De forma a confirmar, queos certificados estão válidos, juntamente com os dados do certificado,
+    é apresentado também o Hash fdo bloco anterior, o nonce e o hash do bloco de que faz parte*/
     @Override
     public String certificadosToString() throws RemoteException {
         try {
