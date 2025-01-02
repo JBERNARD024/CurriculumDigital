@@ -88,11 +88,8 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         this.myMiner = new Miner(listener);
         this.tree = new MerkleTree();
         Security.addProvider(new BouncyCastleProvider());
-//        Recursos.writeObject(certificados, pathCertificados);
-//        Recursos.writeObject(temp, pathTemp);
         certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
         temp = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathTemp);
-//        blockchain.save(pathBlockchain);
         try {
             blockchain.load(pathBlockchain);
         } catch (Exception ex) {
@@ -702,18 +699,13 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     é apresentado também o Hash fdo bloco anterior, o nonce e o hash do bloco de que faz parte*/
     @Override
     public String certificadosToString() throws RemoteException {
-        try {
-            blockchain.load(pathBlockchain);
-        } catch (Exception ex) {
-            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
-        }
         StringBuilder txt = new StringBuilder();
         txt.append("Registo de Certificados = ")
                 .append(certificados.size())
                 .append("\n\n");
         for (Block b : blockchain.getChain()) {
             try {
-                MerkleTree.loadFromFile(basePath + "\\resources\\merkleTree\\" + b.getMerkleRoot() + ".mkt");
+                tree = MerkleTree.loadFromFile(basePath + "\\resources\\merkleTree\\" + b.getMerkleRoot() + ".mkt");
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
             }

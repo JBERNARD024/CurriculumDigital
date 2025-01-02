@@ -413,14 +413,14 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="javax.swing.JTextArea" name="txtListTransdactions">
+                    <Component class="javax.swing.JTextArea" name="txtListCertificados">
                       <Properties>
                         <Property name="editable" type="boolean" value="false"/>
                         <Property name="columns" type="int" value="20"/>
                         <Property name="rows" type="int" value="5"/>
                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                            <TitledBorder title="List of Transactions"/>
+                            <TitledBorder title="List of Certificados"/>
                           </Border>
                         </Property>
                       </Properties>
