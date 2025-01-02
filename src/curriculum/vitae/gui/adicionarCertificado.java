@@ -394,7 +394,6 @@ public class adicionarCertificado extends java.awt.Dialog {
                             //adiconar o bloco
                             rmtObject.addBlock(b); 
                         }
-                        
                     } catch (Exception ex) {
                         //onException(ex, "Start ming");
                         Logger.getLogger(NodeP2PGui.class.getName()).log(Level.SEVERE, null, ex);

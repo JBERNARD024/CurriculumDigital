@@ -88,7 +88,11 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         this.myMiner = new Miner(listener);
         this.tree = new MerkleTree();
         Security.addProvider(new BouncyCastleProvider());
+//        Recursos.writeObject(certificados, pathCertificados);
+//        Recursos.writeObject(temp, pathTemp);
         certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
+        temp = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathTemp);
+//        blockchain.save(pathBlockchain);
         try {
             blockchain.load(pathBlockchain);
         } catch (Exception ex) {
@@ -397,7 +401,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     @Override
     //Verifica se os dados introduzidos correspondem aos requisitos definidos no sistema, relativamente ao Instituto
-    public  int verificaRegistoInst(String codNome, String password, String confPassword){
+    public int verificaRegistoInst(String codNome, String password, String confPassword) {
         if (codNome.equals("") || password.equals("") || confPassword.equals("")) {
             JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
             return 1;
@@ -532,10 +536,10 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         if (!certificados.contains(c)) {
             temp.add(c);
             certificados.add(c);
+            //As alterações às listas são guardadas nos respetivos ficheiros
+            Recursos.writeObject(certificados, pathCertificados);
+            Recursos.writeObject(temp, pathTemp);
         }
-        //As alterações às listas são guardadas nos respetivos ficheiros
-        Recursos.writeObject(certificados, pathCertificados);
-        Recursos.writeObject(temp, pathTemp);
 
         //Propaga o nó pela rede
         for (IremoteP2P iremoteP2P : network) {
@@ -812,7 +816,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
                 blockchain.add(b);
                 //guardar a blockchain
                 blockchain.save(pathBlockchain);
-                
+
                 temp = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathTemp);
                 MerkleTree mkt = new MerkleTree(temp);
                 //Guarda a merkleTree num ficheiro

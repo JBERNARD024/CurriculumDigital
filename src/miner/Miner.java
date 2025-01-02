@@ -60,7 +60,7 @@ public class Miner {
         }
         this.message = message;
         //configurar os atributos    
-        int numCores = Runtime.getRuntime().availableProcessors();
+        int numCores = 2; //Runtime.getRuntime().availableProcessors();
         threads = new MinerThread[numCores];
         //inicializar o globalNonce
         globalNonce = new AtomicInteger();
@@ -281,4 +281,5 @@ public class Miner {
         //:::::::::::::::::::::::::::  Copyright(c) M@nso  2021  :::::::::::::::::::
         ///////////////////////////////////////////////////////////////////////////
     }
+
 }
