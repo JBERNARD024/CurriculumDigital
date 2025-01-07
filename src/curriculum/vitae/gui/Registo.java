@@ -4,12 +4,13 @@
  */
 package curriculum.vitae.gui;
 
-import java.rmi.Naming;
+import java.security.Key;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import p2p.IremoteP2P;
 import p2p.OremoteP2P;
+import utils.SecurityUtils;
 
 /**
  *
@@ -338,8 +339,11 @@ public class Registo extends java.awt.Dialog {
         email = txtEmailUser.getText().trim();
         password = new String(txtPasswordUser.getPassword());
         confPassword = new String(txtConfPasswordSuer.getPassword());
+        Key k = rmtObject.getKey();
+        byte[] p_encript = SecurityUtils.encrypt(password.getBytes(), k);
+        byte[] conf_p_encript = SecurityUtils.encrypt(password.getBytes(), k);
         //Faz a validação dos campos
-        switch (rmtObject.verificaRegistoUser(email, password, confPassword)) {
+        switch (rmtObject.verificaRegistoUser(email, p_encript, conf_p_encript)) {
             case 1:
                 JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
                 break;
@@ -352,7 +356,7 @@ public class Registo extends java.awt.Dialog {
             case 4:
                 if (rmtObject.verificaEmailRegisto(email) == false) {
                     //Estando a validação correta, o utilizador Pessoa é adicionado à lista de Pessoas
-                    rmtObject.registerUser(rmtObject.getAdress(), email, password);
+                    rmtObject.registerUser(rmtObject.getAdress(), email, p_encript);
                     rmtObject.addMessage(email + " registou-se no sistema!");
                     dispose();
                     new Login(null, true, rmtObject).setVisible(true);
@@ -368,8 +372,11 @@ public class Registo extends java.awt.Dialog {
         codNome = txtCodNomeInst.getText().trim();
         password = new String(txtPasswordInst.getPassword());
         confPassword = new String(txtConfPasswordInst.getPassword());
+        Key k = rmtObject.getKey();
+        byte[] p_encript = SecurityUtils.encrypt(password.getBytes(), k);
+        byte[] conf_p_encript = SecurityUtils.encrypt(password.getBytes(), k);
         //Faz a validação dos campos
-        switch (rmtObject.verificaRegistoInst(codNome, password, confPassword)) {
+        switch (rmtObject.verificaRegistoInst(codNome, p_encript, conf_p_encript)) {
             case 1:
                 JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
                 break;
@@ -379,7 +386,7 @@ public class Registo extends java.awt.Dialog {
             case 3:
                 if (rmtObject.verificaCodNome(codNome) == false) {
                     //Estando a validação correta, o utilizador Pessoa é adicionado à lista de Pessoas
-                    rmtObject.registerInst(rmtObject.getAdress(), codNome, password);
+                    rmtObject.registerInst(rmtObject.getAdress(), codNome, p_encript);
                     rmtObject.addMessage(codNome + " registou-se no sistema!");
                     dispose();
                     new Login(null, true, rmtObject).setVisible(true);

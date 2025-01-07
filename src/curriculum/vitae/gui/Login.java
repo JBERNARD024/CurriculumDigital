@@ -6,12 +6,13 @@ package curriculum.vitae.gui;
 
 import curriculum.vitae.core.Instituto;
 import curriculum.vitae.core.Pessoa;
-import java.rmi.Naming;
+import java.security.Key;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import p2p.IremoteP2P;
 import p2p.OremoteP2P;
+import utils.SecurityUtils;
 
 /**
  *
@@ -320,9 +321,12 @@ public class Login extends java.awt.Dialog {
     private void loginPessoa() throws Exception {
         email = txtEmailUser.getText().trim();
         password = new String(txtPasswordUser.getPassword());
+        Key k = rmtObject.getKey();
+        byte[] p_encript = SecurityUtils.encrypt(password.getBytes(), k);
+        System.out.println("Password Encriptada = " + p_encript);
         if (rmtObject.verificaUtilizador(email)) {
-            if (rmtObject.verificaPasswordPessoa(email, password)) {
-                user = new Pessoa(rmtObject.loginUser(password));
+            if (rmtObject.verificaPasswordPessoa(email, p_encript)) {
+                user = new Pessoa(rmtObject.loginUser(p_encript));
                 rmtObject.addMessage(user.getEmail() + " iniciou sessão");
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
                 //Vai verificar se o utilizador já introduziu os dados pessoais
@@ -349,12 +353,15 @@ public class Login extends java.awt.Dialog {
     private void loginInstituto() throws Exception {
         codNome = txtCodNomeInst.getText().trim();
         password = new String(txtPasswordInst.getPassword());
+        Key k = rmtObject.getKey();
+        byte[] p_encript = SecurityUtils.encrypt(password.getBytes(), k);
+        System.out.println("Password Encriptada = " + p_encript);
         //Verifica se o código nome está registado no sistema
         if (rmtObject.verificaCodNome(codNome)) {
             //Caso esteja, vai verificar se a password introduzida é válida
-            if (rmtObject.verificaPasswordInst(codNome, password)) {
+            if (rmtObject.verificaPasswordInst(codNome, p_encript)) {
                 //Sendo a password válida, vai desencriptar a chave privada, enquanto estiver com a sessão ativa
-                instituto = new Instituto(rmtObject.loginInst(password));
+                instituto = new Instituto(rmtObject.loginInst(p_encript));
                 rmtObject.addMessage(instituto.getCodNome() + " iniciou sessão");
                 JOptionPane.showMessageDialog(null, "Bem-vindo!!", "Login Bem Sucedido", 3);
                 //Verifica se os dados Institucionais, já foram definidos

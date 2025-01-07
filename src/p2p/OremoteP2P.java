@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.Key;
 import java.security.Security;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ import utils.BlockChain;
 import utils.MerkleTree;
 import utils.RMI;
 import utils.Recursos;
+import utils.SecurityUtils;
 
 /**
  * Created on 27/11/2024, 17:48:32
@@ -74,6 +76,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     Instituto inst;
     int indexUser;
     int indexInst;
+    Key k;
 
     public OremoteP2P(String address, P2Plistener listener) throws RemoteException, Exception {
         super(RMI.getAdressPort(address));
@@ -87,6 +90,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         this.blockchain = new BlockChain();
         this.myMiner = new Miner(listener);
         this.tree = new MerkleTree();
+        this.k = SecurityUtils.generateKey();
         Security.addProvider(new BouncyCastleProvider());
         certificados = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathCertificados);
         temp = (CopyOnWriteArrayList<Certificado>) Recursos.readObject(pathTemp);
@@ -103,6 +107,11 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //Devolve o endereço de IP de um nó da rede
     public String getAdress() throws RemoteException {
         return address;
+    }
+    
+    @Override
+    public Key getKey() throws RemoteException {
+        return this.k;
     }
 
     //Verifica se o endereço de IP, já está na rede
@@ -196,7 +205,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //################################ LOGIN DE UMA PESSOA ################################
     @Override
     //Efetua o login de uma Pessoa no sistema
-    public Pessoa loginUser(String password) throws RemoteException {
+    public Pessoa loginUser(byte[] password) throws RemoteException {
         listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         user = new Pessoa(listUsers.get(indexUser));
         //Atualiza a data do último login efetuado
@@ -204,8 +213,9 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         //Incrementa o número de logins
         user.setNumLogin(user.getNumLogin() + 1);
         try {
+            String p_decrypt = new String(SecurityUtils.decrypt(password, k));
             //Desencript a chave privada
-            user.load(password);
+            user.load(p_decrypt);
         } catch (Exception ex) {
             Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -215,12 +225,13 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     @Override
     //Verifica se a password introduzida desencripta a chave privada de uma pessoa
-    public boolean verificaPasswordPessoa(String email, String password) {
+    public boolean verificaPasswordPessoa(String email, byte[] password) {
         listUsers = (CopyOnWriteArrayList<Pessoa>) Recursos.readObject(pathUsers);
         boolean verifica = false;
         try {
             user = new Pessoa(email);
-            verifica = user.load(password);
+            String p_decrypt = new String(SecurityUtils.decrypt(password, k));
+            verifica = user.load(p_decrypt);
         } catch (Exception ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -247,7 +258,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //################################ REGISTAR UMA PESSOA ################################
     @Override
     //Regista uma pessoa no sistema e guarda as suas chaves assimétricas numa pasta
-    public void registerUser(String address, String email, String password) throws RemoteException {
+    public void registerUser(String address, String email, byte[] password) throws RemoteException {
         if (verificaUtilizador(email)) {
             return;
         }
@@ -258,7 +269,8 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
             //O par de chaves asssimétricas é criado
             user.generateKeys();
             //O par de chaves assimétricas é guardado na pasta da Pessoa e a chave privada é encriptada com a password
-            user.save(password);
+            String p_decrypt = new String(SecurityUtils.decrypt(password, k));
+            user.save(p_decrypt);
             //A pessoa é adicionada ao sistema
             listUsers.add(user);
             //A pessoa é guardada no ficheiro da lista das pessoas
@@ -273,19 +285,26 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     @Override
     //Verifica se os todos os campos foram preenchidos e cumprem os requisitos
-    public int verificaRegistoUser(String email, String password, String confPassword) {
-        if (email.equals("") || password.equals("") || confPassword.equals("")) {
-            JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
-            return 1;
-        } else if (!password.equals(confPassword)) {
-            JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
-            return 2;
-        } else if (!email.contains("@")) {
-            JOptionPane.showConfirmDialog(null, "Email inválido!!", "Email Incorreto", 2);
-            return 3;
-        } else {
-            return 4;
+    public int verificaRegistoUser(String email, byte[] password, byte[] confPassword) {
+        try {
+            String p_decrypt = new String(SecurityUtils.decrypt(password, k));
+            String conf_p_decrypt = new String(SecurityUtils.decrypt(password, k));
+            if (email.equals("") || p_decrypt.equals("") || conf_p_decrypt.equals("")) {
+                JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
+                return 1;
+            } else if (!p_decrypt.equals(conf_p_decrypt)) {
+                JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
+                return 2;
+            } else if (!email.contains("@")) {
+                JOptionPane.showConfirmDialog(null, "Email inválido!!", "Email Incorreto", 2);
+                return 3;
+            } else {
+                return 4;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return 0;
     }
 
     @Override
@@ -370,7 +389,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //################################ REGISTAR UMA INSTITUTO ################################
     @Override
     //Regista um Instituto no sistema e guarda o seu par de chaves num pasta
-    public void registerInst(String address, String codNome, String password) throws RemoteException {
+    public void registerInst(String address, String codNome, byte[] password) throws RemoteException {
         if (verificaCodNome(codNome)) {
             return;
         }
@@ -381,7 +400,8 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
             //O par de chaves asssimétricas é criado
             inst.generateKeys();
             //O par de chaves assimétricas é guardado na pasta da Instituto e a chave privada é encriptada com a password
-            inst.save(password);
+            String p_decrypt = new String(SecurityUtils.decrypt(password, k));
+            inst.save(p_decrypt);
             //O Instituto é adicionado ao sistema
             listInst.add(inst);
             //O Instituto é guardado no ficheiro da lista de Institutos
@@ -398,16 +418,23 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     @Override
     //Verifica se os dados introduzidos correspondem aos requisitos definidos no sistema, relativamente ao Instituto
-    public int verificaRegistoInst(String codNome, String password, String confPassword) {
-        if (codNome.equals("") || password.equals("") || confPassword.equals("")) {
-            JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
-            return 1;
-        } else if (!password.equals(confPassword)) {
-            JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
-            return 2;
-        } else {
-            return 3;
+    public int verificaRegistoInst(String codNome, byte[] password, byte[] confPassword) {
+        try {
+            String p_decrypt = new String(SecurityUtils.decrypt(password, k));
+            String conf_p_decrypt = new String(SecurityUtils.decrypt(password, k));
+            if (codNome.equals("") || p_decrypt.equals("") || conf_p_decrypt.equals("")) {
+                JOptionPane.showConfirmDialog(null, "Um ou mais campos estão vazios", "Campos Vazios", 2);
+                return 1;
+            } else if (!p_decrypt.equals(conf_p_decrypt)) {
+                JOptionPane.showConfirmDialog(null, "As passwords não coincidem!!", "Passwords Diferentes", 2);
+                return 2;
+            } else {
+                return 3;
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return 0;
     }
 
     @Override
@@ -430,7 +457,7 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
     //################################ LOGIN DE UMA INSTITUIÇÃO ################################
     @Override
     //Realiza o login de Instituto no sistema, num dado nó da rede
-    public Instituto loginInst(String password) {
+    public Instituto loginInst(byte[] password) {
         listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
         inst = new Instituto(listInst.get(indexInst));
         //Incrementa o número de logins
@@ -438,8 +465,9 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
         //Atualiza a data do último login efetuado
         inst.setLastLogin(Date.from(Instant.now()));
         try {
+            String p_decrypt = new String(SecurityUtils.decrypt(password, k));
             //Desencript a chave privada
-            inst.load(password);
+            inst.load(p_decrypt);
         } catch (Exception ex) {
             Logger.getLogger(OremoteP2P.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -448,12 +476,13 @@ public class OremoteP2P extends UnicastRemoteObject implements IremoteP2P {
 
     @Override
     //Realiza o login de Instituto no sistema, num dado nó da rede
-    public boolean verificaPasswordInst(String codNome, String password) {
+    public boolean verificaPasswordInst(String codNome, byte[] password) {
         listInst = (CopyOnWriteArrayList<Instituto>) Recursos.readObject(pathInst);
         boolean verifica = false;
         try {
+            String p_decrypt = new String(SecurityUtils.decrypt(password, k));
             inst = new Instituto(codNome);
-            verifica = inst.load(password);
+            verifica = inst.load(p_decrypt);
         } catch (Exception ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }

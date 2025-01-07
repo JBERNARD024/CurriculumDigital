@@ -23,6 +23,7 @@ import curriculum.vitae.core.dadosInstitucionais;
 import curriculum.vitae.core.dadosPessoais;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.security.Key;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -40,6 +41,8 @@ public interface IremoteP2P extends Remote {
     //:::: N E T WO R K  :::::::::::-
     //Devolve o endereço de IP de um nó da rede
     public String getAdress() throws RemoteException;
+    
+    public Key getKey() throws RemoteException;
     
     //Adiciona um novo nó à rede
     public void addNode(IremoteP2P node) throws RemoteException;
@@ -64,20 +67,20 @@ public interface IremoteP2P extends Remote {
     public boolean verificaUtilizador(String email) throws RemoteException;
 
     //Verifica se a password introduzida desencripta a chave privada de uma pessoa
-    public boolean verificaPasswordPessoa(String email, String password) throws RemoteException;
+    public boolean verificaPasswordPessoa(String email, byte[] password) throws RemoteException;
 
     //Efetua o login de uma Pessoa no sistema
-    public Pessoa loginUser(String password) throws RemoteException;
+    public Pessoa loginUser(byte[] password) throws RemoteException;
 
     //Devolve uma Pessoa específica dado o seu email
     public Pessoa getPessoa(String email) throws RemoteException;
 
     //::::::::::: R E G I S T O :::::::: P E S S O A :::::::::::
     //Regista uma pessoa no sistema e guarda as suas chaves assimétricas numa pasta
-    public void registerUser(String address, String email, String password) throws RemoteException;
+    public void registerUser(String address, String email, byte[] password) throws RemoteException;
 
     //Verifica se os todos os campos foram preenchidos e cumprem os requisitos
-    public int verificaRegistoUser(String email, String password, String confPassword) throws RemoteException;
+    public int verificaRegistoUser(String email, byte[] password, byte[] confPassword) throws RemoteException;
 
     //Verifica se os todos os campos foram preenchidos e cumprem os requisitos
     public boolean verificaEmailRegisto(String email) throws RemoteException;
@@ -85,20 +88,20 @@ public interface IremoteP2P extends Remote {
     //::::::::::: R E G I S T O :::::::: I N S T I T U T O :::::::::::
     
     //Regista um Instituto no sistema e guarda o seu par de chaves num pasta
-    public void registerInst(String address, String codNome, String password) throws RemoteException;
+    public void registerInst(String address, String codNome, byte[] password) throws RemoteException;
 
     //Verifica se os dados introduzidos correspondem aos requisitos definidos no sistema, relativamente ao Instituto
-    public int verificaRegistoInst(String codNome, String password, String confPassword) throws RemoteException;
+    public int verificaRegistoInst(String codNome, byte[] password, byte[] confPassword) throws RemoteException;
 
     //Verifica se o código nome do Instituto no sistema existe no sistema
     public boolean verificaCodNome(String codNome) throws RemoteException;
 
     //::::::::::: L O G I N :::::::: I N S T I T U T O :::::::::::
     //Realiza o login de Instituto no sistema, num dado nó da rede
-    public Instituto loginInst(String password) throws RemoteException;
+    public Instituto loginInst(byte[] password) throws RemoteException;
 
     //Realiza o login de Instituto no sistema, num dado nó da rede
-    public boolean verificaPasswordInst(String codNome, String password) throws RemoteException;
+    public boolean verificaPasswordInst(String codNome, byte[] password) throws RemoteException;
 
     //Retorna um Instituto, dado o seu nome de código
     public Instituto getInstituto(String codNome) throws RemoteException;
